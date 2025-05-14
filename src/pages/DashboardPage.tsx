@@ -5,7 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
   BarChart2, ChevronLeft, ChevronRight, Home, LineChart,
-  PieChart, Settings, Wallet
+  Settings, Wallet
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
