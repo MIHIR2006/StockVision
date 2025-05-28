@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: black;
+  background-color: #020916;
   overflow: hidden;
   padding: 1rem;
 }
@@ -42,6 +42,12 @@
 @media (min-width: 1440px) {
   .text {
     font-size: 15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .text {
+   font-size: 6rem;
   }
 }
 
