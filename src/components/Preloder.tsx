@@ -31,20 +31,36 @@ const Preloader: React.FC = () => {
 
   return (
     <div className="loader">
-      <div className="text">
-        {text.split('').map((char, i) => (
-          <span
-            key={i}
-            data-text={char}
-            ref={(el) => {
-              if (el) lettersRef.current[i] = el;
-            }}
-          >
-            {char}
-          </span>
-        ))}
-      </div>
+  <div className="text">
+    <div className="word">
+      {'STOCK'.split('').map((char, i) => (
+        <span
+          key={`stock-${i}`}
+          data-text={char}
+          ref={(el) => {
+            if (el) lettersRef.current[i] = el;
+          }}
+        >
+          {char}
+        </span>
+      ))}
     </div>
+    <div className="word">
+      {'VISION'.split('').map((char, i) => (
+        <span
+          key={`vision-${i}`}
+          data-text={char}
+          ref={(el) => {
+            if (el) lettersRef.current[i + 5] = el; // Offset by STOCK letters
+          }}
+        >
+          {char}
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
+
   );
 };
 
