@@ -57,6 +57,10 @@ export function SettingsSection({ className }: { className?: string }) {
 
         <Separator />
         
+          
+
+
+
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Security Settings</h3>
           <div className="space-y-2">
@@ -75,5 +79,7 @@ export function SettingsSection({ className }: { className?: string }) {
         </div>
       </CardContent>
     </Card>
+
+
   );
 }

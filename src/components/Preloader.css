@@ -76,10 +76,19 @@
 
   background-image: linear-gradient(
     45deg,
-    #08142e,
-    #8b60f7,
-    #3376e0,
-    #151d44
+    hsl(221deg 70% 11%) 0%,
+    hsl(254deg 44% 35%) 8%,
+    hsl(256deg 44% 48%) 17%,
+    hsl(257deg 62% 59%) 25%,
+    hsl(257deg 90% 67%) 33%,
+    hsl(249deg 84% 67%) 42%,
+    hsl(239deg 77% 67%) 50%,
+    hsl(228deg 75% 61%) 58%,
+    hsl(217deg 74% 54%) 67%,
+    hsl(217deg 63% 48%) 75%,
+    hsl(218deg 62% 40%) 83%,
+    hsl(219deg 60% 31%) 92%,
+    hsl(230deg 53% 17%) 100%
   );
 
   background-clip: text;

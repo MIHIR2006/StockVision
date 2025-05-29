@@ -3,9 +3,34 @@ import { cn } from "@/lib/utils";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Badge } from "./ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { ChartContainer } from "./ui/chart";
+import { Card, CardContent, CardHeader, CardTitle ,CardDescription,CardFooter } from "./ui/card";
+// import { ChartContainer } from "./ui/chart";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
+import { Overview } from './overview'
+import { RecentSales } from './recent-sales'
+import { TrendingUp } from "lucide-react"
+import { Bar, BarChart, CartesianGrid, Cell, LabelList } from "recharts"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
+const chartData = [
+  { month: "January", visitors: 186 },
+  { month: "February", visitors: 205 },
+  { month: "March", visitors: -207 },
+  { month: "April", visitors: 173 },
+  { month: "May", visitors: -209 },
+  { month: "June", visitors: 214 },
+]
+
+const chartConfig = {
+  visitors: {
+    label: "Visitors",
+  },
+} satisfies ChartConfig
 export function PerformanceSection({ className }: { className?: string }) {
   // Filter the data for the performance chart (last 30 days)
   const performanceData = marketIndices.map((index) => ({
@@ -15,93 +40,177 @@ export function PerformanceSection({ className }: { className?: string }) {
   }));
 
   return (
-    <Card className={cn("backdrop-blur-lg bg-card/80 border-primary/10 shadow-lg transition-all hover:shadow-xl overflow-hidden", className)}>
-      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <CardTitle className="text-xl font-extrabold">Market Performance</CardTitle>
-        <div className="flex flex-wrap gap-2">
-          {marketIndices.map((index) => (
-            <Badge 
-              key={index.name} 
-              variant={index.change >= 0 ? "success" : "destructive"}
-              className="flex items-center gap-1 font-medium whitespace-nowrap"
-            >
-              {index.name}
-              {index.change >= 0 ? (
-                <ArrowUpIcon className="h-3 w-3" />
-              ) : (
-                <ArrowDownIcon className="h-3 w-3" />
-              )}
-              {Math.abs(index.change).toFixed(2)}%
-            </Badge>
-          ))}
-        </div>
+    <div>
+    <Tabs
+          orientation='vertical'
+          defaultValue='overview'
+          className='space-y-4'
+        >
+          <TabsContent value='overview' className='space-y-4'>
+            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>
+                    Total Revenue
+                  </CardTitle>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    className='text-muted-foreground h-4 w-4'
+                  >
+                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
+                  </svg>
+                </CardHeader>
+                <CardContent>
+                  <div className='text-2xl font-bold'>$45,231.89</div>
+                  <p className='text-muted-foreground text-xs'>
+                    +20.1% from last month
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>
+                    Subscriptions
+                  </CardTitle>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    className='text-muted-foreground h-4 w-4'
+                  >
+                    <path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
+                    <circle cx='9' cy='7' r='4' />
+                    <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
+                  </svg>
+                </CardHeader>
+                <CardContent>
+                  <div className='text-2xl font-bold'>+2350</div>
+                  <p className='text-muted-foreground text-xs'>
+                    +180.1% from last month
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>Sales</CardTitle>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    className='text-muted-foreground h-4 w-4'
+                  >
+                    <rect width='20' height='14' x='2' y='5' rx='2' />
+                    <path d='M2 10h20' />
+                  </svg>
+                </CardHeader>
+                <CardContent>
+                  <div className='text-2xl font-bold'>+12,234</div>
+                  <p className='text-muted-foreground text-xs'>
+                    +19% from last month
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>
+                    Active Now
+                  </CardTitle>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 24 24'
+                    fill='none'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    className='text-muted-foreground h-4 w-4'
+                  >
+                    <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
+                  </svg>
+                </CardHeader>
+                <CardContent>
+                  <div className='text-2xl font-bold'>+573</div>
+                  <p className='text-muted-foreground text-xs'>
+                    +201 since last hour
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
+              <Card className='col-span-1 lg:col-span-4'>
+                <CardHeader>
+                  <CardTitle>Overview</CardTitle>
+                </CardHeader>
+                <CardContent className='pl-2'>
+                  <Overview />
+                </CardContent>
+              </Card>
+              <Card className='col-span-1 lg:col-span-3'>
+                <CardHeader>
+                  <CardTitle>Recent Sales</CardTitle>
+                  <CardDescription>
+                    You made 265 sales this month.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RecentSales />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <div className="mt-5">
+          <Card>
+      <CardHeader>
+        <CardTitle>Share Growth by months </CardTitle>
+        <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
-      <CardContent className="h-[450px] md:h-[500px] lg:h-[650px] pt-0 pb-16 px-2 md:px-6 flex items-center justify-center">
-        <div className="w-full h-full max-w-7xl mx-auto">
-          <ChartContainer
-            config={{
-              "S&P 500": { color: "#22C55E" },
-              "NASDAQ": { color: "#4E97F5" },
-              "DOW JONES": { color: "#F59E0B" },
-            }}
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={marketIndices[0].history}
-                margin={{ top: 20, right: 40, left: 10, bottom: 50 }}
-              >
-                <defs>
-                  <linearGradient id="s&p500" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22C55E" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="nasdaq" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4E97F5" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#4E97F5" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="dowjones" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#F59E0B" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(date) => {
-                    const d = new Date(date);
-                    return `${d.getDate()}/${d.getMonth() + 1}`;
-                  }}
-                  minTickGap={30}
-                  dy={10}
-                  height={60}
-                  tick={{ fontSize: 12 }}
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel hideIndicator />}
+            />
+            <Bar dataKey="visitors">
+              <LabelList position="top" dataKey="month" fillOpacity={1} />
+              {chartData.map((item) => (
+                <Cell
+                  key={item.month}
+                  fill= {item.visitors > 0 ? "#3C82F6" : "#E11E48"} 
                 />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(price) => `$${Math.round(price)}`}
-                  domain={['dataMin - 100', 'dataMax + 100']}
-                  orientation="right"
-                  dx={10}
-                  width={70}
-                  tick={{ fontSize: 12 }}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Area
-                  type="monotone"
-                  dataKey="price"
-                  stroke="#22C55E"
-                  fillOpacity={1}
-                  fill="url(#s&p500)"
-                  strokeWidth={2}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </div>
+              ))}
+            </Bar>
+          </BarChart>
+        </ChartContainer>
       </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing total Growth of last 6 months
+        </div>
+      </CardFooter>
     </Card>
+        </div>
+    </div>     
   );
 }
 
