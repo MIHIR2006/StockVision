@@ -28,7 +28,7 @@ const chartData = [
 
 const chartConfig = {
   visitors: {
-    label: "Visitors",
+    label: "Price Per Share",
   },
 } satisfies ChartConfig
 export function PerformanceSection({ className }: { className?: string }) {
