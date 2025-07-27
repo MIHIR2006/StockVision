@@ -1,0 +1,31 @@
+
+> stockvision@0.0.0 build
+> next build
+
+   ▲ Next.js 15.3.5
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 34.0s
+   Linting and checking validity of types ...
+ ⨯ ESLint: Cannot find package 'eslint-config-next' imported from C:\Users\Mihir\OneDrive\Desktop\StockVision\frontend\eslint.config.js
+   Collecting page data ...
+   Generating static pages (0/5) ...
+   Generating static pages (1/5) 
+   Generating static pages (2/5) 
+   Generating static pages (3/5) 
+ ✓ Generating static pages (5/5)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    44.8 kB         291 kB
+├ ○ /_not-found                            141 B         102 kB
+└ ○ /dashboard                           29.1 kB         275 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/870-856b6c2216c59f03.js       46.7 kB
+  ├ chunks/c7879cf7-bd0d5f1ca02ccc2a.js  53.2 kB
+  └ other shared chunks (total)          2.05 kB
+
+
+○  (Static)  prerendered as static content
+

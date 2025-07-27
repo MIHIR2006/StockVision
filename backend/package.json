@@ -1,0 +1,17 @@
+{
+  "name": "stockvision-backend",
+  "version": "1.0.0",
+  "description": "StockVision FastAPI Backend",
+  "private": true,
+  "scripts": {
+    "dev": "python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000",
+    "start": "python -m uvicorn main:app --host 127.0.0.1 --port 8000",
+    "build": "echo 'Python backend does not require build step'",
+    "test": "pytest",
+    "lint": "black . && isort . && flake8 .",
+    "format": "black . && isort ."
+  },
+  "engines": {
+    "python": ">=3.8"
+  }
+} 
