@@ -1,4 +1,4 @@
-// File: C:\Users\Mihir\OneDrive\Desktop\StockVision\frontend\app\page.tsx
+// File: C:\Users\chait\OneDrive\Desktop\OpenSource Contribution\StockVision\frontend\app\page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

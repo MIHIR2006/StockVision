@@ -1,55 +1,5 @@
-### Next.js
+node_modules
+# Keep environment variables out of version control
+.env
 
-# Node modules
-/node_modules
-
-# Yarn PnP
-.pnp.*
-.pnpm-debug.log*
-
-# Build output
-/.next/
-/out/
-/dist/
-/build
-
-# Test coverage
-/coverage
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Local env files
-.env.local
-.env.*.local
-
-# OS files
-.DS_Store
-
-# SSL keys
-*.pem
-
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-# Python virtual environments
-backend/venv/
-backend/.env
-backend/.env.*
-backend/.pytest_cache/
-backend/.mypy_cache/
-backend/.coverage
-backend/.cache/
-backend/.DS_Store
-backend/.vscode/
-backend/.idea/
+/generated/prisma
