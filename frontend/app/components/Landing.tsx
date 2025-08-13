@@ -428,25 +428,63 @@ export default function Landing() {
       </section>
 
 
-      {/* Features Section */}
-      <section ref={featuresRef} id="features-section" className="py-16 bg-muted/50 scroll-mt-20">
+       {/* Features Section */}
+      <section
+        ref={featuresRef}
+        id="features-section"
+        className="py-16 bg-muted/50 scroll-mt-20"
+      >
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-12 text-center">Powerful Features</h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-12 text-center">
+            Powerful Features
+          </h2>
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              <ChartLine className="h-12 w-12 text-primary mb-4" />
+            {/* Feature 1 */}
+            <div
+              className="glass-card p-6 rounded-xl shadow-lg animate-fade-in 
+                   transition-all duration-300 
+                   hover:scale-105 hover:shadow-2xl hover:bg-primary/5 
+                   active:scale-110"
+              style={{ animationDelay: "0.2s" }}
+            >
+              <ChartLine className="h-12 w-12 text-primary mb-4 transition-colors duration-300 group-hover:text-primary/80" />
               <h3 className="text-xl font-bold mb-2">Real-time Analytics</h3>
-              <p className="text-muted-foreground">Track your portfolio performance with real-time charts and analytics that help you make informed decisions.</p>
+              <p className="text-muted-foreground">
+                Track your portfolio performance with real-time charts and
+                analytics that help you make informed decisions.
+              </p>
             </div>
-            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <TrendingUp className="h-12 w-12 text-primary mb-4" />
+
+            {/* Feature 2 */}
+            <div
+              className="glass-card p-6 rounded-xl shadow-lg animate-fade-in 
+                   transition-all duration-300 
+                   hover:scale-105 hover:shadow-2xl hover:bg-primary/5 
+                   active:scale-110"
+              style={{ animationDelay: "0.3s" }}
+            >
+              <TrendingUp className="h-12 w-12 text-primary mb-4 transition-colors duration-300 group-hover:text-primary/80" />
               <h3 className="text-xl font-bold mb-2">Performance Tracking</h3>
-              <p className="text-muted-foreground">Visualize your investment growth over time with interactive charts and comprehensive performance metrics.</p>
+              <p className="text-muted-foreground">
+                Visualize your investment growth over time with interactive
+                charts and comprehensive performance metrics.
+              </p>
             </div>
-            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              <CircleDollarSign className="h-12 w-12 text-primary mb-4" />
+
+            {/* Feature 3 */}
+            <div
+              className="glass-card p-6 rounded-xl shadow-lg animate-fade-in 
+                   transition-all duration-300 
+                   hover:scale-105 hover:shadow-2xl hover:bg-primary/5 
+                   active:scale-110"
+              style={{ animationDelay: "0.4s" }}
+            >
+              <CircleDollarSign className="h-12 w-12 text-primary mb-4 transition-colors duration-300 group-hover:text-primary/80" />
               <h3 className="text-xl font-bold mb-2">Portfolio Management</h3>
-              <p className="text-muted-foreground">Easily manage your investment portfolio with intuitive tools to buy, sell, and track your holdings.</p>
+              <p className="text-muted-foreground">
+                Easily manage your investment portfolio with intuitive tools to
+                buy, sell, and track your holdings.
+              </p>
             </div>
           </div>
         </div>
@@ -467,23 +505,34 @@ export default function Landing() {
       </section>
 
 
-    {/*Pricing Section*/}
-      <section ref={pricingRef} id="pricing-section" className="py-16 bg-muted/50 scroll-mt-20">
-      <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-center">Pricing</h2>
+    {/* Pricing Section */}
+      <section
+        ref={pricingRef}
+        id="pricing-section"
+        className="py-16 bg-muted/50 scroll-mt-20"
+      >
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-center">
+            Pricing
+          </h2>
           <p className="text-xl text-muted-foreground text-center max-w-3xl mx-auto mb-12">
-            Choose the plan that best fits your investment strategy with our AI-powered price prediction models.
+            Choose the plan that best fits your investment strategy with our
+            AI-powered price prediction models.
           </p>
-
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Silver Plan */}
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-primary relative overflow-hidden">
               <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-gray-400 to-gray-500"></div>
               <CardHeader>
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-2xl font-bold">Silver</CardTitle>
-                  <Badge variant="outline" className="font-medium text-sm  bg-gradient-to-r from-gray-400 to-gray-500">Basic</Badge>
+                  <Badge
+                    variant="outline"
+                    className="font-medium text-sm bg-gradient-to-r from-gray-400 to-gray-500"
+                  >
+                    Basic
+                  </Badge>
                 </div>
                 <div className="flex items-end gap-1 mt-4">
                   <span className="text-4xl font-extrabold">$99</span>
@@ -513,25 +562,26 @@ export default function Landing() {
                     <span>Portfolio optimization</span>
                   </li>
                 </ul>
-
-
                 <Link href="/dashboard">
-                  <Button variant="outline" className="w-full mt-4 font-bold hover:scale-105 transition-transform">
+                  <Button
+                    variant="outline"
+                    className="w-full mt-4 font-bold transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-white"
+                  >
                     Get Started
                   </Button>
                 </Link>
               </CardContent>
             </Card>
 
-
             {/* Gold Plan */}
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden scale-105 z-10">
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-primary relative overflow-hidden scale-105 z-10">
               <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-amber-400 to-amber-600"></div>
-              {/* <div className="absolute -right-8 top-6 rotate-45 bg-primary text-primary-foreground py-1 px-10 text-sm font-semibold">Popular</div> */}
               <CardHeader>
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-2xl font-bold">Gold</CardTitle>
-                  <Badge className="font-medium text-sm bg-amber-500">Recommended</Badge>
+                  <Badge className="font-medium text-sm bg-amber-500">
+                    Recommended
+                  </Badge>
                 </div>
                 <div className="flex items-end gap-1 mt-4">
                   <span className="text-4xl font-extrabold">$279</span>
@@ -561,24 +611,26 @@ export default function Landing() {
                     <span>Portfolio optimization</span>
                   </li>
                 </ul>
-
-
                 <Link href="/dashboard">
-                  <Button className="w-full mt-4 font-bold hover:scale-105 transition-transform">
+                  <Button className="w-full mt-4 font-bold transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-white">
                     Get Started
                   </Button>
                 </Link>
               </CardContent>
             </Card>
 
-
             {/* Platinum Plan */}
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-primary relative overflow-hidden">
               <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-indigo-400 to-indigo-600"></div>
               <CardHeader>
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-2xl font-bold">Platinum</CardTitle>
-                  <Badge variant="outline" className="font-medium text-sm bg-gradient-to-r from-indigo-400 to-indigo-600">Premium</Badge>
+                  <Badge
+                    variant="outline"
+                    className="font-medium text-sm bg-gradient-to-r from-indigo-400 to-indigo-600"
+                  >
+                    Premium
+                  </Badge>
                 </div>
                 <div className="flex items-end gap-1 mt-4">
                   <span className="text-4xl font-extrabold">$499</span>
@@ -608,10 +660,11 @@ export default function Landing() {
                     <span>Portfolio optimization</span>
                   </li>
                 </ul>
-
-
                 <Link href="/dashboard">
-                  <Button variant="outline" className="w-full mt-4 font-bold hover:scale-105 transition-transform">
+                  <Button
+                    variant="outline"
+                    className="w-full mt-4 font-bold transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-white"
+                  >
                     Get Started
                   </Button>
                 </Link>
@@ -619,21 +672,33 @@ export default function Landing() {
             </Card>
           </div>
 
-
           {/* Diamond Plan (Coming Soon) */}
           <div className="mt-12 mb-8">
             <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-purple-600 to-purple-500"></div>
               <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-20">
-                <Badge className="mt-3 font-medium bg-blue-400/80 px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap">Coming Soon</Badge>
+                <Badge className="mt-3 font-medium bg-blue-400/80 px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap">
+                  Coming Soon
+                </Badge>
               </div>
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-6 sm:mt-0">
-                  <CardTitle className="text-3xl font-extrabold">Diamond</CardTitle>
-                  <Badge variant="outline" className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500">Enterprise</Badge>
+                  <CardTitle className="text-3xl font-extrabold">
+                    Diamond
+                  </CardTitle>
+                  <Badge
+                    variant="outline"
+                    className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500"
+                  >
+                    Enterprise
+                  </Badge>
                 </div>
                 <p className="text-xl font-bold mt-2">
-                Our most advanced ML prediction Model, trained on <span className="text-purple-500 font-extrabold">20 years</span> of historical stock data.
+                  Our most advanced ML prediction Model, trained on{" "}
+                  <span className="text-purple-500 font-extrabold">
+                    20 years
+                  </span>{" "}
+                  of historical stock data.
                 </p>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -642,19 +707,27 @@ export default function Landing() {
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Deep-learning models trained on 20+ years of market data</span>
+                      <span className="font-medium">
+                        Deep-learning models trained on 20+ years of market data
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Predictive market crash indicators</span>
+                      <span className="font-medium">
+                        Predictive market crash indicators
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Sector-specific trend forecasting</span>
+                      <span className="font-medium">
+                        Sector-specific trend forecasting
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Custom AI model training on your portfolio</span>
+                      <span className="font-medium">
+                        Custom AI model training on your portfolio
+                      </span>
                     </li>
                   </ul>
                 </div>
@@ -663,27 +736,44 @@ export default function Landing() {
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium"> Pattern Recognition Engine</span>
+                      <span className="font-medium">
+                        {" "}
+                        Pattern Recognition Engine
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Dedicated account manager</span>
+                      <span className="font-medium">
+                        Dedicated account manager
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Get Personal Guidance from Top Market Minds</span>
+                      <span className="font-medium">
+                        Get Personal Guidance from Top Market Minds
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">White-label options available</span>
+                      <span className="font-medium">
+                        White-label options available
+                      </span>
                     </li>
                   </ul>
                 </div>
                 <div className="md:col-span-2 flex flex-col items-center mt-4">
                   <p className="text-muted-foreground text-center mb-4 font-medium">
-                    Join the waitlist to be the first to know when our Diamond plan becomes available
+                    Join the waitlist to be the first to know when our Diamond
+                    plan becomes available
                   </p>
-                  <Button variant="outline" className="font-bold hover:scale-105 transition-transform px-8" onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.'}>
+                  <Button
+                    variant="outline"
+                    className="font-bold hover:scale-105 transition-transform px-8"
+                    onClick={() =>
+                      (window.location.href =
+                        "mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.")
+                    }
+                  >
                     Join Waitlist
                   </Button>
                 </div>
@@ -691,15 +781,24 @@ export default function Landing() {
             </Card>
           </div>
 
-
           <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-4">Need a custom solution for your investment firm?</p>
-            <Button variant="outline" className="font-bold scale-hover" onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.'}>
+            <p className="text-muted-foreground mb-4">
+              Need a custom solution for your investment firm?
+            </p>
+            <Button
+              variant="outline"
+              className="font-bold scale-hover"
+              onClick={() =>
+                (window.location.href =
+                  "mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.")
+              }
+            >
               Contact Sales
             </Button>
           </div>
-      </div>
-    </section>
+        </div>
+      </section>
+
 
 
       {/* Testimonial Section */}
