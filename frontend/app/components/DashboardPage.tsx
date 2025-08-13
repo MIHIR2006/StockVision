@@ -26,24 +26,24 @@ export default function DashboardPage() {
   }, [isMobile]);
   
   // Remove URL/hash-based useEffect
-  // useEffect(() => {
-  //   // Determine active section based on the URL hash
-  //   const hash = location.hash.replace('#', '');
-  //   
-  //   if (location.pathname === "/") {
-  //     setActiveSection("home");
-  //   } else if (location.pathname === "/dashboard") {
-  //     if (hash === "performance") {
-  //       setActiveSection("performance");
-  //     } else if (hash === "portfolio") {
-  //       setActiveSection("portfolio");
-  //     } else if (hash === "settings") {
-  //       setActiveSection("settings");
-  //     } else {
-  //       setActiveSection("dashboard");
-  //     }
-  //   }
-  // }, []);
+  useEffect(() => {
+    // Determine active section based on the URL hash
+    const hash = location.hash.replace('#', '');
+    
+    if (location.pathname === "/") {
+      setActiveSection("home");
+    } else if (location.pathname === "/dashboard") {
+      if (hash === "performance") {
+        setActiveSection("performance");
+      } else if (hash === "portfolio") {
+        setActiveSection("portfolio");
+      } else if (hash === "settings") {
+        setActiveSection("settings");
+      } else{
+        setActiveSection("overview");
+      }
+    }
+  }, []);
 
   // Handler for section change
   const handleSectionChange = (section: string) => {
