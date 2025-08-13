@@ -13,6 +13,7 @@ import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
 import { useRouter, usePathname } from "next/navigation";
+import { resetPreloaderState } from "@/lib/preloader-utils";
 
 
 
@@ -88,8 +89,14 @@ export default function Landing() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Function to reset preloader state (for testing purposes)
+  const resetPreloader = () => {
+    resetPreloaderState();
+    // Optionally reload the page to show preloader again
+    window.location.reload();
+  };
 
-   const handleSectionChange = (section: string) => {
+  const handleSectionChange = (section: string) => {
     setActiveSection(section);
     setSidebarOpen(false);
   };
@@ -128,14 +135,14 @@ export default function Landing() {
       {/* Header */}
       <header className="border-b backdrop-blur-lg bg-background/80 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2"onClick={() => setSidebarOpen(true)}>
+          <div className="flex items-center gap-2" onClick={() => setSidebarOpen(true)}>
             <BarChart2 className="h-6 w-6 text-primary" />
             <span className="font-extrabold text-xl">StockVision</span>
           </div>
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <Link href="/dashboard">
-              <Button className="font-bold hover:scale-105 transition-transform flex items-center gap-2">
+              <Button className="font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-primary/25 flex items-center gap-2">
                 <LogIn className="h-4 w-4" />
                 <span className="hidden sm:inline">Sign In</span>
               </Button>
@@ -173,14 +180,14 @@ export default function Landing() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/dashboard">
-                  <Button size="lg" className="w-full sm:w-auto font-bold scale-hover">
+                  <Button size="lg" className="w-full sm:w-auto font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-primary/25">
                     Launch Dashboard
                   </Button>
                 </Link>
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto font-bold scale-hover"
+                  className="w-full sm:w-auto font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/25"
                   onClick={scrollToMarketData}
                 >
                   Learn More
@@ -189,23 +196,23 @@ export default function Landing() {
             </div>
             <div className="grid grid-cols-2 gap-4 animate-slide-in">
               <div className="flex flex-col gap-4">
-                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 scale-hover">
-                  <LineChart className="h-16 w-16 text-primary mb-2" />
-                  <p className="text-center font-medium">Stock Performance</p>
+                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/25">
+                  <LineChart className="h-16 w-16 text-primary mb-2 transition-all duration-300 ease-in-out hover:scale-110" />
+                  <p className="text-center font-medium transition-colors duration-300 ease-in-out hover:text-primary">Stock Performance</p>
                 </div>
-                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 scale-hover">
-                  <PieChart className="h-16 w-16 text-primary mb-2" />
-                  <p className="text-center font-medium">Portfolio Allocation</p>
+                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/25">
+                  <PieChart className="h-16 w-16 text-primary mb-2 transition-all duration-300 ease-in-out hover:scale-110" />
+                  <p className="text-center font-medium transition-colors duration-300 ease-in-out hover:text-primary">Portfolio Allocation</p>
                 </div>
               </div>
               <div className="flex flex-col gap-4 mt-8">
-                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 scale-hover">
-                  <BarChart2 className="h-16 w-16 text-primary mb-2" />
-                  <p className="text-center font-medium">Revenue Analytics</p>
+                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/25">
+                  <BarChart2 className="h-16 w-16 text-primary mb-2 transition-all duration-300 ease-in-out hover:scale-110" />
+                  <p className="text-center font-medium transition-colors duration-300 ease-in-out hover:text-primary">Revenue Analytics</p>
                 </div>
-                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 scale-hover">
-                  <div className="font-bold text-3xl text-primary">+34%</div>
-                  <p className="text-center font-medium mt-2">Portfolio Growth</p>
+                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary/20 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/25">
+                  <div className="font-bold text-3xl text-primary transition-all duration-300 ease-in-out hover:scale-110">+34%</div>
+                  <p className="text-center font-medium mt-2 transition-colors duration-300 ease-in-out hover:text-primary">Portfolio Growth</p>
                 </div>
               </div>
             </div>
@@ -224,20 +231,20 @@ export default function Landing() {
             {portfolioStocks.map((stock, index) => (
               <div 
                 key={stock.symbol} 
-                className="bg-card/60 backdrop-blur-lg p-4 rounded-xl border border-primary/10 animate-fade-in scale-hover" 
+                className="bg-card/60 backdrop-blur-lg p-4 rounded-xl border border-primary/10 animate-fade-in transition-all duration-300 ease-in-out hover:scale-105 hover:bg-card/80 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/25 cursor-pointer group" 
                 style={{ animationDelay: `${0.1 * index}s` }}
               >
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-bold text-lg">{stock.symbol}</span>
+                  <span className="font-bold text-lg transition-colors duration-300 ease-in-out group-hover:text-primary">{stock.symbol}</span>
                   <div 
-                    className={`text-xs px-2 py-1 rounded-full ${stock.change >= 0 ? "bg-gain/20 text-gain" : "bg-loss/20 text-loss"
+                    className={`text-xs px-2 py-1 rounded-full transition-all duration-300 ease-in-out group-hover:scale-110 ${stock.change >= 0 ? "bg-gain/20 text-gain" : "bg-loss/20 text-loss"
                     }`}
                   >
                     {stock.change >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}%
                   </div>
                 </div>
-                <div className="text-2xl font-bold">${stock.price.toFixed(2)}</div>
-                <div className="text-xs text-muted-foreground mt-1">{stock.name}</div>
+                <div className="text-2xl font-bold transition-colors duration-300 ease-in-out group-hover:text-primary">${stock.price.toFixed(2)}</div>
+                <div className="text-xs text-muted-foreground mt-1 transition-colors duration-300 ease-in-out group-hover:text-foreground/80">{stock.name}</div>
               </div>
             ))}
           </div>
@@ -246,7 +253,7 @@ export default function Landing() {
           <div className="mt-8 text-center">
             <Button
               variant="outline"
-              className="font-bold scale-hover"
+              className="font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/25"
               onClick={scrollToYieldCurve}
             >
               Show More
@@ -433,20 +440,20 @@ export default function Landing() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-extrabold mb-12 text-center">Powerful Features</h2>
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              <ChartLine className="h-12 w-12 text-primary mb-4" />
-              <h3 className="text-xl font-bold mb-2">Real-time Analytics</h3>
-              <p className="text-muted-foreground">Track your portfolio performance with real-time charts and analytics that help you make informed decisions.</p>
+            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in group cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 hover:bg-card/90 hover:border-primary/30" style={{ animationDelay: "0.2s" }}>
+              <ChartLine className="h-12 w-12 text-primary mb-4 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-primary/80" />
+              <h3 className="text-xl font-bold mb-2 transition-colors duration-300 ease-in-out group-hover:text-primary">Real-time Analytics</h3>
+              <p className="text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/80">Track your portfolio performance with real-time charts and analytics that help you make informed decisions.</p>
             </div>
-            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <TrendingUp className="h-12 w-12 text-primary mb-4" />
-              <h3 className="text-xl font-bold mb-2">Performance Tracking</h3>
-              <p className="text-muted-foreground">Visualize your investment growth over time with interactive charts and comprehensive performance metrics.</p>
+            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in group cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 hover:bg-card/90 hover:border-primary/30" style={{ animationDelay: "0.3s" }}>
+              <TrendingUp className="h-12 w-12 text-primary mb-4 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-primary/80" />
+              <h3 className="text-xl font-bold mb-2 transition-colors duration-300 ease-in-out group-hover:text-primary">Performance Tracking</h3>
+              <p className="text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/80">Visualize your investment growth over time with interactive charts and comprehensive performance metrics.</p>
             </div>
-            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              <CircleDollarSign className="h-12 w-12 text-primary mb-4" />
-              <h3 className="text-xl font-bold mb-2">Portfolio Management</h3>
-              <p className="text-muted-foreground">Easily manage your investment portfolio with intuitive tools to buy, sell, and track your holdings.</p>
+            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in group cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 hover:bg-card/90 hover:border-primary/30" style={{ animationDelay: "0.4s" }}>
+              <CircleDollarSign className="h-12 w-12 text-primary mb-4 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-primary/80" />
+              <h3 className="text-xl font-bold mb-2 transition-colors duration-300 ease-in-out group-hover:text-primary">Portfolio Management</h3>
+              <p className="text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/80">Easily manage your investment portfolio with intuitive tools to buy, sell, and track your holdings.</p>
             </div>
           </div>
         </div>
@@ -459,7 +466,7 @@ export default function Landing() {
           <h2 className="text-3xl md:text-4xl font-extrabold mb-6">Ready to Optimize Your Investments?</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">Start tracking your portfolio performance today and make smarter investment decisions with StockVision.</p>
           <Link href="/dashboard">
-            <Button size="lg" className="font-bold scale-hover">
+            <Button size="lg" className="font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-primary/25">
               Launch Dashboard
             </Button>
           </Link>
@@ -478,30 +485,30 @@ export default function Landing() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Silver Plan */}
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-gray-400 to-gray-500"></div>
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/30 relative overflow-hidden group cursor-pointer">
+              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-gray-400 to-gray-500 transition-all duration-300 ease-in-out group-hover:from-gray-300 group-hover:to-gray-400"></div>
               <CardHeader>
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-2xl font-bold">Silver</CardTitle>
-                  <Badge variant="outline" className="font-medium text-sm  bg-gradient-to-r from-gray-400 to-gray-500">Basic</Badge>
+                  <CardTitle className="text-2xl font-bold transition-colors duration-300 ease-in-out group-hover:text-primary">Silver</CardTitle>
+                  <Badge variant="outline" className="font-medium text-sm  bg-gradient-to-r from-gray-400 to-gray-500 transition-all duration-300 ease-in-out group-hover:from-gray-300 group-hover:to-gray-400">Basic</Badge>
                 </div>
                 <div className="flex items-end gap-1 mt-4">
-                  <span className="text-4xl font-extrabold">$99</span>
-                  <span className="text-muted-foreground mb-1">/month</span>
+                  <span className="text-4xl font-extrabold transition-colors duration-300 ease-in-out group-hover:text-primary">$99</span>
+                  <span className="text-muted-foreground mb-1 transition-colors duration-300 ease-in-out group-hover:text-foreground/70">/month</span>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="space-y-3">
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Basic price predictions</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Top 50 stocks analysis</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Daily market insights</span>
                   </li>
                   <li className="flex items-center gap-2 text-muted-foreground">
@@ -514,46 +521,44 @@ export default function Landing() {
                   </li>
                 </ul>
 
-
                 <Link href="/dashboard">
-                  <Button variant="outline" className="w-full mt-4 font-bold hover:scale-105 transition-transform">
+                  <Button variant="outline" className="w-full mt-4 font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/25">
                     Get Started
                   </Button>
                 </Link>
               </CardContent>
             </Card>
 
-
             {/* Gold Plan */}
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden scale-105 z-10">
-              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-amber-400 to-amber-600"></div>
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-amber-500/20 hover:scale-105 hover:bg-card/90 hover:border-amber-500/30 relative overflow-hidden scale-105 z-10 group cursor-pointer">
+              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-amber-400 to-amber-600 transition-all duration-300 ease-in-out group-hover:from-amber-300 group-hover:to-amber-500"></div>
               {/* <div className="absolute -right-8 top-6 rotate-45 bg-primary text-primary-foreground py-1 px-10 text-sm font-semibold">Popular</div> */}
               <CardHeader>
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-2xl font-bold">Gold</CardTitle>
-                  <Badge className="font-medium text-sm bg-amber-500">Recommended</Badge>
+                  <CardTitle className="text-2xl font-bold transition-colors duration-300 ease-in-out group-hover:text-amber-600">Gold</CardTitle>
+                  <Badge className="font-medium text-sm bg-amber-500 transition-all duration-300 ease-in-out group-hover:bg-amber-600 group-hover:scale-105">Recommended</Badge>
                 </div>
                 <div className="flex items-end gap-1 mt-4">
-                  <span className="text-4xl font-extrabold">$279</span>
-                  <span className="text-muted-foreground mb-1">/month</span>
+                  <span className="text-4xl font-extrabold transition-colors duration-300 ease-in-out group-hover:text-amber-600">$279</span>
+                  <span className="text-muted-foreground mb-1 transition-colors duration-300 ease-in-out group-hover:text-foreground/70">/month</span>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="space-y-3">
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Enhanced price predictions</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Top 200 stocks analysis</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Real-time market alerts</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Advanced ML models</span>
                   </li>
                   <li className="flex items-center gap-2 text-muted-foreground">
@@ -562,56 +567,53 @@ export default function Landing() {
                   </li>
                 </ul>
 
-
                 <Link href="/dashboard">
-                  <Button className="w-full mt-4 font-bold hover:scale-105 transition-transform">
+                  <Button className="w-full mt-4 font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:shadow-primary/25 hover:bg-primary/90">
                     Get Started
                   </Button>
                 </Link>
               </CardContent>
             </Card>
 
-
             {/* Platinum Plan */}
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-indigo-400 to-indigo-600"></div>
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-indigo-500/20 hover:scale-105 hover:bg-card/90 hover:border-indigo-500/30 relative overflow-hidden group cursor-pointer">
+              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-indigo-400 to-indigo-600 transition-all duration-300 ease-in-out group-hover:from-indigo-300 group-hover:to-indigo-500"></div>
               <CardHeader>
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-2xl font-bold">Platinum</CardTitle>
-                  <Badge variant="outline" className="font-medium text-sm bg-gradient-to-r from-indigo-400 to-indigo-600">Premium</Badge>
+                  <CardTitle className="text-2xl font-bold transition-colors duration-300 ease-in-out group-hover:text-indigo-600">Platinum</CardTitle>
+                  <Badge variant="outline" className="font-medium text-sm bg-gradient-to-r from-indigo-400 to-indigo-600 transition-all duration-300 ease-in-out group-hover:from-indigo-300 group-hover:to-indigo-500">Premium</Badge>
                 </div>
                 <div className="flex items-end gap-1 mt-4">
-                  <span className="text-4xl font-extrabold">$499</span>
-                  <span className="text-muted-foreground mb-1">/month</span>
+                  <span className="text-4xl font-extrabold transition-colors duration-300 ease-in-out group-hover:text-indigo-600">$499</span>
+                  <span className="text-muted-foreground mb-1 transition-colors duration-300 ease-in-out group-hover:text-foreground/70">/month</span>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="space-y-3">
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Premium price predictions</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Full market analysis</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Personalized market alerts</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Advanced ML models</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500 transition-all duration-300 ease-in-out group-hover:scale-110" />
                     <span>Portfolio optimization</span>
                   </li>
                 </ul>
 
-
                 <Link href="/dashboard">
-                  <Button variant="outline" className="w-full mt-4 font-bold hover:scale-105 transition-transform">
+                  <Button variant="outline" className="w-full mt-4 font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/25">
                     Get Started
                   </Button>
                 </Link>
@@ -622,68 +624,68 @@ export default function Landing() {
 
           {/* Diamond Plan (Coming Soon) */}
           <div className="mt-12 mb-8">
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-purple-600 to-purple-500"></div>
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 ease-in-out hover:shadow-2xl hover:shadow-purple-500/20 hover:scale-105 hover:bg-card/90 hover:border-purple-500/30 relative overflow-hidden group cursor-pointer">
+              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-purple-600 to-purple-500 transition-all duration-300 ease-in-out group-hover:from-purple-500 group-hover:to-purple-400"></div>
               <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-20">
-                <Badge className="mt-3 font-medium bg-blue-400/80 px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap">Coming Soon</Badge>
+                <Badge className="mt-3 font-medium bg-blue-400/80 px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap transition-all duration-300 ease-in-out group-hover:bg-blue-300 group-hover:scale-105">Coming Soon</Badge>
               </div>
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-6 sm:mt-0">
-                  <CardTitle className="text-3xl font-extrabold">Diamond</CardTitle>
-                  <Badge variant="outline" className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500">Enterprise</Badge>
+                  <CardTitle className="text-3xl font-extrabold transition-colors duration-300 ease-in-out group-hover:text-purple-600">Diamond</CardTitle>
+                  <Badge variant="outline" className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 ease-in-out group-hover:from-blue-300 group-hover:to-purple-400">Enterprise</Badge>
                 </div>
-                <p className="text-xl font-bold mt-2">
-                Our most advanced ML prediction Model, trained on <span className="text-purple-500 font-extrabold">20 years</span> of historical stock data.
+                <p className="text-xl font-bold mt-2 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">
+                Our most advanced ML prediction Model, trained on <span className="text-purple-500 font-extrabold transition-colors duration-300 ease-in-out group-hover:text-purple-400">20 years</span> of historical stock data.
                 </p>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-bold">Advanced Features</h3>
+                  <h3 className="text-xl font-bold transition-colors duration-300 ease-in-out group-hover:text-purple-600">Advanced Features</h3>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5 transition-all duration-300 ease-in-out group-hover:scale-110" />
                       <span className="font-medium">Deep-learning models trained on 20+ years of market data</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5 transition-all duration-300 ease-in-out group-hover:scale-110" />
                       <span className="font-medium">Predictive market crash indicators</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5 transition-all duration-300 ease-in-out group-hover:scale-110" />
                       <span className="font-medium">Sector-specific trend forecasting</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5 transition-all duration-300 ease-in-out group-hover:scale-110" />
                       <span className="font-medium">Custom AI model training on your portfolio</span>
                     </li>
                   </ul>
                 </div>
                 <div className="space-y-4">
-                  <h3 className="text-xl font-bold">Enterprise Benefits</h3>
+                  <h3 className="text-xl font-bold transition-colors duration-300 ease-in-out group-hover:text-purple-600">Enterprise Benefits</h3>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5 transition-all duration-300 ease-in-out group-hover:scale-110" />
                       <span className="font-medium"> Pattern Recognition Engine</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5 transition-all duration-300 ease-in-out group-hover:scale-110" />
                       <span className="font-medium">Dedicated account manager</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5 transition-all duration-300 ease-in-out group-hover:scale-110" />
                       <span className="font-medium">Get Personal Guidance from Top Market Minds</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5 transition-all duration-300 ease-in-out group-hover:scale-110" />
                       <span className="font-medium">White-label options available</span>
                     </li>
                   </ul>
                 </div>
                 <div className="md:col-span-2 flex flex-col items-center mt-4">
-                  <p className="text-muted-foreground text-center mb-4 font-medium">
+                  <p className="text-muted-foreground text-center mb-4 font-medium transition-colors duration-300 ease-in-out group-hover:text-foreground/80">
                     Join the waitlist to be the first to know when our Diamond plan becomes available
                   </p>
-                  <Button variant="outline" className="font-bold hover:scale-105 transition-transform px-8" onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.'}>
+                  <Button variant="outline" className="font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:bg-purple-500 hover:text-white hover:shadow-lg hover:shadow-purple-500/25 px-8" onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.'}>
                     Join Waitlist
                   </Button>
                 </div>
@@ -693,8 +695,8 @@ export default function Landing() {
 
 
           <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-4">Need a custom solution for your investment firm?</p>
-            <Button variant="outline" className="font-bold scale-hover" onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.'}>
+            <p className="text-muted-foreground mb-4 transition-colors duration-300 ease-in-out hover:text-foreground/80">Need a custom solution for your investment firm?</p>
+            <Button variant="outline" className="font-bold transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/25" onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.'}>
               Contact Sales
             </Button>
           </div>
@@ -714,131 +716,121 @@ export default function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Left Column */}
             <div className="flex flex-col gap-8">
-              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-                <p className="mb-4">"I bought the Gold membership of Stock Vision, and it has helped me a lot in increasing both my portfolio size and profits. This quarter has been especially beneficial for me."</p>
+              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+                <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"I bought the Gold membership of Stock Vision, and it has helped me a lot in increasing both my portfolio size and profits. This quarter has been especially beneficial for me."</p>
                 <div className="flex items-center">
                   <div>
-                    <p className="font-semibold">Leslie Alexander</p>
-                    <p className="text-sm text-muted-foreground">@lesliealexander</p>
+                    <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Leslie Alexander</p>
+                    <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@lesliealexander</p>
                   </div>
                 </div>
               </div>
 
-
-              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-                <p className="mb-4">"The real-time market alerts have saved me from several bad investment decisions. I've been using StockVision for 6 months and my portfolio is up 24%. Couldn't be happier."</p>
+              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+                <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"The real-time market alerts have saved me from several bad investment decisions. I've been using StockVision for 6 months and my portfolio is up 24%. Couldn't be happier."</p>
                 <div className="flex items-center">
                   <div>
-                    <p className="font-semibold">Michael Foster</p>
-                    <p className="text-sm text-muted-foreground">@michaelfoster</p>
+                    <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Michael Foster</p>
+                    <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@michaelfoster</p>
                   </div>
                 </div>
               </div>
 
-
-              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-                <p className="mb-4">"As a day trader, I need reliable data and quick insights. StockVision's dashboard provides everything I need at a glance. The Silver plan has paid for itself many times over."</p>
+              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+                <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"As a day trader, I need reliable data and quick insights. StockVision's dashboard provides everything I need at a glance. The Silver plan has paid for itself many times over."</p>
                 <div className="flex items-center">
                   <div>
-                    <p className="font-semibold">Dries Vincent</p>
-                    <p className="text-sm text-muted-foreground">@driesvincent</p>
+                    <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Dries Vincent</p>
+                    <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@driesvincent</p>
                   </div>
                 </div>
               </div>
             </div>
-
 
             {/* Center Column */}
             <div className="space-y-8">
-              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-                <p className="mb-4">"The AI predictions on StockVision have been remarkably accurate. I was skeptical at first, but after seeing their 87% accuracy rate on tech stocks over three months, I upgraded to the Platinum plan. My investment firm now relies on it daily."</p>
+              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+                <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"The AI predictions on StockVision have been remarkably accurate. I was skeptical at first, but after seeing their 87% accuracy rate on tech stocks over three months, I upgraded to the Platinum plan. My investment firm now relies on it daily."</p>
                 <div className="flex items-center">
                   <div>
-                    <p className="font-semibold">Brenna Goyette</p>
-                    <p className="text-sm text-muted-foreground">@brennagoyette</p>
+                    <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Brenna Goyette</p>
+                    <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@brennagoyette</p>
                   </div>
                 </div>
               </div>
 
-
-              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-                <p className="mb-4">"StockVision's portfolio optimization tool helped me rebalance my investments and reduce risk while maintaining strong returns. Their Gold plan is worth every penny."</p>
+              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+                <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"StockVision's portfolio optimization tool helped me rebalance my investments and reduce risk while maintaining strong returns. Their Gold plan is worth every penny."</p>
                 <div className="flex items-center">
                   <div>
-                    <p className="font-semibold">Lindsay Walton</p>
-                    <p className="text-sm text-muted-foreground">@lindsaywalton</p>
+                    <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Lindsay Walton</p>
+                    <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@lindsaywalton</p>
                   </div>
                 </div>
               </div>
 
-
-              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-                <p className="mb-4">"The visualizations on StockVision make complex market data easy to understand. I've made 31% returns this year thanks to their insights and predictive analytics."</p>
+              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+                <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"The visualizations on StockVision make complex market data easy to understand. I've made 31% returns this year thanks to their insights and predictive analytics."</p>
                 <div className="flex items-center">
                   <div>
-                    <p className="font-semibold">Courtney Henry</p>
-                    <p className="text-sm text-muted-foreground">@courtneyhenry</p>
+                    <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Courtney Henry</p>
+                    <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@courtneyhenry</p>
                   </div>
                 </div>
               </div>
             </div>
 
-
             {/* Right Column */}
             <div className="flex flex-col gap-8">
-              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-                <p className="mb-4">"StockVision alerted me to a market downturn three days before it happened. I was able to adjust my positions and avoid a 15% loss. The Platinum plan's predictive alerts are game-changing."</p>
+              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+                <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"StockVision alerted me to a market downturn three days before it happened. I was able to adjust my positions and avoid a 15% loss. The Platinum plan's predictive alerts are game-changing."</p>
                 <div className="flex items-center">
                   <div>
-                    <p className="font-semibold">Leonard Krasner</p>
-                    <p className="text-sm text-muted-foreground">@leonardkrasner</p>
+                    <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Leonard Krasner</p>
+                    <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@leonardkrasner</p>
                   </div>
                 </div>
               </div>
 
-
-              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-                <p className="mb-4">"I've tried many stock analysis platforms, but StockVision's ML models are in a league of their own. Their Gold plan has helped me identify undervalued stocks with remarkable accuracy."</p>
+              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+                <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"I've tried many stock analysis platforms, but StockVision's ML models are in a league of their own. Their Gold plan has helped me identify undervalued stocks with remarkable accuracy."</p>
                 <div className="flex items-center">
                   <div>
-                    <p className="font-semibold">Floyd Miles</p>
-                    <p className="text-sm text-muted-foreground">@floydmiles</p>
+                    <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Floyd Miles</p>
+                    <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@floydmiles</p>
                   </div>
                 </div>
               </div>
 
-
-              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-                <p className="mb-4">"Since signing up for StockVision's Silver plan, my investment strategy has completely transformed. Their real-time analytics and daily insights have helped me achieve a 28% annual return."</p>
+              <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+                <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"Since signing up for StockVision's Silver plan, my investment strategy has completely transformed. Their real-time analytics and daily insights have helped me achieve a 28% annual return."</p>
                 <div className="flex items-center">
                   <div>
-                    <p className="font-semibold">Emily Selman</p>
-                    <p className="text-sm text-muted-foreground">@emilyselman</p>
+                    <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Emily Selman</p>
+                    <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@emilyselman</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-            <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-              <p className="mb-4">"StockVision's sector-specific trend forecasting helped our fund identify emerging opportunities in renewable energy. We've seen a 41% return in that sector alone over the past year. Looking forward to their Diamond plan."</p>
+            <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+              <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"StockVision's sector-specific trend forecasting helped our fund identify emerging opportunities in renewable energy. We've seen a 41% return in that sector alone over the past year. Looking forward to their Diamond plan."</p>
               <div className="flex items-center">
                 <div>
-                  <p className="font-semibold">Tom Cook</p>
-                  <p className="text-sm text-muted-foreground">@tomcook</p>
+                  <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Tom Cook</p>
+                  <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@tomcook</p>
                 </div>
               </div>
             </div>
 
-
-            <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
-              <p className="mb-4">"As a financial advisor, I need tools I can trust. StockVision's Platinum plan gives me insights that impress my clients and keep their portfolios growing. The ROI has been exceptional."</p>
+            <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/20 hover:scale-105 hover:bg-card/90 hover:border-primary/20 group cursor-pointer">
+              <p className="mb-4 transition-colors duration-300 ease-in-out group-hover:text-foreground/90">"As a financial advisor, I need tools I can trust. StockVision's Platinum plan gives me insights that impress my clients and keep their portfolios growing. The ROI has been exceptional."</p>
               <div className="flex items-center">
                 <div>
-                  <p className="font-semibold">Whitney Francis</p>
-                  <p className="text-sm text-muted-foreground">@whitneyfrancis</p>
+                  <p className="font-semibold transition-colors duration-300 ease-in-out group-hover:text-primary">Whitney Francis</p>
+                  <p className="text-sm text-muted-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70">@whitneyfrancis</p>
                 </div>
               </div>
             </div>
@@ -861,10 +853,10 @@ export default function Landing() {
             <div>
               <h3 className="font-bold text-lg mb-4">Quick Links</h3>
               <ul className="space-y-2 text-muted-foreground">
-                <li><a onClick={scrollToTop} className="hover:text-primary transition-colors cursor-pointer">Home</a></li>
-                <li><Link href="/dashboard" className="hover:text-primary transition-colors">Dashboard</Link></li>
-                <li><a onClick={scrollToFeatures} className="hover:text-primary transition-colors cursor-pointer">Features</a></li>
-                <li><a onClick={scrollToPricing} className="hover:text-primary transition-colors cursor-pointer">Pricing</a></li>
+                <li><a onClick={scrollToTop} className="hover:text-primary transition-all duration-300 ease-in-out cursor-pointer hover:scale-105 inline-block">Home</a></li>
+                <li><Link href="/dashboard" className="hover:text-primary transition-all duration-300 ease-in-out hover:scale-105 inline-block">Dashboard</Link></li>
+                <li><a onClick={scrollToFeatures} className="hover:text-primary transition-all duration-300 ease-in-out cursor-pointer hover:scale-105 inline-block">Features</a></li>
+                <li><a onClick={scrollToPricing} className="hover:text-primary transition-all duration-300 ease-in-out cursor-pointer hover:scale-105 inline-block">Pricing</a></li>
               </ul>
             </div>
             <div>
@@ -872,7 +864,7 @@ export default function Landing() {
               <p className="text-muted-foreground">Have questions? Reach out to our support team.</p>
               <Button 
                 variant="outline" 
-                className="mt-4 scale-hover"
+                className="mt-4 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/25"
                 onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=StockVision%20Support%20Request&body=I%20have%20a%20question%20about%20StockVision:'}
               >
                 Contact Support
@@ -881,6 +873,14 @@ export default function Landing() {
           </div>
           <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
             © 2025 StockVision. All rights reserved.
+            {/* Hidden reset button for testing purposes */}
+            <button 
+              onClick={resetPreloader}
+              className="ml-4 text-xs text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
+              title="Reset preloader (for testing)"
+            >
+              Reset Preloader
+            </button>
           </div>
         </div>
       </footer>
