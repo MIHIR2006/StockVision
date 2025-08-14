@@ -10,6 +10,12 @@ import { portfolioStocks } from "@/data/mock-data";
 import { BarChart2, ChartLine, CheckCircle, CircleDollarSign, LineChart, LogIn, PieChart, TrendingUp, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { useState } from "react";
+import { Sidebar } from "@/components/sidebar";
+import { useRouter, usePathname } from "next/navigation";
+
+
+
 
 // Declare the global window interface extension
 declare global {
@@ -18,11 +24,18 @@ declare global {
   }
 }
 
+
 export default function Landing() {
   const marketDataRef = useRef<HTMLDivElement>(null);
   const yieldCurveRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
+  const pathname = usePathname();
+
+
+   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+
 
   // Expose scrollToPricing function to window so it can be called from MarketDataCenter
   useEffect(() => {
@@ -33,6 +46,7 @@ export default function Landing() {
     };
   }, []);
 
+
   const scrollToMarketData = () => {
     if (marketDataRef.current) {
       const yOffset = -80; // Adjust offset to account for header height
@@ -40,6 +54,7 @@ export default function Landing() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
+
 
   const scrollToYieldCurve = () => {
     const yieldCurveElement = document.getElementById('yield-curve-us');
@@ -50,6 +65,7 @@ export default function Landing() {
     }
   };
 
+
   const scrollToPricing = () => {
     if (pricingRef.current) {
       const yOffset = -80; // Adjust offset to account for header height
@@ -57,6 +73,7 @@ export default function Landing() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
+
 
   const scrollToFeatures = () => {
     if (featuresRef.current) {
@@ -66,16 +83,52 @@ export default function Landing() {
     }
   };
 
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+
+   const handleSectionChange = (section: string) => {
+    setActiveSection(section);
+    setSidebarOpen(false);
+  };
+
+
+   
+
+
+  // Update active section based on current route
+  useEffect(() => {
+    if (pathname === "/") {
+      setActiveSection("home");
+    } else if (pathname === "/dashboard") {
+      // Check for hash in URL for dashboard sections
+      const hash = window.location.hash.replace('#', '');
+      setActiveSection(hash || "overview");
+    } else if (pathname === "/performance") {
+      setActiveSection("performance");
+    } else if (pathname === "/portfolio") {
+      setActiveSection("portfolio");
+    } else if (pathname === "/settings") {
+      setActiveSection("settings");
+    }
+  }, [pathname]);
+
+
+
+
+    
+
+
+
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="border-b backdrop-blur-lg bg-background/80 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2"onClick={() => setSidebarOpen(true)}>
             <BarChart2 className="h-6 w-6 text-primary" />
             <span className="font-extrabold text-xl">StockVision</span>
           </div>
@@ -91,8 +144,20 @@ export default function Landing() {
         </div>
       </header>
 
+
+      {/* Sidebar */}
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        activeSection={activeSection}
+        onSectionChange={handleSectionChange}
+      />
+      
+
+
       {/* Stock Ticker */}
       <StockTicker />
+
 
       {/* Hero Section */}
       <section className="flex-1 flex items-center">
@@ -148,6 +213,7 @@ export default function Landing() {
         </div>
       </section>
 
+
       {/* Stock Prices Section */}
       <section className="py-12 bg-primary/5 backdrop-blur-sm">
         <div className="container mx-auto px-4">
@@ -176,6 +242,7 @@ export default function Landing() {
             ))}
           </div>
 
+
           <div className="mt-8 text-center">
             <Button
               variant="outline"
@@ -188,15 +255,18 @@ export default function Landing() {
         </div>
       </section>
 
+
       {/* Market Data Center Section */}
       <div ref={marketDataRef} id="market-data-center" className="scroll-mt-20">
       <MarketDataCenter />
       </div>
 
+
       {/* U.S. Treasury Bill Section */}
       <div ref={yieldCurveRef} id="yield-curve" className="scroll-mt-20">
       <TreasuryBillSection />
       </div>
+
 
       {/* YIELD CURVE - US Section */}
       <section className="py-16 bg-muted/30 dark:bg-slate-900/50" id="yield-curve-us">
@@ -219,6 +289,7 @@ export default function Landing() {
                 <div>30Y</div>
               </div>
 
+
               {/* Yield Curve */}
               <div className="relative h-64 w-full">
                 {/* Grid Lines */}
@@ -229,6 +300,7 @@ export default function Landing() {
                   <div className="border-t border-muted-foreground/10"></div>
                 </div>
 
+
                 {/* Y-Axis Labels */}
                 <div className="absolute -left-6 inset-y-0 flex flex-col justify-between text-sm text-muted-foreground">
                   <div>5%</div>
@@ -237,6 +309,7 @@ export default function Landing() {
                   <div>2%</div>
                   <div>1%</div>
                 </div>
+
 
                 {/* Current Yield Curve */}
                 <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
@@ -250,6 +323,7 @@ export default function Landing() {
                   </svg>
                 </div>
 
+
                 {/* Data Points */}
                 <div className="absolute left-0 bottom-40 h-2 w-2 rounded-full bg-primary"></div>
                 <div className="absolute left-1/8 bottom-42 h-2 w-2 rounded-full bg-primary"></div>
@@ -260,6 +334,7 @@ export default function Landing() {
                 <div className="absolute left-6/8 bottom-48 h-2 w-2 rounded-full bg-primary"></div>
                 <div className="absolute left-7/8 bottom-45 h-2 w-2 rounded-full bg-primary"></div>
                 <div className="absolute right-0 bottom-42 h-2 w-2 rounded-full bg-primary"></div>
+
 
                 {/* Previous Yield Curve */}
                 <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
@@ -273,6 +348,7 @@ export default function Landing() {
                     />
                   </svg>
                 </div>
+
 
                 {/* Legend */}
                 <div className="absolute top-2 right-2 flex flex-col gap-2">
@@ -332,6 +408,7 @@ export default function Landing() {
                     <span className="font-bold">4.21%</span>
                   </div>
 
+
                   <div className="mt-6 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
                     <div className="flex items-start gap-2">
                       <div className="mt-0.5 text-amber-500">
@@ -350,29 +427,69 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section ref={featuresRef} id="features-section" className="py-16 bg-muted/50 scroll-mt-20">
+
+       {/* Features Section */}
+      <section
+        ref={featuresRef}
+        id="features-section"
+        className="py-16 bg-muted/50 scroll-mt-20"
+      >
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-12 text-center">Powerful Features</h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-12 text-center">
+            Powerful Features
+          </h2>
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              <ChartLine className="h-12 w-12 text-primary mb-4" />
+            {/* Feature 1 */}
+            <div
+              className="glass-card p-6 rounded-xl shadow-lg animate-fade-in 
+                   transition-all duration-300 
+                   hover:scale-105 hover:shadow-2xl hover:bg-primary/5 
+                   active:scale-110"
+              style={{ animationDelay: "0.2s" }}
+            >
+              <ChartLine className="h-12 w-12 text-primary mb-4 transition-colors duration-300 group-hover:text-primary/80" />
               <h3 className="text-xl font-bold mb-2">Real-time Analytics</h3>
-              <p className="text-muted-foreground">Track your portfolio performance with real-time charts and analytics that help you make informed decisions.</p>
+              <p className="text-muted-foreground">
+                Track your portfolio performance with real-time charts and
+                analytics that help you make informed decisions.
+              </p>
             </div>
-            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <TrendingUp className="h-12 w-12 text-primary mb-4" />
+
+            {/* Feature 2 */}
+            <div
+              className="glass-card p-6 rounded-xl shadow-lg animate-fade-in 
+                   transition-all duration-300 
+                   hover:scale-105 hover:shadow-2xl hover:bg-primary/5 
+                   active:scale-110"
+              style={{ animationDelay: "0.3s" }}
+            >
+              <TrendingUp className="h-12 w-12 text-primary mb-4 transition-colors duration-300 group-hover:text-primary/80" />
               <h3 className="text-xl font-bold mb-2">Performance Tracking</h3>
-              <p className="text-muted-foreground">Visualize your investment growth over time with interactive charts and comprehensive performance metrics.</p>
+              <p className="text-muted-foreground">
+                Visualize your investment growth over time with interactive
+                charts and comprehensive performance metrics.
+              </p>
             </div>
-            <div className="glass-card p-6 rounded-xl shadow-lg animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              <CircleDollarSign className="h-12 w-12 text-primary mb-4" />
+
+            {/* Feature 3 */}
+            <div
+              className="glass-card p-6 rounded-xl shadow-lg animate-fade-in 
+                   transition-all duration-300 
+                   hover:scale-105 hover:shadow-2xl hover:bg-primary/5 
+                   active:scale-110"
+              style={{ animationDelay: "0.4s" }}
+            >
+              <CircleDollarSign className="h-12 w-12 text-primary mb-4 transition-colors duration-300 group-hover:text-primary/80" />
               <h3 className="text-xl font-bold mb-2">Portfolio Management</h3>
-              <p className="text-muted-foreground">Easily manage your investment portfolio with intuitive tools to buy, sell, and track your holdings.</p>
+              <p className="text-muted-foreground">
+                Easily manage your investment portfolio with intuitive tools to
+                buy, sell, and track your holdings.
+              </p>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* Call to Action */}
       <section className="py-20 bg-gradient-to-br from-primary/20 to-purple-500/20 backdrop-blur-sm">
@@ -387,22 +504,35 @@ export default function Landing() {
         </div>
       </section>
 
-    {/*Pricing Section*/}
-      <section ref={pricingRef} id="pricing-section" className="py-16 bg-muted/50 scroll-mt-20">
-      <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-center">Pricing</h2>
+
+    {/* Pricing Section */}
+      <section
+        ref={pricingRef}
+        id="pricing-section"
+        className="py-16 bg-muted/50 scroll-mt-20"
+      >
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-center">
+            Pricing
+          </h2>
           <p className="text-xl text-muted-foreground text-center max-w-3xl mx-auto mb-12">
-            Choose the plan that best fits your investment strategy with our AI-powered price prediction models.
+            Choose the plan that best fits your investment strategy with our
+            AI-powered price prediction models.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Silver Plan */}
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-primary relative overflow-hidden">
               <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-gray-400 to-gray-500"></div>
               <CardHeader>
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-2xl font-bold">Silver</CardTitle>
-                  <Badge variant="outline" className="font-medium text-sm  bg-gradient-to-r from-gray-400 to-gray-500">Basic</Badge>
+                  <Badge
+                    variant="outline"
+                    className="font-medium text-sm bg-gradient-to-r from-gray-400 to-gray-500"
+                  >
+                    Basic
+                  </Badge>
                 </div>
                 <div className="flex items-end gap-1 mt-4">
                   <span className="text-4xl font-extrabold">$99</span>
@@ -432,9 +562,11 @@ export default function Landing() {
                     <span>Portfolio optimization</span>
                   </li>
                 </ul>
-
                 <Link href="/dashboard">
-                  <Button variant="outline" className="w-full mt-4 font-bold hover:scale-105 transition-transform">
+                  <Button
+                    variant="outline"
+                    className="w-full mt-4 font-bold transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-white"
+                  >
                     Get Started
                   </Button>
                 </Link>
@@ -442,13 +574,14 @@ export default function Landing() {
             </Card>
 
             {/* Gold Plan */}
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden scale-105 z-10">
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-primary relative overflow-hidden scale-105 z-10">
               <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-amber-400 to-amber-600"></div>
-              {/* <div className="absolute -right-8 top-6 rotate-45 bg-primary text-primary-foreground py-1 px-10 text-sm font-semibold">Popular</div> */}
               <CardHeader>
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-2xl font-bold">Gold</CardTitle>
-                  <Badge className="font-medium text-sm bg-amber-500">Recommended</Badge>
+                  <Badge className="font-medium text-sm bg-amber-500">
+                    Recommended
+                  </Badge>
                 </div>
                 <div className="flex items-end gap-1 mt-4">
                   <span className="text-4xl font-extrabold">$279</span>
@@ -478,9 +611,8 @@ export default function Landing() {
                     <span>Portfolio optimization</span>
                   </li>
                 </ul>
-
                 <Link href="/dashboard">
-                  <Button className="w-full mt-4 font-bold hover:scale-105 transition-transform">
+                  <Button className="w-full mt-4 font-bold transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-white">
                     Get Started
                   </Button>
                 </Link>
@@ -488,12 +620,17 @@ export default function Landing() {
             </Card>
 
             {/* Platinum Plan */}
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
+            <Card className="glass-card border-primary/10 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-primary relative overflow-hidden">
               <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-indigo-400 to-indigo-600"></div>
               <CardHeader>
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-2xl font-bold">Platinum</CardTitle>
-                  <Badge variant="outline" className="font-medium text-sm bg-gradient-to-r from-indigo-400 to-indigo-600">Premium</Badge>
+                  <Badge
+                    variant="outline"
+                    className="font-medium text-sm bg-gradient-to-r from-indigo-400 to-indigo-600"
+                  >
+                    Premium
+                  </Badge>
                 </div>
                 <div className="flex items-end gap-1 mt-4">
                   <span className="text-4xl font-extrabold">$499</span>
@@ -523,9 +660,11 @@ export default function Landing() {
                     <span>Portfolio optimization</span>
                   </li>
                 </ul>
-
                 <Link href="/dashboard">
-                  <Button variant="outline" className="w-full mt-4 font-bold hover:scale-105 transition-transform">
+                  <Button
+                    variant="outline"
+                    className="w-full mt-4 font-bold transition-all duration-300 hover:scale-105 hover:bg-primary hover:text-white"
+                  >
                     Get Started
                   </Button>
                 </Link>
@@ -538,15 +677,28 @@ export default function Landing() {
             <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-purple-600 to-purple-500"></div>
               <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-20">
-                <Badge className="mt-3 font-medium bg-blue-400/80 px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap">Coming Soon</Badge>
+                <Badge className="mt-3 font-medium bg-blue-400/80 px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap">
+                  Coming Soon
+                </Badge>
               </div>
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-6 sm:mt-0">
-                  <CardTitle className="text-3xl font-extrabold">Diamond</CardTitle>
-                  <Badge variant="outline" className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500">Enterprise</Badge>
+                  <CardTitle className="text-3xl font-extrabold">
+                    Diamond
+                  </CardTitle>
+                  <Badge
+                    variant="outline"
+                    className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500"
+                  >
+                    Enterprise
+                  </Badge>
                 </div>
                 <p className="text-xl font-bold mt-2">
-                Our most advanced ML prediction Model, trained on <span className="text-purple-500 font-extrabold">20 years</span> of historical stock data.
+                  Our most advanced ML prediction Model, trained on{" "}
+                  <span className="text-purple-500 font-extrabold">
+                    20 years
+                  </span>{" "}
+                  of historical stock data.
                 </p>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -555,19 +707,27 @@ export default function Landing() {
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Deep-learning models trained on 20+ years of market data</span>
+                      <span className="font-medium">
+                        Deep-learning models trained on 20+ years of market data
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Predictive market crash indicators</span>
+                      <span className="font-medium">
+                        Predictive market crash indicators
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Sector-specific trend forecasting</span>
+                      <span className="font-medium">
+                        Sector-specific trend forecasting
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Custom AI model training on your portfolio</span>
+                      <span className="font-medium">
+                        Custom AI model training on your portfolio
+                      </span>
                     </li>
                   </ul>
                 </div>
@@ -576,27 +736,44 @@ export default function Landing() {
                   <ul className="space-y-3">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium"> Pattern Recognition Engine</span>
+                      <span className="font-medium">
+                        {" "}
+                        Pattern Recognition Engine
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Dedicated account manager</span>
+                      <span className="font-medium">
+                        Dedicated account manager
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">Get Personal Guidance from Top Market Minds</span>
+                      <span className="font-medium">
+                        Get Personal Guidance from Top Market Minds
+                      </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">White-label options available</span>
+                      <span className="font-medium">
+                        White-label options available
+                      </span>
                     </li>
                   </ul>
                 </div>
                 <div className="md:col-span-2 flex flex-col items-center mt-4">
                   <p className="text-muted-foreground text-center mb-4 font-medium">
-                    Join the waitlist to be the first to know when our Diamond plan becomes available
+                    Join the waitlist to be the first to know when our Diamond
+                    plan becomes available
                   </p>
-                  <Button variant="outline" className="font-bold hover:scale-105 transition-transform px-8" onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.'}>
+                  <Button
+                    variant="outline"
+                    className="font-bold hover:scale-105 transition-transform px-8"
+                    onClick={() =>
+                      (window.location.href =
+                        "mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.")
+                    }
+                  >
                     Join Waitlist
                   </Button>
                 </div>
@@ -605,20 +782,33 @@ export default function Landing() {
           </div>
 
           <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-4">Need a custom solution for your investment firm?</p>
-            <Button variant="outline" className="font-bold scale-hover" onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.'}>
+            <p className="text-muted-foreground mb-4">
+              Need a custom solution for your investment firm?
+            </p>
+            <Button
+              variant="outline"
+              className="font-bold scale-hover"
+              onClick={() =>
+                (window.location.href =
+                  "mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.")
+              }
+            >
               Contact Sales
             </Button>
           </div>
-      </div>
-    </section>
+        </div>
+      </section>
+
+
 
       {/* Testimonial Section */}
       <section className="py-16 bg-gradient-to-br from-purple-50/50 to-blue-50/50 dark:from-slate-900/80 dark:to-slate-950/80">
         <div className="container mx-auto px-4">
 
+
           <h3 className="text-4xl md:text-5xl font-bold text-center mb-16">Trusted by <br />thousands of investors and traders.
           </h3>
+
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Left Column */}
@@ -633,6 +823,7 @@ export default function Landing() {
                 </div>
               </div>
 
+
               <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
                 <p className="mb-4">"The real-time market alerts have saved me from several bad investment decisions. I've been using StockVision for 6 months and my portfolio is up 24%. Couldn't be happier."</p>
                 <div className="flex items-center">
@@ -642,6 +833,7 @@ export default function Landing() {
                   </div>
                 </div>
               </div>
+
 
               <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
                 <p className="mb-4">"As a day trader, I need reliable data and quick insights. StockVision's dashboard provides everything I need at a glance. The Silver plan has paid for itself many times over."</p>
@@ -653,6 +845,7 @@ export default function Landing() {
                 </div>
               </div>
             </div>
+
 
             {/* Center Column */}
             <div className="space-y-8">
@@ -666,6 +859,7 @@ export default function Landing() {
                 </div>
               </div>
 
+
               <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
                 <p className="mb-4">"StockVision's portfolio optimization tool helped me rebalance my investments and reduce risk while maintaining strong returns. Their Gold plan is worth every penny."</p>
                 <div className="flex items-center">
@@ -675,6 +869,7 @@ export default function Landing() {
                   </div>
                 </div>
               </div>
+
 
               <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
                 <p className="mb-4">"The visualizations on StockVision make complex market data easy to understand. I've made 31% returns this year thanks to their insights and predictive analytics."</p>
@@ -686,6 +881,7 @@ export default function Landing() {
                 </div>
               </div>
             </div>
+
 
             {/* Right Column */}
             <div className="flex flex-col gap-8">
@@ -699,6 +895,7 @@ export default function Landing() {
                 </div>
               </div>
 
+
               <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
                 <p className="mb-4">"I've tried many stock analysis platforms, but StockVision's ML models are in a league of their own. Their Gold plan has helped me identify undervalued stocks with remarkable accuracy."</p>
                 <div className="flex items-center">
@@ -708,6 +905,7 @@ export default function Landing() {
                   </div>
                 </div>
               </div>
+
 
               <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
                 <p className="mb-4">"Since signing up for StockVision's Silver plan, my investment strategy has completely transformed. Their real-time analytics and daily insights have helped me achieve a 28% annual return."</p>
@@ -721,6 +919,7 @@ export default function Landing() {
             </div>
           </div>
 
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
               <p className="mb-4">"StockVision's sector-specific trend forecasting helped our fund identify emerging opportunities in renewable energy. We've seen a 41% return in that sector alone over the past year. Looking forward to their Diamond plan."</p>
@@ -731,6 +930,7 @@ export default function Landing() {
                 </div>
               </div>
             </div>
+
 
             <div className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50">
               <p className="mb-4">"As a financial advisor, I need tools I can trust. StockVision's Platinum plan gives me insights that impress my clients and keep their portfolios growing. The ROI has been exceptional."</p>
@@ -744,6 +944,7 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
 
       {/* Footer */}
       <footer className="border-t backdrop-blur-lg bg-background/80">
