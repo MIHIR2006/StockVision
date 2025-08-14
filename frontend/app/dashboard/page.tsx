@@ -1,6 +1,7 @@
 import DashboardPage from "@/components/DashboardPage";
-// import Preloader from "@/components/Preloder";
-// import { Suspense } from "react";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import authOptions from "../api/auth/[...nextauth]/authOptions";
 
 export const metadata = {
   title: "Dashboard | Stock Vision - AI/ML Stock Portfolio Analytics",
@@ -27,10 +28,10 @@ export const metadata = {
   }
 };
 
-export default function Dashboard() {
-  return (
-    // <Suspense fallback={<Preloader />}>
-      <DashboardPage />
-    // </Suspense>
-  );
-} 
+export default async function Dashboard() {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    redirect("/login");
+  }
+  return <DashboardPage />;
+}
