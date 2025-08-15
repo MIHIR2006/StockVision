@@ -1,4 +1,21 @@
 {
+  "name": "stockvision-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "StockVision Monorepo - Next.js Frontend + FastAPI Backend",
+  "packageManager": "npm@10.5.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "install:all": "npm install && npm install --workspace=frontend && npm install --workspace=backend"
+  },
   "dependencies": {
     "@prisma/client": "^6.13.0",
     "@tanstack/react-query": "^5.85.0",
@@ -10,6 +27,12 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
+    "turbo": "^2.5.5",
     "@types/next-auth": "^3.13.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }
