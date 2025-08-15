@@ -1,7 +1,9 @@
 ### NEXT.JS + NODE.JS (Frontend)
 
 # Node modules
-/node_modules/
+# Ignore all node_modules folders recursively
+
+**/node_modules/
 
 # Yarn Plug'n'Play
 .pnp.*
@@ -76,3 +78,4 @@ frontend/.env.local
 
 packages/*/generated/
 
+.turbo/daemon/ad84a52ed504153f-turbo.log.2025-08-15
