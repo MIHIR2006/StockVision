@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Stock Vision | AI-Powered Stock Market Visualizer & Analyzer",
+  title: "Stock Vision",
   description: "Visualize and analyze your stock market performance with Stock Vision. Leverage the latest AI and ML data to optimize your investments and gain actionable insights.",
   keywords: [
     "Stock Vision",
