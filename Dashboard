@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Customizable Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            position: relative;
+        }
+        .widget {
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            background-color: white;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            min-height: 200px;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .widget-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            background: linear-gradient(to right, #f8fafc, #ffffff);
+        }
+        .widget-content {
+            padding: 16px;
+            height: calc(100% - 50px);
+            overflow: auto;
+        }
+        .widget-ghost {
+            opacity: 0.5;
+            background-color: rgba(226, 232, 240, 0.5);
+        }
+        .widget-placeholder {
+            border: 2px dashed rgba(148, 163, 184, 0.7);
+            background-color: rgba(248, 250, 252, 0.5);
+        }
+        .widget-library {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .widget-library.open {
+            transform: translateX(0);
+        }
+        .library-item {
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .library-item:hover {
+            background: #e2e8f0;
+            transform: translateX(5px);
+        }
+        .toggle-library {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            z-index: 1001;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            transition: all 0.3s ease;
+        }
+        .toggle-library:hover {
+            transform: scale(1.1);
+        }
+        .widget-settings {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            z-index: 10;
+            display: none;
+            min-width: 150px;
+        }
+        .widget:hover .widget-settings {
+            display: block;
+        }
+        .widget-setting-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px 8px;
+            width: 100%;
+            text-align: left;
+            border-radius: 4px;
+        }
+        .widget-setting-btn:hover {
+            background: #f1f5f9;
+        }
+        .stats-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(248, 250, 252, 0.5);
+            transition: all 0.2s ease;
+        }
+        .stats-card:hover {
+            background: rgba(226, 232, 240, 0.5);
+        }
+        .stats-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            flex-shrink: 0;
+        }
+        .activity-item {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+        }
+        .activity-item:hover {
+            background: #f8fafc;
+            transform: translateX(2px);
+        }
+        .activity-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .chart-container {
+            height: 200px;
+            margin-bottom: 10px;
+        }
+        .calendar-day {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 2px;
+        }
+        .calendar-day.active {
+            background: #4f46e5;
+            color: white;
+        }
+        .task-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            border-radius: 6px;
+        }
+        .task-item.completed {
+            opacity: 0.7;
+        }
+        .task-checkbox {
+            margin-right: 10px;
+        }
+        .weather-container {
+            text-align: center;
+            padding: 10px;
+        }
+        .weather-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            background: #e2e8f0;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #4f46e5;
+        }
+        .widget-size-controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .size-btn {
+            padding: 2px 6px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .size-btn.active {
+            background: #4f46e5;
+            color: white;
+        }
+        .theme-selector {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 1001;
+        }
+        .theme-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+            cursor: pointer;
+            margin: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .dashboard-empty {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="widget-library" id="widgetLibrary">
+        <h2 class="text-xl font-bold mb-4 text-gray-800">Widget Library</h2>
+        <div class="library-item" data-widget-type="stats">
+            <h3 class="font-medium">Statistics Card</h3>
+            <p class="text-sm text-gray-600">Display key metrics and KPIs</p>
+        </div>
+        <div class="library-item" data-widget-type="activity">
+            <h3 class="font-medium">Activity Feed</h3>
+            <p class="text-sm text-gray-600">Show recent user activities</p>
+        </div>
+        <div class="library-item" data-widget-type="chart">
+            <h3 class="font-medium">Performance Chart</h3>
+            <p class="text-sm text-gray-600">Visualize data trends</p>
+        </div>
+        <div class="library-item" data-widget-type="calendar">
+            <h3 class="font-medium">Calendar</h3>
+            <p class="text-sm text-gray-600">Upcoming events and tasks</p>
+        </div>
+        <div class="library-item" data-widget-type="tasks">
+            <h3 class="font-medium">Task List</h3>
+            <p class="text-sm text-gray-600">Manage your to-do items</p>
+        </div>
+        <div class="library-item" data-widget-type="weather">
+            <h3 class="font-medium">Weather Forecast</h3>
+            <p class="text-sm text-gray-600">Local weather information</p>
+        </div>
+        <div class="library-item" data-widget-type="progress">
+            <h3 class="font-medium">Progress Tracker</h3>
+            <p class="text-sm text-gray-600">Track project completion</p>
+        </div>
+        <div class="library-item" data-widget-type="notes">
+            <h3 class="font-medium">Quick Notes</h3>
+            <p class="text-sm text-gray-600">Jot down important thoughts</p>
+        </div>
+    </div>
+
+    <button class="toggle-library" id="toggleLibrary">+</button>
+
+    <div class="theme-selector">
+        <div class="flex">
+            <button class="theme-btn bg-white" data-theme="light"></button>
+            <button class="theme-btn bg-gray-800" data-theme="dark"></button>
+            <button class="theme-btn bg-blue-50" data-theme="blue"></button>
+        </div>
+    </div>
+
+    <div class="container mx-auto pt-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-800">My Dashboard</h1>
+            <p class="text-gray-600">Customize your workspace by dragging widgets</p>
+        </header>
+
+        <div class="dashboard" id="dashboard">
+            <div class="dashboard-empty" id="emptyState">Your dashboard is empty. Add widgets from the library to get started!</div>
+            <!-- Widgets will be added here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dashboard = document.getElementById('dashboard');
+            const widgetLibrary = document.getElementById('widgetLibrary');
+            const toggleLibrary = document.getElementById('toggleLibrary');
+            const emptyState = document.getElementById('emptyState');
+            
+            // Widget templates
+            const widgetTemplates = {
+                stats: {
+                    title: 'Key Metrics',
+                    content: `
+                        <div class="stats-card">
+                            <div class="stats-icon bg-blue-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="20" x2="12" y2="10"></line>
+                                    <line x1="18" y1="20" x2="18" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="16"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Total Views</h4>
+                                <p class="text-2xl font-bold">12,489</p>
+                                <p class="text-sm text-green-500">↑ 24% from last week</p>
+                            </div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-icon bg-purple-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">New Users</h4>
+                                <p class="text-2xl font-bold">378</p>
+                                <p class="text-sm text-green-500">↑ 12% from last week</p>
+                            </div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-icon bg-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Response Time</h4>
+                                <p class="text-2xl font-bold">34s</p>
+                                <p class="text-sm text-red-500">↓ 8% from last week</p>
+                            </div>
+                        </div>
+                    `,
+                    settings: {
+                        size: 'medium',
+                        theme: 'default'
+                    }
+                },
+                activity: {
+                    title: 'Recent Activity',
+                    content: `
+                        <div class="activity-item">
+                            <div class="activity-avatar bg-blue-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Sarah Johnson</h4>
+                                <p class="text-sm text-gray-600">Completed project setup</p>
+                                <p class="text-xs text-gray-400">10 minutes ago</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-avatar bg-green-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Michael Chen</h4>
+                                <p class="text-sm text-gray-600">Uploaded new documents</p>
+                                <p class="text-xs text-gray-400">1 hour ago</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-avatar bg-purple-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">Lisa Rodriguez</h4>
+                                <p class="text-sm text-gray-600">Commented on Ticket #1245</p>
+                                <p class="text-xs text-gray-400">2 hours ago</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-avatar bg-yellow-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-medium">David Kim</h4>
+                                <p class="text-sm text-gray-600">Updated server settings</p>
+                                <p class="text-xs text-gray-400">Yesterday</p>
+                            </div>
+                        </div>
+                    `,
+                    settings: {
+                        size: 'medium',
+                        theme: 'default'
+                    }
+                },
+                chart: {
+                    title: 'Performance',
+                    content: `
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-500">
+                            <span>Mon</span>
+                            <span>Tue</span>
+                            <span>Wed</span>
+                            <span>Thu</span>
+                            <span>Fri</span>
+                            <span>Sat</span>
+                            <span>Sun</span>
+                        </div>
+                    `,
+                    settings: {
+                        size: 'large',
+                        theme: 'default'
+                    }
+                },
+                calendar: {
+                    title: 'Calendar',
+                    content: `
+                        <div class="flex justify-between items-center mb-4">
+                            <button class="text-gray-500">&lt;</button>
+                            <h4 class="font-medium">June 2023</h4>
+                            <button class="text-gray-500">&gt;</button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center text-sm">
+                            <div class="font-medium text-gray-500 py-1">S</div>
+                            <div class="font-medium text-gray-500 py-1">M</div>
+                            <div class="font-medium text-gray-500 py-1">T</div>
+                            <div class="font-medium text-gray-500 py-1">W</div>
+                            <div class="font-medium text-gray-500 py-1">T</div>
+                            <div class="font-medium text-gray-500 py-1">F</div>
+                            <div class="font-medium text-gray-500 py-1">S</div>
+                            
+                            <div class="py-1"></div>
+                            <div class="py-1"></div>
+                            <div class="py-1"></div>
+                            <div class="py-1"></div>
+                            <div class="calendar-day">1</div>
+                            <div class="calendar-day">2</div>
+                            <div class="calendar-day">3</div>
+                            
+                            <div class="calendar-day">4</div>
+                            <div class="calendar-day">5</div>
+                            <div class="calendar-day">6</div>
+                            <div class="calendar-day">7</div>
+                            <div class="calendar-day active">8</div>
+                            <div class="calendar-day">9</div>
+                            <div class="calendar-day">10</div>
+                            
+                            <div class="calendar-day">11</div>
+                            <div class="calendar-day">12</div>
+                            <div class="calendar-day">13</div>
+                            <div class="calendar-day">14</div>
+                            <div class="calendar-day">15</div>
+                            <div class="calendar-day">16</div>
+                            <div class="calendar-day">17</div>
+                            
+                            <div class="calendar-day">18</div>
+                            <div class="calendar-day">19</div>
+                            <div class="calendar-day">20</div>
+                            <div class="calendar-day">21</div>
+                            <div class="calendar-day">22</div>
+                            <div class="calendar-day">23</div>
+                            <div class="calendar-day">24</div>
+                            
+                            <div class="calendar-day">25</div>
+                            <div class="calendar-day">26</div>
+                            <div class="calendar-day">27</div>
+                            <div class="calendar-day">28</div>
+                            <div class="calendar-day">29</div>
+                            <div class="calendar-day">30</div>
+                            <div class="py-1"></div>
+                        </div>
+                        <div class="mt-4 text-sm">
+                            <div class="flex items-center mb-2">
+                                <div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                                <div>Team meeting - 2:00 PM</div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                                <div>Project deadline</div>
+                            </div>
+                        </div>
+                    `,
+                    settings: {
+                        size: 'medium',
+                        theme: 'default'
+                    }
+                },
+                tasks: {
+                    title: 'Tasks',
+                    content: `
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" checked>
+                            <div>
+                                <h4 class="font-medium line-through">Complete project proposal</h4>
+                                <p class="text-sm text-gray-500">Due yesterday</p>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div>
+                                <h4 class="font-medium">Review design mockups</h4>
+                                <p class="text-sm text-gray-500">Due tomorrow</p>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div>
+                                <h4 class="font-medium">Schedule team meeting</h4>
+                                <p class="text-sm text-gray-500">No due date</p>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div>
+                                <h4 class="font-medium">Update documentation</h4>
+                                <p class="text-sm text-gray-500">Due Friday</p>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div>
+                                <h4 class="font-medium">Respond to customer emails</h4>
+                                <p class="text-sm text-gray-500">Due today</p>
+                            </div>
+                        </div>
+                        <button class="w-full mt-2 p-2 bg-gray-100 rounded text-sm text-gray-600 hover:bg-gray-200">+ Add Task</button>
+                    `,
+                    settings: {
+                        size: 'medium',
+                        theme: 'default'
+                    }
+                },
+                weather: {
+                    title: 'Weather',
+                    content: `
+                        <div class="weather-container">
+                            <div class="weather-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v2"></path>
+                                    <path d="M12 20v2"></path>
+                                    <path d="M4 12H2"></path>
+                                    <path d="M22 12h-2"></path>
+                                    <path d="M5.64 5.64l.7.7"></path>
+                                    <path d="M17.66 17.66l.7.7"></path>
+                                    <path d="M5.64 18.36l.7-.7"></path>
+                                    <path d="M17.66 6.34l.7-.7"></path>
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold">72°F</h3>
+                            <p class="text-gray-600">Sunny</p>
+                            <p class="text-sm text-gray-500">San Francisco, CA</p>
+                            <div class="grid grid-cols-3 gap-2 mt-4">
+                                <div>
+                                    <p class="text-xs text-gray-500">Humidity</p>
+                                    <p class="font-medium">65%</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Wind</p>
+                                    <p class="font-medium">8 mph</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Precip</p>
+                                    <p class="font-medium">0%</p>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    settings: {
+                        size: 'small',
+                        theme: 'default'
+                    }
+                },
+                progress: {
+                    title: 'Project Progress',
+                    content: `
+                        <div class="mb-4">
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Website Redesign</span>
+                                <span class="text-sm text-gray-500">75%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Mobile App</span>
+                                <span class="text-sm text-gray-500">40%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Marketing Campaign</span>
+                                <span class="text-sm text-gray-500">90%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    `,
+                    settings: {
+                        size: 'medium',
+                        theme: 'default'
+                    }
+                },
+                notes: {
+                    title: 'Quick Notes',
+                    content: `
+                        <textarea class="w-full h-full p-2 border border-gray-200 rounded resize-none" placeholder="Type your notes here..."></textarea>
+                    `,
+                    settings: {
+                        size: 'medium',
+                        theme: 'default'
+                    }
+                }
+            };
+
+            // Initialize the dashboard
+            function initDashboard() {
+                loadSavedDashboard();
+                setupDragAndDrop();
+                setupWidgetLibrary();
+                setupThemeSelector();
+                setupWidgetInteractions();
+                
+                // Hide empty state if widgets exist
+                if (dashboard.children.length > 1) { // 1 for empty state div
+                    emptyState.style.display = 'none';
+                }
+            }
+
+            // Load saved dashboard from localStorage
+            function loadSavedDashboard() {
+                const savedDashboard = localStorage.getItem('dashboardLayout');
+                if (savedDashboard) {
+                    const widgets = JSON.parse(savedDashboard);
+                    widgets.forEach(widget => {
+                        addWidgetToDashboard(widget.type, widget.id, widget.settings);
+                    });
+                } else {
+                    // Add some default widgets if no saved layout exists
+                    addWidgetToDashboard('stats', generateId());
+                    addWidgetToDashboard('calendar', generateId());
+                }
+            }
+
+            // Generate unique ID for widgets
+            function generateId() {
+                return 'widget-' + Math.random().toString(36).substr(2, 9);
+            }
+
+            // Setup drag and drop functionality
+            function setupDragAndDrop() {
+                // Make widgets draggable
+                dashboard.addEventListener('dragstart', function(e) {
+                    if (e.target.classList.contains('widget')) {
+                        e.dataTransfer.setData('text/plain', e.target.id);
+                        e.target.classList.add('widget-ghost');
+                        setTimeout(() => e.target.style.display = 'none', 0);
+                    }
+                });
+
+                dashboard.addEventListener('dragend', function(e) {
+                    if (e.target.classList.contains('widget')) {
+                        e.target.classList.remove('widget-ghost');
+                        e.target.style.display = 'block';
+                    }
+                });
+
+                // Handle drop targets
+                dashboard.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    const widget = document.elementFromPoint(e.clientX, e.clientY);
+                    
+                    if (widget && widget.classList.contains('widget')) {
+                        widget.classList.add('widget-placeholder');
+                    }
+                });
+
+                dashboard.addEventListener('dragleave', function(e) {
+                    const widget = document.elementFromPoint(e.clientX, e.clientY);
+                    if (widget && widget.classList.contains('widget')) {
+                        widget.classList.remove('widget-placeholder');
+                    }
+                });
+
+                dashboard.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove all placeholder classes
+                    document.querySelectorAll('.widget-placeholder').forEach(el => {
+                        el.classList.remove('widget-placeholder');
+                    });
+                    
+                    const widgetId = e.dataTransfer.getData('text/plain');
+                    const draggedWidget = document.getElementById(widgetId);
+                    const dropWidget = document.elementFromPoint(e.clientX, e.clientY);
+                    
+                    if (draggedWidget && dropWidget) {
+                        if (dropWidget.classList.contains('widget')) {
+                            dropWidget.parentNode.insertBefore(draggedWidget, dropWidget);
+                        } else if (dropWidget.classList.contains('dashboard')) {
+                            dropWidget.appendChild(draggedWidget);
+                        }
+                        saveDashboardLayout();
+                    }
+                });
+            }
+
+            // Setup widget library functionality
+            function setupWidgetLibrary() {
+                // Toggle library visibility
+                toggleLibrary.addEventListener('click', function() {
+                    widgetLibrary.classList.toggle('open');
+                });
+
+                // Add widget from library to dashboard
+                document.querySelectorAll('.library-item').forEach(item => {
+                    item.addEventListener('dragstart', function(e) {
+                        e.dataTransfer.setData('text/plain', item.dataset.widgetType);
+                    });
+
+                    item.addEventListener('click', function() {
+                        addWidgetToDashboard(item.dataset.widgetType, generateId());
+                        widgetLibrary.classList.remove('open');
+                    });
+                });
+
+                // Make library items draggable
+                document.querySelectorAll('.library-item').forEach(item => {
+                    item.draggable = true;
+                });
+            }
+
+            // Setup theme selector functionality
+            function setupThemeSelector() {
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.body.className = 'bg-' + (this.dataset.theme === 'dark' ? 'gray-900' : 
+                                                           this.dataset.theme === 'blue' ? 'blue-50' : 'gray-100');
+                        document.documentElement.setAttribute('data-theme', this.dataset.theme);
+                        localStorage.setItem('dashboardTheme', this.dataset.theme);
+                    });
+                });
+
+                // Load saved theme
+                const savedTheme = localStorage.getItem('dashboardTheme') || 'light';
+                document.querySelector(`.theme-btn[data-theme="${savedTheme}"]`).click();
+            }
+
+            // Setup widget interactions (settings, etc.)
+            function setupWidgetInteractions() {
+                // Handle widget settings
+                dashboard.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('delete-widget')) {
+                        const widget = e.target.closest('.widget');
+                        widget.parentNode.removeChild(widget);
+                        saveDashboardLayout();
+                        
+                        // Show empty state if no widgets left
+                        if (dashboard.children.length === 1) { // Only empty state div remains
+                            emptyState.style.display = 'block';
+                        }
+                    }
+                    
+                    if (e.target.classList.contains('size-btn')) {
+                        const widget = e.target.closest('.widget');
+                        const sizeBtns = widget.querySelectorAll('.size-btn');
+                        sizeBtns.forEach(btn => btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        
+                        // Update widget size
+                        widget.style.gridColumn = e.target.dataset.size === 'large' ? 'span 2' : 'span 1';
+                        
+                        // Save settings
+                        const widgetId = widget.id;
+                        const widgetType = widget.dataset.widgetType;
+                        widget.dataset.widgetSize = e.target.dataset.size;
+                        
+                        saveWidgetSettings(widgetId, widgetType, { 
+                            size: e.target.dataset.size,
+                            theme: widget.dataset.widgetTheme || 'default'
+                        });
+                    }
+                });
+
+                // Task completion
+                dashboard.addEventListener('change', function(e) {
+                    if (e.target.classList.contains('task-checkbox')) {
+                        const taskItem = e.target.closest('.task-item');
+                        if (e.target.checked) {
+                            taskItem.classList.add('completed');
+                        } else {
+                            taskItem.classList.remove('completed');
+                        }
+                    }
+                });
+            }
+
+            // Add a widget to the dashboard
+            function addWidgetToDashboard(type, id, settings = null) {
+                emptyState.style.display = 'none';
+                
+                if (!widgetTemplates[type]) return;
+                
+                const template = widgetTemplates[type];
+                settings = settings || template.settings;
+                
+                const widgetEl = document.createElement('div');
+                widgetEl.className = 'widget';
+                widgetEl.id = id;
+                widgetEl.draggable = true;
+                widgetEl.dataset.widgetType = type;
+                widgetEl.dataset.widgetSize = settings.size;
+                widgetEl.dataset.widgetTheme = settings.theme;
+                
+                if (settings.size === 'large') {
+                    widgetEl.style.gridColumn = 'span 2';
+                }
+                
+                const widgetHtml = `
+                    <div class="widget-header">
+                        <h3 class="font-medium">${template.title}</h3>
+                        <div class="widget-settings">
+                            <button class="widget-setting-btn delete-widget">Delete</button>
+                            <div class="widget-size-controls">
+                                <button class="size-btn ${settings.size === 'small' ? 'active' : ''}" data-size="small">S</button>
+                                <button class="size-btn ${settings.size === 'medium' ? 'active' : ''}" data-size="medium">M</button>
+                                <button class="size-btn ${settings.size === 'large' ? 'active' : ''}" data-size="large">L</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        ${template.content}
+                    </div>
+                `;
+                
+                widgetEl.innerHTML = widgetHtml;
+                dashboard.appendChild(widgetEl);
+                
+                // Initialize chart if this is a chart widget
+                if (type === 'chart') {
+                    setTimeout(() => initChart(widgetEl), 100);
+                }
+                
+                saveDashboardLayout();
+                return widgetEl;
+            }
+
+            // Initialize chart for chart widgets
+            function initChart(widgetEl) {
+                const canvas = widgetEl.querySelector('canvas');
+                if (!canvas) return;
+                
+                // Mock data for the chart
+                const ctx = canvas.getContext('2d');
+                const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+                gradient.addColorStop(0, 'rgba(79, 70, 229, 0.8)');
+                gradient.addColorStop(1, 'rgba(79, 70, 229, 0.1)');
+                
+                // Create chart
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Performance',
+                            data: [12000, 19000, 15000, 17000, 22000, 18000, 25000],
+                            backgroundColor: gradient,
+                            borderColor: '#4f46e5',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#4f46e5',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value >= 1000 ? (value / 1000) + 'k' : value;
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Save widget settings
+            function saveWidgetSettings(widgetId, widgetType, settings) {
+                const widget = document.getElementById(widgetId);
+                if (!widget) return;
+                
+                widget.dataset.widgetSize = settings.size;
+                widget.dataset.widgetTheme = settings.theme;
+                
+                // Update grid size if needed
+                if (settings.size === 'large') {
+                    widget.style.gridColumn = 'span 2';
+                } else {
+                    widget.style.gridColumn = 'span 1';
+                }
+                
+                saveDashboardLayout();
+            }
+
+            // Save dashboard layout to localStorage
+            function saveDashboardLayout() {
+                const widgets = [];
+                document.querySelectorAll('.widget').forEach(widget => {
+                    widgets.push({
+                        id: widget.id,
+                        type: widget.dataset.widgetType,
+                        settings: {
+                            size: widget.dataset.widgetSize,
+                            theme: widget.dataset.widgetTheme
+                        }
+                    });
+                });
+                
+                localStorage.setItem('dashboardLayout', JSON.stringify(widgets));
+            }
+
+            // Initialize the dashboard
+            initDashboard();
+        });
+    </script>
+</body>
+</html>
