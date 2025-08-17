@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { portfolioStocks } from "@/data/mock-data";
 import { BarChart2, ChartLine, CheckCircle, CircleDollarSign, LineChart, LogIn, PieChart, TrendingUp, XCircle } from "lucide-react";
 import Link from "next/link";
+import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
@@ -35,6 +36,7 @@ export default function Landing() {
 
    const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
 
   // Expose scrollToPricing function to window so it can be called from MarketDataCenter
@@ -116,9 +118,13 @@ export default function Landing() {
   }, [pathname]);
 
 
-
-
-    
+	// Show "Go to Top" after scrolling down
+	useEffect(() => {
+		const onScroll = () => setShowScrollTop(window.scrollY > 400);
+		onScroll();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		return () => window.removeEventListener('scroll', onScroll);
+	}, []);
 
 
 
@@ -983,6 +989,37 @@ export default function Landing() {
           </div>
         </div>
       </footer>
+
+      {/* Go to Top Button */}
+	<div
+		className={clsx(
+			"fixed bottom-6 right-6 z-50 transition-all duration-300",
+			showScrollTop ? "opacity-100 translate-y-0" : "opacity-0 pointer-events-none translate-y-4"
+		)}
+	>
+		<button
+			onClick={scrollToTop}
+			className="relative w-14 h-14 rounded-full text-white focus:outline-none focus:ring-4 focus:ring-blue-400/40 active:scale-95 transition-transform"
+			aria-label="Go to top"
+		>
+			{/* Gradient core */}
+			<span className="absolute inset-0 rounded-full bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-500" />
+			{/* Soft glow */}
+			<span className="absolute inset-0 rounded-full blur-xl bg-blue-500/60 animate-pulse" aria-hidden="true" />
+			{/* Foreground icon */}
+			<span className="relative flex items-center justify-center w-full h-full">
+				<svg
+					className="w-6 h-6 drop-shadow-md"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12l7-7 7 7M12 5v14" />
+				</svg>
+			</span>
+		</button>
+	</div>
     </div>
   );
 }
