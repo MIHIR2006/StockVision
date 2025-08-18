@@ -1,1 +1,94 @@
+### NEXT.JS + NODE.JS (Frontend)
+
+# Node modules
+# Ignore all node_modules folders recursively
+
+**/node_modules/
+
+# Yarn Plug'n'Play
+.pnp.*
+.pnpm-debug.log*
+
+# Build output
+/.next/
+/out/
+/dist/
+/build/
+
+# Test coverage
+/coverage/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local environment files
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+
+# SSL keys
+*.pem
+
+# Vercel
+.vercel/
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts
+
+---
+
+### PYTHON + FASTAPI (Backend)
+
+# Bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+backend/venv/
+backend/.env
+backend/.env.*
+backend/.DS_Store
+
+# Python tooling caches
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.coverage
+backend/.cache/
+
+# IDE/editor configs
+backend/.vscode/
+backend/.idea/
+
+# FastAPI or project-level generated files (optional, adjust as needed)
+backend/.ruff_cache/
+backend/.ipynb_checkpoints/
+backend/.benchmarks/
+frontend/.env.local
+frontend/.env.local
+
+
+# Prisma generated files
+**/generated/
+
+packages/*/generated/
+
+# Ignore all .gz files
+*.gz
+
+# Ignore all .gz.old files
+*.gz.old
+
+# Ignore JavaScript bundles and Babel output files in Next.js
 .next/
+out/
+**/bundle*.js
+**/bundles/**
+**/.babelrc
+**/babel.config.js
+babel-cache/
