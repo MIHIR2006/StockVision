@@ -10,6 +10,7 @@ import { StockCard } from "./stock-card";
 import { StockChart } from "./stock-chart";
 import { SummaryCard } from "./summary-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import Screener from "./screener";
 
 // Define the Activity type to match what RecentActivity component expects
 type Activity = {
@@ -34,10 +35,11 @@ export function Dashboard({ activeSection, onSectionChange }: DashboardProps) {
   return (
     <div className="w-full px-2 sm:px-4 py-4 sm:py-6 space-y-6 animate-fade-in max-w-full">
       <Tabs value={activeSection} onValueChange={onSectionChange} className="w-full">
-        <TabsList className="w-full md:w-[400px] mb-4 sm:mb-6 grid grid-cols-4">
+        <TabsList className="w-full md:w-[520px] mb-4 sm:mb-6 grid grid-cols-5">
           <TabsTrigger value="overview" className="font-bold text-xs sm:text-sm">Overview</TabsTrigger>
           <TabsTrigger value="performance" className="font-bold text-xs sm:text-sm">Performance</TabsTrigger>
           <TabsTrigger value="portfolio" className="font-bold text-xs sm:text-sm">Portfolio</TabsTrigger>
+          <TabsTrigger value="screener" className="font-bold text-xs sm:text-sm">Screener</TabsTrigger>
           <TabsTrigger value="settings" className="font-bold text-xs sm:text-sm">Settings</TabsTrigger>
         </TabsList>
 
@@ -116,6 +118,11 @@ export function Dashboard({ activeSection, onSectionChange }: DashboardProps) {
         {/* Portfolio Tab */}
         <TabsContent value="portfolio" className="space-y-4 sm:space-y-6">
           <PortfolioSection className="animate-fade-in" />
+        </TabsContent>
+
+        {/* Screener Tab */}
+        <TabsContent value="screener" className="space-y-4 sm:space-y-6">
+          <Screener />
         </TabsContent>
 
         {/* Settings Tab */}
