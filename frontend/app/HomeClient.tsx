@@ -1,21 +1,22 @@
 "use client";
+import { useEffect, useState } from "react";
 import Landing from "@/components/Landing";
 import Preloader from "@/components/Preloder";
-import { useEffect, useState } from "react";
 
+let hasShownPreloader = false;
 export default function HomeClient() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!hasShownPreloader);
+
   useEffect(() => {
-    const hasLoaded = localStorage.getItem("preloaderShown");
-    if (hasLoaded === "true") {
-      setIsLoading(false);
-    } else {
+    if (!hasShownPreloader) {
       const timer = setTimeout(() => {
         setIsLoading(false);
-        localStorage.setItem("preloaderShown", "true");
-      }, 2500); 
+        hasShownPreloader = true; 
+      }, 2500);
+
       return () => clearTimeout(timer);
     }
   }, []);
+
   return isLoading ? <Preloader /> : <Landing />;
 }
