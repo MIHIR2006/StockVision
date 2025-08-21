@@ -6,10 +6,16 @@ import { useEffect, useState } from "react";
 export default function HomeClient() {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const hasLoaded = localStorage.getItem("preloaderShown");
+    if (hasLoaded === "true") {
       setIsLoading(false);
-    }, 2500);
-    return () => clearTimeout(timer);
+    } else {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        localStorage.setItem("preloaderShown", "true");
+      }, 2500); 
+      return () => clearTimeout(timer);
+    }
   }, []);
   return isLoading ? <Preloader /> : <Landing />;
-} 
+}
