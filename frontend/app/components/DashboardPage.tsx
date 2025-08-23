@@ -25,9 +25,7 @@ export default function DashboardPage() {
     }
   }, [isMobile]);
   
-  // Remove URL/hash-based useEffect
   useEffect(() => {
-    // Determine active section based on the URL hash
     const hash = location.hash.replace('#', '');
     
     if (location.pathname === "/") {
@@ -45,13 +43,11 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // Handler for section change
   const handleSectionChange = (section: string) => {
     setActiveSection(section);
     if (isMobile) setSidebarCollapsed(true);
   };
 
-  // Add a handler for Home navigation
   const handleHomeClick = () => {
     router.push("/");
     if (isMobile) setSidebarCollapsed(true);
@@ -69,6 +65,7 @@ export default function DashboardPage() {
   
   return (
     <div className="flex h-screen overflow-hidden">
+      
       {/* Sidebar */}
       <div
         className={cn(
