@@ -131,6 +131,7 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      
       {/* Header */}
       <header className="border-b backdrop-blur-lg bg-background/80 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
