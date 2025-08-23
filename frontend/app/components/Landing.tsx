@@ -135,7 +135,7 @@ export default function Landing() {
       {/* Header */}
       <header className="border-b backdrop-blur-lg bg-background/80 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2"onClick={() => setSidebarOpen(true)}>
+                     <div className="flex items-center gap-2"onClick={() => setSidebarOpen(true)}>
             <BarChart2 className="h-6 w-6 text-primary" />
             <span className="font-extrabold text-xl">StockVision</span>
           </div>
@@ -160,8 +160,37 @@ export default function Landing() {
         onSectionChange={handleSectionChange}
       />
       
+      {/* Floating Side Menu Button */}
+      <div className={`fixed left-2 top-32 z-30 transition-all duration-300 ${sidebarOpen ? 'opacity-0 pointer-events-none scale-95' : 'opacity-100 scale-100'}`}>
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="w-12 h-12 rounded-lg bg-blue-100 hover:bg-blue-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-blue-200/50 dark:border-blue-600/30 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group"
+          aria-label="Open side menu"
+        >
+          {/* Light mode: double chevron arrows like in the image */}
+          <div className="flex items-center text-blue-600 group-hover:text-blue-700 transition-colors duration-200 dark:hidden">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+            <svg className="w-4 h-4 -ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+          
+          {/* Dark mode: double chevron arrows like in the image */}
+          <div className="hidden dark:flex items-center text-blue-400 group-hover:text-blue-300 transition-colors duration-200">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+            <svg className="w-4 h-4 -ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </button>
+      </div>
+      
 
-
+      
       {/* Stock Ticker */}
       <StockTicker />
 
