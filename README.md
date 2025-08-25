@@ -309,7 +309,7 @@ Follow these steps to contribute your changes to **StockVision!**:
  3. Create a Branch
     Navigate to the project directory and create a new branch for your changes:
 
-```bash
+    ```bash
     cd StockVision
     git checkout -b my-feature-branch
     ```
