@@ -1,10 +1,8 @@
 'use client';
-import { BarChart2, ChevronLeft, ChevronRight, Home, LineChart, Settings, Wallet } from "lucide-react";
+import { BarChart2, ChevronLeft, Home, LineChart, Settings, Wallet, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useEffect, useState } from "react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -15,16 +13,6 @@ interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose, activeSection, onSectionChange }: SidebarProps) {
   const router = useRouter();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const isMobile = useIsMobile();
-  
-  useEffect(() => {
-    if (isMobile) {
-      setSidebarCollapsed(true);
-    } else {
-      setSidebarCollapsed(false);
-    }
-  }, [isMobile]);
 
   const getLinkClass = (section: string) => {
     const baseClass = "flex items-center gap-3 px-3 py-2 rounded-md transition-colors w-full";
@@ -39,16 +27,13 @@ export function Sidebar({ isOpen, onClose, activeSection, onSectionChange }: Sid
   const handleNavigation = (section: string, route?: string) => {
     onSectionChange(section);
     if (route) {
-      // For separate pages
       router.push(route);
     } else {
-      // For hash-based navigation within dashboard
       if (section !== 'home') {
         router.push(`/dashboard#${section}`);
       }
     }
-    if (isMobile) setSidebarCollapsed(true);
-    if (onClose) onClose();
+    onClose();
   };
 
   const handleHomeClick = () => {
@@ -61,17 +46,19 @@ export function Sidebar({ isOpen, onClose, activeSection, onSectionChange }: Sid
       {/* Sidebar Panel */}
       <div
         className={cn(
-          "border-r bg-sidebar text-sidebar-foreground transition-all duration-300 ease-in-out z-20 h-full fixed top-0 left-0",
-          isOpen ? "w-64" : "-translate-x-full"
+          "border-r bg-sidebar text-sidebar-foreground transition-transform duration-300 ease-in-out z-40 h-full fixed top-0 left-0",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+          "md:relative md:translate-x-0"
         )}
+        style={{ width: '16rem' }} // w-64
       >
         {/* Header */}
         <div className="flex items-center justify-between h-16 px-4 border-b">
-          <div className="flex items-center gap-2" onClick={()=>setSidebarCollapsed(true)}>
+          <div className="flex items-center gap-2">
             <BarChart2 className="h-5 w-5 text-primary" />
             <span className="font-bold">StockVision</span>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} type="button">
+          <Button variant="ghost" size="icon" onClick={onClose} type="button" className="md:hidden">
             <ChevronLeft className="h-4 w-4" />
           </Button>
         </div>
@@ -87,7 +74,7 @@ export function Sidebar({ isOpen, onClose, activeSection, onSectionChange }: Sid
                 style={{ width: '100%' }}
               >
                 <Home className="h-5 w-5" />
-                {!sidebarCollapsed && <span>Home</span>}
+                <span>Home</span>
               </button>
             </li>
             <li>
@@ -98,7 +85,7 @@ export function Sidebar({ isOpen, onClose, activeSection, onSectionChange }: Sid
                 style={{ width: '100%' }}
               >
                 <BarChart2 className="h-5 w-5" />
-                {!sidebarCollapsed && <span>Dashboard</span>}
+                <span>Dashboard</span>
               </button>
             </li>
             <li>
@@ -109,7 +96,7 @@ export function Sidebar({ isOpen, onClose, activeSection, onSectionChange }: Sid
                 style={{ width: '100%' }}
               >
                 <LineChart className="h-5 w-5" />
-                {!sidebarCollapsed && <span>Performance</span>}
+                <span>Performance</span>
               </button>
             </li>
            
@@ -121,7 +108,18 @@ export function Sidebar({ isOpen, onClose, activeSection, onSectionChange }: Sid
                 style={{ width: '100%' }}
               >
                 <Wallet className="h-5 w-5" />
-                {!sidebarCollapsed && <span>Portfolio</span>}
+                <span>Portfolio</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className={getLinkClass("screener")}
+                onClick={() => handleNavigation("screener")}
+                type="button"
+                style={{ width: '100%' }}
+              >
+                <Search className="h-5 w-5" />
+                <span>Screener</span>
               </button>
             </li>
             <li>
@@ -132,25 +130,17 @@ export function Sidebar({ isOpen, onClose, activeSection, onSectionChange }: Sid
                 style={{ width: '100%' }}
               >
                 <Settings className="h-5 w-5" />
-                {!sidebarCollapsed && <span>Settings</span>}
+                <span>Settings</span>
               </button>
             </li>
           </ul>
         </nav>
       </div>
 
-      {/* Overlay for mobile when sidebar is open */}
-      {isMobile && !sidebarCollapsed && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-10"
-          onClick={() => setSidebarCollapsed(true)}
-        />
-      )}
-
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-10"
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
           onClick={onClose}
         />
       )}

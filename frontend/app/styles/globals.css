@@ -117,7 +117,20 @@
   }
   
   .glass-card {
-    @apply backdrop-blur-lg bg-card/80 border-primary/10 shadow-lg hover:shadow-xl transition-all;
+    @apply backdrop-blur-lg bg-card/80 border-primary/10 shadow-lg hover:shadow-xl transition-all hover:scale-105;
+  }
+
+  .glowing-orb {
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: hsla(var(--primary), 0.2);
+    filter: blur(100px);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: left 0.1s ease-out, top 0.1s ease-out;
+    z-index: -1;
   }
   
   /* Text gradients */

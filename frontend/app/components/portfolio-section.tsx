@@ -1,310 +1,264 @@
-import { portfolioStocks } from "@/data/mock-data";
-import { cn } from "@/lib/utils";
-import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
-import { Badge } from "./ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
+'use client';
 
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle, 
+  CardDescription 
+} from '@/components/ui/card';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger, 
+  DialogFooter 
+} from '@/components/ui/dialog';
+import { Plus, Edit, Trash } from 'lucide-react';
+import { PortfolioComparison } from './portfolio-comparison';
 
-import * as React from "react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+interface Portfolio {
+  id: number;
+  name: string;
+}
 
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-export const description = "An interactive area chart"
-const chartData = [
-  { date: "2024-04-01", desktop: 222, mobile: 150 },
-  { date: "2024-04-02", desktop: 97, mobile: 180 },
-  { date: "2024-04-03", desktop: 167, mobile: 120 },
-  { date: "2024-04-04", desktop: 242, mobile: 260 },
-  { date: "2024-04-05", desktop: 373, mobile: 290 },
-  { date: "2024-04-06", desktop: 301, mobile: 340 },
-  { date: "2024-04-07", desktop: 245, mobile: 180 },
-  { date: "2024-04-08", desktop: 409, mobile: 320 },
-  { date: "2024-04-09", desktop: 59, mobile: 110 },
-  { date: "2024-04-10", desktop: 261, mobile: 190 },
-  { date: "2024-04-11", desktop: 327, mobile: 350 },
-  { date: "2024-04-12", desktop: 292, mobile: 210 },
-  { date: "2024-04-13", desktop: 342, mobile: 380 },
-  { date: "2024-04-14", desktop: 137, mobile: 220 },
-  { date: "2024-04-15", desktop: 120, mobile: 170 },
-  { date: "2024-04-16", desktop: 138, mobile: 190 },
-  { date: "2024-04-17", desktop: 446, mobile: 360 },
-  { date: "2024-04-18", desktop: 364, mobile: 410 },
-  { date: "2024-04-19", desktop: 243, mobile: 180 },
-  { date: "2024-04-20", desktop: 89, mobile: 150 },
-  { date: "2024-04-21", desktop: 137, mobile: 200 },
-  { date: "2024-04-22", desktop: 224, mobile: 170 },
-  { date: "2024-04-23", desktop: 138, mobile: 230 },
-  { date: "2024-04-24", desktop: 387, mobile: 290 },
-  { date: "2024-04-25", desktop: 215, mobile: 250 },
-  { date: "2024-04-26", desktop: 75, mobile: 130 },
-  { date: "2024-04-27", desktop: 383, mobile: 420 },
-  { date: "2024-04-28", desktop: 122, mobile: 180 },
-  { date: "2024-04-29", desktop: 315, mobile: 240 },
-  { date: "2024-04-30", desktop: 454, mobile: 380 },
-  { date: "2024-05-01", desktop: 165, mobile: 220 },
-  { date: "2024-05-02", desktop: 293, mobile: 310 },
-  { date: "2024-05-03", desktop: 247, mobile: 190 },
-  { date: "2024-05-04", desktop: 385, mobile: 420 },
-  { date: "2024-05-05", desktop: 481, mobile: 390 },
-  { date: "2024-05-06", desktop: 498, mobile: 520 },
-  { date: "2024-05-07", desktop: 388, mobile: 300 },
-  { date: "2024-05-08", desktop: 149, mobile: 210 },
-  { date: "2024-05-09", desktop: 227, mobile: 180 },
-  { date: "2024-05-10", desktop: 293, mobile: 330 },
-  { date: "2024-05-11", desktop: 335, mobile: 270 },
-  { date: "2024-05-12", desktop: 197, mobile: 240 },
-  { date: "2024-05-13", desktop: 197, mobile: 160 },
-  { date: "2024-05-14", desktop: 448, mobile: 490 },
-  { date: "2024-05-15", desktop: 473, mobile: 380 },
-  { date: "2024-05-16", desktop: 338, mobile: 400 },
-  { date: "2024-05-17", desktop: 499, mobile: 420 },
-  { date: "2024-05-18", desktop: 315, mobile: 350 },
-  { date: "2024-05-19", desktop: 235, mobile: 180 },
-  { date: "2024-05-20", desktop: 177, mobile: 230 },
-  { date: "2024-05-21", desktop: 82, mobile: 140 },
-  { date: "2024-05-22", desktop: 81, mobile: 120 },
-  { date: "2024-05-23", desktop: 252, mobile: 290 },
-  { date: "2024-05-24", desktop: 294, mobile: 220 },
-  { date: "2024-05-25", desktop: 201, mobile: 250 },
-  { date: "2024-05-26", desktop: 213, mobile: 170 },
-  { date: "2024-05-27", desktop: 420, mobile: 460 },
-  { date: "2024-05-28", desktop: 233, mobile: 190 },
-  { date: "2024-05-29", desktop: 78, mobile: 130 },
-  { date: "2024-05-30", desktop: 340, mobile: 280 },
-  { date: "2024-05-31", desktop: 178, mobile: 230 },
-  { date: "2024-06-01", desktop: 178, mobile: 200 },
-  { date: "2024-06-02", desktop: 470, mobile: 410 },
-  { date: "2024-06-03", desktop: 103, mobile: 160 },
-  { date: "2024-06-04", desktop: 439, mobile: 380 },
-  { date: "2024-06-05", desktop: 88, mobile: 140 },
-  { date: "2024-06-06", desktop: 294, mobile: 250 },
-  { date: "2024-06-07", desktop: 323, mobile: 370 },
-  { date: "2024-06-08", desktop: 385, mobile: 320 },
-  { date: "2024-06-09", desktop: 438, mobile: 480 },
-  { date: "2024-06-10", desktop: 155, mobile: 200 },
-  { date: "2024-06-11", desktop: 92, mobile: 150 },
-  { date: "2024-06-12", desktop: 492, mobile: 420 },
-  { date: "2024-06-13", desktop: 81, mobile: 130 },
-  { date: "2024-06-14", desktop: 426, mobile: 380 },
-  { date: "2024-06-15", desktop: 307, mobile: 350 },
-  { date: "2024-06-16", desktop: 371, mobile: 310 },
-  { date: "2024-06-17", desktop: 475, mobile: 520 },
-  { date: "2024-06-18", desktop: 107, mobile: 170 },
-  { date: "2024-06-19", desktop: 341, mobile: 290 },
-  { date: "2024-06-20", desktop: 408, mobile: 450 },
-  { date: "2024-06-21", desktop: 169, mobile: 210 },
-  { date: "2024-06-22", desktop: 317, mobile: 270 },
-  { date: "2024-06-23", desktop: 480, mobile: 530 },
-  { date: "2024-06-24", desktop: 132, mobile: 180 },
-  { date: "2024-06-25", desktop: 141, mobile: 190 },
-  { date: "2024-06-26", desktop: 434, mobile: 380 },
-  { date: "2024-06-27", desktop: 448, mobile: 490 },
-  { date: "2024-06-28", desktop: 149, mobile: 200 },
-  { date: "2024-06-29", desktop: 103, mobile: 160 },
-  { date: "2024-06-30", desktop: 446, mobile: 400 },
-]
-const chartConfig = {
-  visitors: {
-    label: "Portfolio Value",
-  },
-  desktop: {
-label: "AAPL",
-    color: "var(--chart-1)",
-  },
-  mobile: {
-label: "MSFT",
-    color: "var(--chart-2)",
-  },
-} satisfies ChartConfig
+export function PortfolioSection() {
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio | null>(null);
+  const [newPortfolioName, setNewPortfolioName] = useState('');
+  const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
+  const [isRenameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [portfolioToRename, setPortfolioToRename] = useState<Portfolio | null>(null);
+  const [portfolioToDelete, setPortfolioToDelete] = useState<Portfolio | null>(null);
 
-export function PortfolioSection({ className }: { className?: string }) {
-  const [timeRange, setTimeRange] = React.useState("90d");
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date);
-    const referenceDate = new Date("2024-06-30");
-    let daysToSubtract = 90;
-    if (timeRange === "30d") {
-      daysToSubtract = 30;
-    } else if (timeRange === "7d") {
-      daysToSubtract = 7;
+  useEffect(() => {
+    fetchPortfolios();
+  }, []);
+
+  const fetchPortfolios = async () => {
+    const response = await fetch('/api/portfolios');
+    if (response.ok) {
+      const data = await response.json();
+      setPortfolios(data as Portfolio[]);
+
+      // If no portfolio is selected, or the selected one was deleted, select the first available.
+      const currentSelectedId = selectedPortfolio?.id;
+      if (currentSelectedId && data.some((p: Portfolio) => p.id === currentSelectedId)) {
+        // Current selection is still valid, do nothing.
+      } else if (data.length > 0) {
+        setSelectedPortfolio(data[0]);
+      } else {
+        setSelectedPortfolio(null);
+      }
     }
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - daysToSubtract);
-    return date >= startDate;
-  });
+  };
+
+  const handleCreatePortfolio = async () => {
+    if (newPortfolioName.trim() !== '') {
+      const response = await fetch('/api/portfolios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newPortfolioName.trim() }),
+      });
+      if (response.ok) {
+        fetchPortfolios();
+        setNewPortfolioName('');
+        setCreateDialogOpen(false);
+      }
+    }
+  };
+
+  const handleRenamePortfolio = async () => {
+    if (portfolioToRename && newPortfolioName.trim() !== '') {
+      const response = await fetch(`/api/portfolios/${portfolioToRename.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: newPortfolioName.trim() }),
+        }
+      );
+      if (response.ok) {
+        fetchPortfolios();
+        setPortfolioToRename(null);
+        setNewPortfolioName('');
+        setRenameDialogOpen(false);
+      }
+    }
+  };
+
+  const handleDeletePortfolio = async () => {
+    if (portfolioToDelete) {
+      const response = await fetch(`/api/portfolios/${portfolioToDelete.id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      if (response.ok) {
+        await fetchPortfolios();
+        setPortfolioToDelete(null);
+        setDeleteDialogOpen(false);
+      }
+    }
+  };
 
   return (
-    <div>
-    <Card className={cn("backdrop-blur-lg bg-card/80 border-primary/10 shadow-lg transition-all hover:shadow-xl", className)}>
-      <CardHeader>
-        <CardTitle className="text-xl font-extrabold">My Portfolio</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[120px]">Symbol</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead className="text-right">Price</TableHead>
-                <TableHead className="text-right">Change</TableHead>
-                <TableHead className="text-right">Shares</TableHead>
-                <TableHead className="text-right">Value</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {portfolioStocks.map((stock) => (
-                <TableRow key={stock.symbol} className="hover:bg-muted/50 backdrop-blur-lg transition-colors">
-                  <TableCell className="font-medium">{stock.symbol}</TableCell>
-                  <TableCell>{stock.name}</TableCell>
-                  <TableCell className="text-right">${stock.price.toFixed(2)}</TableCell>
-                  <TableCell className="text-right">
-                    <Badge 
-                      variant={stock.change >= 0 ? "success" : "destructive"}
-                      className="inline-flex items-center gap-1"
-                    >
-                      {stock.change >= 0 ? (
-                        <ArrowUpIcon className="h-3 w-3" />
-                      ) : (
-                        <ArrowDownIcon className="h-3 w-3" />
-                      )}
-                      {Math.abs(stock.changePercent).toFixed(2)}%
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">{stock.shares}</TableCell>
-                  <TableCell className="text-right font-bold">${stock.value.toFixed(2)}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-    </Card>
-<div className="mt-4">
-    <Card className="pt-0">
-      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-        <div className="grid flex-1 gap-1">
-          <CardTitle>Portfolio Value Over Time</CardTitle>
-          <CardDescription>
-            Your portfolio value trend for the selected period
-          </CardDescription>
-        </div>
-    <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger
-            className="hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
-            aria-label="Select a value"
-          >
-            <SelectValue placeholder="Last 3 months" />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl">
-            <SelectItem value="90d" className="rounded-lg">
-              Last 3 months
-            </SelectItem>
-            <SelectItem value="30d" className="rounded-lg">
-              Last 30 days
-            </SelectItem>
-            <SelectItem value="7d" className="rounded-lg">
-              Last 7 days
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
-          <AreaChart data={filteredData}>
-            <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="#3b82f6"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="#3b82f6"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="#60a5fa"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="#60a5fa"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value)
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })
-              }}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })
-                  }}
-                  indicator="dot"
-                />
+    <div className="p-4 md:p-8">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div className="flex items-center gap-4">
+            <CardTitle>Portfolios</CardTitle>
+            <Select
+              value={selectedPortfolio ? String(selectedPortfolio.id) : ""}
+              onValueChange={(id) =>
+                setSelectedPortfolio(portfolios.find((p) => p.id === parseInt(id)) || null)
               }
-            />
-            <Area
-              dataKey="mobile"
-              type="natural"
-              fill="url(#fillMobile)"
-              stroke="#60a5fa"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="url(#fillDesktop)"
-              stroke="#3b82f6"
-              stackId="a"
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-          </AreaChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
-    </div>
+            >
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Select a portfolio" />
+              </SelectTrigger>
+              <SelectContent>
+                {portfolios.map((portfolio) => (
+                  <SelectItem key={portfolio.id} value={portfolio.id.toString()}>
+                    {portfolio.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Dialog open={isCreateDialogOpen} onOpenChange={(isOpen) => {
+              setCreateDialogOpen(isOpen);
+              if (!isOpen) setNewPortfolioName('');
+            }}>
+            <DialogTrigger asChild>
+              <Button size="sm" onClick={() => setNewPortfolioName('')}>
+                <Plus className="mr-2 h-4 w-4" />
+                Create Portfolio
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Portfolio</DialogTitle>
+              </DialogHeader>
+              <Input
+                placeholder="Portfolio Name"
+                value={newPortfolioName}
+                onChange={(e) => setNewPortfolioName(e.target.value)}
+              />
+              <DialogFooter>
+                <Button onClick={handleCreatePortfolio}>Create</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
+        <CardContent>
+          <CardDescription>Manage and compare your investment portfolios.</CardDescription>
+          <div className="mt-4">
+            <h3 className="font-semibold">Portfolio List</h3>
+            {portfolios.length > 0 ? (
+              <ul className="mt-2 space-y-2">
+                {portfolios.map((portfolio) => (
+                  <li
+                    key={portfolio.id}
+                    className="flex items-center justify-between rounded-md border p-3"
+                  >
+                    <span>{portfolio.name}</span>
+                    <div className="flex items-center gap-2">
+                      <Dialog
+                        open={isRenameDialogOpen && portfolioToRename?.id === portfolio.id}
+                        onOpenChange={(isOpen) => {
+                          setRenameDialogOpen(isOpen);
+                          if (!isOpen) {
+                            setPortfolioToRename(null);
+                            setNewPortfolioName('');
+                          }
+                        }}
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setPortfolioToRename(portfolio);
+                              setNewPortfolioName(portfolio.name);
+                              setRenameDialogOpen(true);
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Rename Portfolio</DialogTitle>
+                          </DialogHeader>
+                          <Input
+                            value={newPortfolioName}
+                            onChange={(e) => setNewPortfolioName(e.target.value)}
+                          />
+                          <DialogFooter>
+                            <Button onClick={handleRenamePortfolio}>Save</Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      <Dialog
+                        open={isDeleteDialogOpen && portfolioToDelete?.id === portfolio.id}
+                        onOpenChange={(isOpen) => {
+                          setDeleteDialogOpen(isOpen);
+                          if (!isOpen) setPortfolioToDelete(null);
+                        }}
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setPortfolioToDelete(portfolio);
+                              setDeleteDialogOpen(true);
+                            }}
+                          >
+                            <Trash className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Delete Portfolio</DialogTitle>
+                          </DialogHeader>
+                          <p>Are you sure you want to delete the portfolio "{portfolio.name}"?</p>
+                          <DialogFooter>
+                            <Button variant="destructive" onClick={handleDeletePortfolio}>
+                              Delete
+                            </Button>
+                            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                              Cancel
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="mt-4 text-center text-muted-foreground border-2 border-dashed rounded-lg p-8">
+                <p className="font-medium">No portfolios found.</p>
+                <p className="text-sm">Click "Create Portfolio" to get started.</p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+      <PortfolioComparison portfolios={portfolios} />
     </div>
   );
 }

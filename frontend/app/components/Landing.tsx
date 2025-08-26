@@ -7,13 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { portfolioStocks } from "@/data/mock-data";
-import { BarChart2, ChartLine, CheckCircle, CircleDollarSign, LineChart, LogIn, PieChart, TrendingUp, XCircle } from "lucide-react";
+import { BarChart2, ChartLine, CheckCircle, CircleDollarSign, LineChart, LogIn, Menu, PieChart, TrendingUp, XCircle } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
-import { useRouter, usePathname } from "next/navigation";
 
 
 
@@ -31,7 +30,6 @@ export default function Landing() {
   const yieldCurveRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
-  const pathname = usePathname();
 
 
    const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -59,10 +57,9 @@ export default function Landing() {
 
 
   const scrollToYieldCurve = () => {
-    const yieldCurveElement = document.getElementById('yield-curve-us');
-    if (yieldCurveElement) {
+    if (yieldCurveRef.current) {
       const yOffset = -80; // Adjust offset to account for header height
-      const y = yieldCurveElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      const y = yieldCurveRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
@@ -99,25 +96,6 @@ export default function Landing() {
 
    
 
-
-  // Update active section based on current route
-  useEffect(() => {
-    if (pathname === "/") {
-      setActiveSection("home");
-    } else if (pathname === "/dashboard") {
-      // Check for hash in URL for dashboard sections
-      const hash = window.location.hash.replace('#', '');
-      setActiveSection(hash || "overview");
-    } else if (pathname === "/performance") {
-      setActiveSection("performance");
-    } else if (pathname === "/portfolio") {
-      setActiveSection("portfolio");
-    } else if (pathname === "/settings") {
-      setActiveSection("settings");
-    }
-  }, [pathname]);
-
-
 	// Show "Go to Top" after scrolling down
 	useEffect(() => {
 		const onScroll = () => setShowScrollTop(window.scrollY > 400);
@@ -135,11 +113,17 @@ export default function Landing() {
       {/* Header */}
       <header className="border-b backdrop-blur-lg bg-background/80 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-                     <div className="flex items-center gap-2"onClick={() => setSidebarOpen(true)}>
+          <div className="flex items-center gap-2">
             <BarChart2 className="h-6 w-6 text-primary" />
             <span className="font-extrabold text-xl">StockVision</span>
           </div>
-          <div className="flex items-center gap-4">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+            <a onClick={scrollToTop} className="hover:text-primary transition-colors cursor-pointer">Home</a>
+            <Link href="/dashboard" className="hover:text-primary transition-colors">Dashboard</Link>
+            <a onClick={scrollToFeatures} className="hover:text-primary transition-colors cursor-pointer">Features</a>
+            <a onClick={scrollToPricing} className="hover:text-primary transition-colors cursor-pointer">Pricing</a>
+          </nav>
+          <div className="flex items-center gap-2">
             <ThemeToggle />
             <Link href="/dashboard">
               <Button className="font-bold hover:scale-105 transition-transform flex items-center gap-2">
@@ -147,6 +131,11 @@ export default function Landing() {
                 <span className="hidden sm:inline">Sign In</span>
               </Button>
             </Link>
+            <div className="md:hidden">
+                <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
+                    <Menu className="h-6 w-6" />
+                </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -160,36 +149,6 @@ export default function Landing() {
         onSectionChange={handleSectionChange}
       />
       
-      {/* Floating Side Menu Button */}
-      <div className={`fixed left-2 top-32 z-30 transition-all duration-300 ${sidebarOpen ? 'opacity-0 pointer-events-none scale-95' : 'opacity-100 scale-100'}`}>
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="w-12 h-12 rounded-lg bg-blue-100 hover:bg-blue-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-blue-200/50 dark:border-blue-600/30 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group"
-          aria-label="Open side menu"
-        >
-          {/* Light mode: double chevron arrows like in the image */}
-          <div className="flex items-center text-blue-600 group-hover:text-blue-700 transition-colors duration-200 dark:hidden">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-            <svg className="w-4 h-4 -ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
-          
-          {/* Dark mode: double chevron arrows like in the image */}
-          <div className="hidden dark:flex items-center text-blue-400 group-hover:text-blue-300 transition-colors duration-200">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-            <svg className="w-4 h-4 -ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
-        </button>
-      </div>
-      
-
       
       {/* Stock Ticker */}
       <StockTicker />
@@ -266,8 +225,8 @@ export default function Landing() {
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-bold text-lg">{stock.symbol}</span>
                   <div 
-                    className={`text-xs px-2 py-1 rounded-full ${stock.change >= 0 ? "bg-gain/20 text-gain" : "bg-loss/20 text-loss"
-                    }`}
+                    className={`text-xs px-2 py-1 rounded-full ${stock.change >= 0 ? "bg-gain/20 text-gain" : "bg-loss/20 text-loss"}
+                    `}
                   >
                     {stock.change >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}%
                   </div>

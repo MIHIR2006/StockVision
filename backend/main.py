@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 # Import routers
-from app.routers import stocks, market
+from app.routers import stocks, market, screener
 
 # Load environment variables
 load_dotenv()
@@ -36,6 +36,7 @@ app.add_middleware(
 # Include routers
 app.include_router(stocks.router)
 app.include_router(market.router)
+app.include_router(screener.router, prefix="/api/screener", tags=["screener"])
 
 # Health check endpoints
 @app.get("/")
@@ -68,4 +69,4 @@ if __name__ == "__main__":
         port=8000,
         reload=True,
         log_level="info"
-    ) 
+    )

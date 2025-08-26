@@ -12,9 +12,28 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String?
-  createdAt DateTime @default(now())
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
+  password   String
+  name       String?
+  createdAt  DateTime    @default(now())
+  portfolios Portfolio[]
+}
+
+model Portfolio {
+  id        Int       @id @default(autoincrement())
+  name      String
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  holdings  Holding[]
+}
+
+model Holding {
+  id            Int      @id @default(autoincrement())
+  symbol        String
+  quantity      Float
+  purchasePrice Float
+  purchaseDate  DateTime
+  portfolioId   Int
+  portfolio     Portfolio @relation(fields: [portfolioId], references: [id])
 }
