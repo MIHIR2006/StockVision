@@ -147,6 +147,17 @@
       transform: translateX(0);
     }
   }
+
+  @keyframes subtle-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+  }
   
   .animate-fade-in {
     animation: fade-in 0.5s ease-out forwards;
@@ -154,6 +165,10 @@
   
   .animate-slide-in {
     animation: slide-in 0.5s ease-out forwards;
+  }
+
+  .animate-subtle-pulse {
+    animation: subtle-pulse 2s ease-in-out infinite;
   }
 
   .scale-hover {

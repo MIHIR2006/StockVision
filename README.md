@@ -8,13 +8,13 @@ Track your investments, analyze performance, and make data-driven decisions with
 
 ---
 
-## 📊 Project Overview
+## Project Overview
 
 StockVision is a modern, interactive dashboard for investors and traders. It provides a comprehensive view of your portfolio, real-time market data, and insightful analytics to help you make smarter financial decisions.
 
 ---
 
-## ✨ Features
+## Features
 
 - **Portfolio Overview:** Visualize your holdings and performance at a glance.
 - **Market Data Center:** Access up-to-date market data and trends.
@@ -28,7 +28,7 @@ StockVision is a modern, interactive dashboard for investors and traders. It pro
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Framework:** Next.js 15 (Monorepo)
@@ -46,7 +46,7 @@ StockVision is a modern, interactive dashboard for investors and traders. It pro
 ### For a detailed explanation of the backend structure, API endpoints, and integration, see [Backend.md](./Backend.md).
 ---
 
-## 📁 Folder Structure
+## Folder Structure
 
 ```
 StockVision/
@@ -69,7 +69,7 @@ StockVision/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - **Node.js 18+** and **npm 9+**
@@ -108,7 +108,7 @@ StockVision/
 
 ---
 
-## 🔐 Access Points
+## Access Points
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
@@ -118,7 +118,7 @@ StockVision/
 
 ---
 
-## 🔧 Development & Scripts
+## Development & Scripts
 
 ### Monorepo Scripts
 ```bash
@@ -153,7 +153,7 @@ npm run lint             # Format and lint code
 
 ---
 
-## 📚 API Endpoints (Backend)
+## API Endpoints (Backend)
 
 See [Backend.md](./Backend.md) for full details, but here are the essentials:
 
@@ -178,7 +178,7 @@ See [Backend.md](./Backend.md) for full details, but here are the essentials:
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
 ### Backend (.env)
 ```bash
@@ -193,7 +193,7 @@ The frontend uses Next.js environment variables. Create `.env.local` in the fron
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [ ] Real-time stock data integration
 - [ ] User authentication and portfolios
@@ -205,19 +205,7 @@ The frontend uses Next.js environment variables. Create `.env.local` in the fron
 
 ---
 
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 🚀 Production Deployment
+## Production Deployment
 
 ### Monorepo Management
 
@@ -237,6 +225,27 @@ See [Backend.md](./Backend.md) for backend deployment and API details.
 
 ---
 
-## 🏁 TurboRepo
+## TurboRepo
 
 This monorepo uses [Turborepo](https://turbo.build/) for fast, cacheable builds and development.
+
+## Contributing
+
+We love our contributors! Here's how you can contribute:
+
+- [Open an issue](https://github.com/MIHIR2006/StockVision/issues) if you believe you've encountered a bug.
+- Follow the local development guide to get your local dev environment set up.
+- Make a [pull request](https://github.com/MIHIR2006/StockVision/pulls) to add new features/make quality-of-life improvements/fix bugs.
+
+<a href="https://github.com/MIHIR2006/StockVision/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=MIHIR2006/StockVision" />
+</a>
+
+
+---
+
+## Repo Activity
+
+![Alt](https://repobeats.axiom.co/api/embed/ec1c47a5d3bcf938b5065f7f0efb5cd9effbb94f.svg "Repobeats analytics image")
+
+
