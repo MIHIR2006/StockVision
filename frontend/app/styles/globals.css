@@ -160,3 +160,232 @@
     @apply transition-transform hover:scale-105;
   }
 }
+
+
+/* subtle animation on cards */
+
+.card-bottom-line {
+  @apply relative bg-primary/10 rounded-lg p-6 h-40 
+         flex flex-col justify-center items-center 
+         backdrop-blur-lg border border-primary/20 
+         overflow-hidden transition-transform duration-300 hover:scale-105;
+}
+
+/* Bottom gradient line */
+.card-bottom-line::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 0%; /* Start hidden */
+  background: linear-gradient(to right, #3b82f6, #a855f7, #ec4899); /* blue → purple → pink */
+  transition: width 0.5s ease-in-out;
+}
+
+.card-bottom-line:hover::after {
+  width: 100%; /* Expands from left → right */
+}
+
+
+
+
+/* for live market data */
+
+.card-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+}
+
+.card-shimmer:hover::after {
+  animation: shimmer-move 1s forwards;
+}
+
+@keyframes shimmer-move {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+
+/* market data center */
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
+  50% { box-shadow: 0 0 12px 4px rgba(34,197,94,0.3); }
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+  50% { box-shadow: 0 0 12px 4px rgba(239,68,68,0.3); }
+}
+
+.pulse-green {
+  animation: pulse-green 2.5s infinite;
+}
+
+.pulse-red {
+  animation: pulse-red 2.5s infinite;
+}
+
+@keyframes glow-green {
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(34,197,94,0.4); border-color: rgba(34,197,94,0.6); }
+  50% { box-shadow: 0 0 16px 4px rgba(34,197,94,0.7); border-color: rgba(34,197,94,1); }
+}
+
+@keyframes glow-red {
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(239,68,68,0.4); border-color: rgba(239,68,68,0.6); }
+  50% { box-shadow: 0 0 16px 4px rgba(239,68,68,0.7); border-color: rgba(239,68,68,1); }
+}
+
+.glow-green {
+  border: 1px solid transparent;
+  border-radius: 0.75rem; /* matches rounded-xl */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glow-green:hover {
+  border: 1px solid rgba(34,197,94,0.6);
+  animation: glow-green 3s infinite;
+}
+
+.glow-red {
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glow-red:hover {
+  border: 1px solid rgba(239,68,68,0.6);
+  animation: glow-red 3s infinite;
+}
+
+
+
+/* asia market */
+
+@keyframes card-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    box-shadow: 0 0 0 0 rgba(59,130,246,0.6); /* blue glow */
+    border-color: transparent;
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(0) scale(1.02);
+    box-shadow: 0 0 16px 4px rgba(59,130,246,0.6);
+    border-color: rgba(59,130,246,0.6);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: none;
+    border-color: transparent;
+  }
+}
+
+.card-appear {
+  animation: card-pop-in 0.8s ease forwards;
+}
+
+
+/* Animated glowing gradient border for cards */
+.glow-border-card {
+  position: relative;
+  border-radius: 0.75rem;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.glow-border-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    270deg,
+    #3b82f6,
+    #8b5cf6,
+    #ec4899,
+    #f59e0b,
+    #3b82f6
+  );
+  background-size: 400% 400%;
+  animation: border-glow 8s linear infinite;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+}
+
+@keyframes border-glow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Yellow glowing alert box */
+.glow-yellow {
+  position: relative;
+  background: rgba(251, 191, 36, 0.1); /* amber-500/10 */
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.5);
+  animation: glow-amber 3s infinite ease-in-out;
+}
+
+@keyframes glow-amber {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(251, 191, 36, 0.4),
+                0 0 12px rgba(251, 191, 36, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.7),
+                0 0 20px rgba(251, 191, 36, 0.5);
+  }
+}
+
+
+
+/* Glowing Coming Soon Badge */
+.glow-badge {
+  position: relative;
+  background: rgba(96, 165, 250, 0.85); /* blue-400 */
+  color: white;
+  box-shadow: 0 0 6px rgba(96, 165, 250, 0.7), 0 0 12px rgba(147, 51, 234, 0.5);
+  animation: glow-pulse 2.5s infinite ease-in-out;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(96, 165, 250, 0.6),
+                0 0 12px rgba(147, 51, 234, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(96, 165, 250, 0.9),
+                0 0 20px rgba(147, 51, 234, 0.7);
+    transform: scale(1.05);
+  }
+}
