@@ -14,7 +14,7 @@ import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
 import { useRouter, usePathname } from "next/navigation";
-import { motion , type Variants  } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 // Declare the global window interface extension
 declare global {
@@ -31,14 +31,12 @@ export default function Landing() {
   const featuresRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
 
-
-   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
- enhance-ui-with-animation
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const [showScrollTop, setShowScrollTop] = useState(false);
-main
+
 
 
   // Expose scrollToPricing function to window so it can be called from MarketDataCenter
@@ -93,13 +91,13 @@ main
   };
 
 
-   const handleSectionChange = (section: string) => {
+  const handleSectionChange = (section: string) => {
     setActiveSection(section);
     setSidebarOpen(false);
   };
 
 
-   
+
 
 
   // Update active section based on current route
@@ -120,7 +118,6 @@ main
   }, [pathname]);
 
 
- enhance-ui-with-animation
   // scroll animation
   useEffect(() => {
     const updateScroll = () => {
@@ -132,89 +129,89 @@ main
     window.addEventListener("scroll", updateScroll);
     return () => window.removeEventListener("scroll", updateScroll);
   }, []);
-    
 
-	// Show "Go to Top" after scrolling down
-	useEffect(() => {
-		const onScroll = () => setShowScrollTop(window.scrollY > 400);
-		onScroll();
-		window.addEventListener('scroll', onScroll, { passive: true });
-		return () => window.removeEventListener('scroll', onScroll);
-	}, []);
- main
 
-const fadeUp : Variants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
-  }
-};
+  // Show "Go to Top" after scrolling down
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 400);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+
+  const fadeUp: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
 
 
   return (
     <div className="min-h-screen flex flex-col">
-      
+
       {/* Header */}
       <header className="border-b backdrop-blur-lg bg-background/80 sticky top-0 z-50">
- enhance-ui-with-animation
-      {/* Progress Bar */}
-      <div
-       className="h-1 rounded-full 
+
+        {/* Progress Bar */}
+        <div
+          className="h-1 rounded-full 
              bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 
              shadow-[0_0_10px_rgba(59,130,246,0.8),0_0_20px_rgba(139,92,246,0.6)] 
              transition-all duration-200"
-        style={{ width: `${scrollProgress}%` }}
-      />
-
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => setSidebarOpen(true)}
-        >
-          <BarChart2 className="h-6 w-6 text-primary" />
-          <span className="font-extrabold text-xl">StockVision</span>
-        </div>
-
-        {/* Right Section */}
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <Link href="/dashboard">
-          <Button
-            className="relative overflow-hidden font-bold flex items-center gap-2 px-6 py-3 
-                      rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 
-                      text-white hover:scale-105 transition-transform"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              <LogIn className="h-4 w-4" />
-              <span className="hidden sm:inline">Sign In</span>
-            </span>
-
-            {/* shimmer overlay */}
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent 
-                            translate-x-[-100%] animate-[shimmer_2s_infinite]" />
-          </Button>
-        </Link>
+          style={{ width: `${scrollProgress}%` }}
+        />
 
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-                     <div className="flex items-center gap-2"onClick={() => setSidebarOpen(true)}>
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => setSidebarOpen(true)}
+          >
             <BarChart2 className="h-6 w-6 text-primary" />
             <span className="font-extrabold text-xl">StockVision</span>
           </div>
+
+          {/* Right Section */}
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <Link href="/dashboard">
-              <Button className="font-bold hover:scale-105 transition-transform flex items-center gap-2">
-                <LogIn className="h-4 w-4" />
-                <span className="hidden sm:inline">Sign In</span>
+              <Button
+                className="relative overflow-hidden font-bold flex items-center gap-2 px-6 py-3 
+                      rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 
+                      text-white hover:scale-105 transition-transform"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  <LogIn className="h-4 w-4" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </span>
+
+                {/* shimmer overlay */}
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent 
+                            translate-x-[-100%] animate-[shimmer_2s_infinite]" />
               </Button>
             </Link>
+
+            {/* <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+              <div className="flex items-center gap-2" onClick={() => setSidebarOpen(true)}>
+                <BarChart2 className="h-6 w-6 text-primary" />
+                <span className="font-extrabold text-xl">StockVision</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <ThemeToggle />
+                <Link href="/dashboard">
+                  <Button className="font-bold hover:scale-105 transition-transform flex items-center gap-2">
+                    <LogIn className="h-4 w-4" />
+                    <span className="hidden sm:inline">Sign In</span>
+                  </Button>
+                </Link>
+              </div>
+            </div> */}
           </div>
- main
         </div>
-      </div>
-    </header>
+      </header>
 
 
       {/* Sidebar */}
@@ -224,7 +221,7 @@ const fadeUp : Variants = {
         activeSection={activeSection}
         onSectionChange={handleSectionChange}
       />
-      
+
       {/* Floating Side Menu Button */}
       <div className={`fixed left-2 top-32 z-30 transition-all duration-300 ${sidebarOpen ? 'opacity-0 pointer-events-none scale-95' : 'opacity-100 scale-100'}`}>
         <button
@@ -241,7 +238,7 @@ const fadeUp : Variants = {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
             </svg>
           </div>
-          
+
           {/* Dark mode: double chevron arrows like in the image */}
           <div className="hidden dark:flex items-center text-blue-400 group-hover:text-blue-300 transition-colors duration-200">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -253,9 +250,9 @@ const fadeUp : Variants = {
           </div>
         </button>
       </div>
-      
 
-      
+
+
       {/* Stock Ticker */}
       <StockTicker />
 
@@ -276,18 +273,18 @@ const fadeUp : Variants = {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/dashboard">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto font-bold relative overflow-hidden group"
-                >
-                  <span className="relative z-10">Launch Dashboard</span>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto font-bold relative overflow-hidden group"
+                  >
+                    <span className="relative z-10">Launch Dashboard</span>
 
-                  {/* Water fill gradient */}
-                  <span className="absolute inset-0 bg-gradient-to-t from-purple-500 to-blue-600
+                    {/* Water fill gradient */}
+                    <span className="absolute inset-0 bg-gradient-to-t from-purple-500 to-blue-600
                                   translate-y-full group-hover:translate-y-0 
                                   transition-transform duration-500 ease-out z-0 " />
-                </Button>
-              </Link>
+                  </Button>
+                </Link>
 
                 <Button
                   size="lg"
@@ -305,29 +302,29 @@ const fadeUp : Variants = {
 
               </div>
             </div>
-           <div className="grid grid-cols-2 gap-4 animate-slide-in">
-          <div className="flex flex-col gap-4">
-            <div className="card-bottom-line">
-              <LineChart className="h-16 w-16 text-primary mb-2" />
-              <p className="text-center font-medium">Stock Performance</p>
-            </div>
-            <div className="card-bottom-line">
-              <PieChart className="h-16 w-16 text-primary mb-2" />
-              <p className="text-center font-medium">Portfolio Allocation</p>
-            </div>
-          </div>
+            <div className="grid grid-cols-2 gap-4 animate-slide-in">
+              <div className="flex flex-col gap-4">
+                <div className="card-bottom-line">
+                  <LineChart className="h-16 w-16 text-primary mb-2" />
+                  <p className="text-center font-medium">Stock Performance</p>
+                </div>
+                <div className="card-bottom-line">
+                  <PieChart className="h-16 w-16 text-primary mb-2" />
+                  <p className="text-center font-medium">Portfolio Allocation</p>
+                </div>
+              </div>
 
-          <div className="flex flex-col gap-4 mt-8">
-            <div className="card-bottom-line">
-              <BarChart2 className="h-16 w-16 text-primary mb-2" />
-              <p className="text-center font-medium">Revenue Analytics</p>
+              <div className="flex flex-col gap-4 mt-8">
+                <div className="card-bottom-line">
+                  <BarChart2 className="h-16 w-16 text-primary mb-2" />
+                  <p className="text-center font-medium">Revenue Analytics</p>
+                </div>
+                <div className="card-bottom-line">
+                  <div className="font-bold text-3xl text-primary">+34%</div>
+                  <p className="text-center font-medium mt-2">Portfolio Growth</p>
+                </div>
+              </div>
             </div>
-            <div className="card-bottom-line">
-              <div className="font-bold text-3xl text-primary">+34%</div>
-              <p className="text-center font-medium mt-2">Portfolio Growth</p>
-            </div>
-          </div>
-        </div>
           </div>
         </div>
       </section>
@@ -341,24 +338,23 @@ const fadeUp : Variants = {
           </h2>
           <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {portfolioStocks.map((stock, index) => (
-          <div 
-            key={stock.symbol} 
-            className="bg-card/60 backdrop-blur-lg p-4 rounded-xl border border-primary/10 animate-fade-in scale-hover card-shimmer" 
-            style={{ animationDelay: `${0.1 * index}s` }}
-          >
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-bold text-lg">{stock.symbol}</span>
-              <div 
-                className={`text-xs px-2 py-1 rounded-full ${
-                  stock.change >= 0 ? "bg-gain/20 text-gain" : "bg-loss/20 text-loss"
-                }`}
+              <div
+                key={stock.symbol}
+                className="bg-card/60 backdrop-blur-lg p-4 rounded-xl border border-primary/10 animate-fade-in scale-hover card-shimmer"
+                style={{ animationDelay: `${0.1 * index}s` }}
               >
-                {stock.change >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}%
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-bold text-lg">{stock.symbol}</span>
+                  <div
+                    className={`text-xs px-2 py-1 rounded-full ${stock.change >= 0 ? "bg-gain/20 text-gain" : "bg-loss/20 text-loss"
+                      }`}
+                  >
+                    {stock.change >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}%
+                  </div>
+                </div>
+                <div className="text-2xl font-bold">${stock.price.toFixed(2)}</div>
+                <div className="text-xs text-muted-foreground mt-1">{stock.name}</div>
               </div>
-            </div>
-            <div className="text-2xl font-bold">${stock.price.toFixed(2)}</div>
-            <div className="text-xs text-muted-foreground mt-1">{stock.name}</div>
-          </div>
             ))}
           </div>
           <div className="mt-8 text-center">
@@ -376,167 +372,167 @@ const fadeUp : Variants = {
 
       {/* Market Data Center Section */}
       <div ref={marketDataRef} id="market-data-center" className="scroll-mt-20">
-      <MarketDataCenter />
+        <MarketDataCenter />
       </div>
 
 
       {/* U.S. Treasury Bill Section */}
       <div ref={yieldCurveRef} id="yield-curve" className="scroll-mt-20">
-      <TreasuryBillSection />
+        <TreasuryBillSection />
       </div>
 
 
-     {/* YIELD CURVE - US Section */}
-<section className="py-16 bg-muted/30 dark:bg-slate-900/50" id="yield-curve-us">
-  <div className="container mx-auto px-4">
-    <h2 className="text-3xl md:text-4xl font-extrabold mb-8 text-center text-gradient">
-      YIELD CURVE - US
-    </h2>
+      {/* YIELD CURVE - US Section */}
+      <section className="py-16 bg-muted/30 dark:bg-slate-900/50" id="yield-curve-us">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-8 text-center text-gradient">
+            YIELD CURVE - US
+          </h2>
 
-    {/* Card with moving glowing border */}
-    <div className="glow-border-card p-6 rounded-xl shadow-lg max-w-5xl mx-auto dark:bg-slate-800/80 dark:border-slate-700/50 relative">
-      <div className="aspect-video w-full bg-card/60 dark:bg-slate-900/80 rounded-lg p-6 flex flex-col justify-end mb-6 relative">
-        
-        {/* X-Axis Labels */}
-        <div className="flex justify-between w-full mb-2 text-sm text-muted-foreground">
-          <div>1M</div>
-          <div>3M</div>
-          <div>6M</div>
-          <div>1Y</div>
-          <div>2Y</div>
-          <div>5Y</div>
-          <div>10Y</div>
-          <div>20Y</div>
-          <div>30Y</div>
-        </div>
+          {/* Card with moving glowing border */}
+          <div className="glow-border-card p-6 rounded-xl shadow-lg max-w-5xl mx-auto dark:bg-slate-800/80 dark:border-slate-700/50 relative">
+            <div className="aspect-video w-full bg-card/60 dark:bg-slate-900/80 rounded-lg p-6 flex flex-col justify-end mb-6 relative">
 
-        {/* Yield Curve */}
-        <div className="relative h-64 w-full">
-          {/* Grid Lines */}
-          <div className="absolute inset-0 grid grid-rows-4 w-full h-full">
-            <div className="border-t border-muted-foreground/10"></div>
-            <div className="border-t border-muted-foreground/10"></div>
-            <div className="border-t border-muted-foreground/10"></div>
-            <div className="border-t border-muted-foreground/10"></div>
-          </div>
+              {/* X-Axis Labels */}
+              <div className="flex justify-between w-full mb-2 text-sm text-muted-foreground">
+                <div>1M</div>
+                <div>3M</div>
+                <div>6M</div>
+                <div>1Y</div>
+                <div>2Y</div>
+                <div>5Y</div>
+                <div>10Y</div>
+                <div>20Y</div>
+                <div>30Y</div>
+              </div>
 
-          {/* Y-Axis Labels */}
-          <div className="absolute -left-6 inset-y-0 flex flex-col justify-between text-sm text-muted-foreground">
-            <div>5%</div>
-            <div>4%</div>
-            <div>3%</div>
-            <div>2%</div>
-            <div>1%</div>
-          </div>
-
-          {/* Current Yield Curve */}
-          <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
-              <path
-                d="M0,50 C10,45 20,42 30,40 C40,38 50,37 60,37 C70,37 80,38 90,42 L100,45"
-                fill="none"
-                strokeWidth="2"
-                className="stroke-primary"
-              />
-            </svg>
-          </div>
-
-          {/* Previous Yield Curve */}
-          <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
-              <path
-                d="M0,30 C10,35 20,38 30,40 C40,42 50,43 60,43 C70,43 80,42 90,40 L100,35"
-                fill="none"
-                strokeWidth="2"
-                strokeDasharray="2,2"
-                className="stroke-blue-500/70"
-              />
-            </svg>
-          </div>
-
-          {/* Legend */}
-          <div className="absolute top-2 right-2 flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <div className="h-3 w-6 bg-primary rounded-sm"></div>
-              <span className="text-xs">Current (June 2025)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="h-3 w-6 border-2 border-dashed border-blue-500/70 rounded-sm"></div>
-              <span className="text-xs">Previous (March 2025)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Content Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h3 className="text-xl font-bold mb-4">Current Yield Analysis</h3>
-          <p className="text-muted-foreground mb-4">
-            The US Treasury yield curve is a critical indicator of economic health and market expectations.
-            Our analysis provides insights into potential market movements based on yield curve shapes.
-          </p>
-          <ul className="space-y-2">
-            <li className="flex items-start gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <span>Real-time Treasury yield data</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <span>Yield curve inversion alerts</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <span>Historical yield comparisons</span>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="text-xl font-bold mb-4">Current Treasury Yields</h3>
-          <p className="text-muted-foreground mb-4">
-            Understanding yield curve movements helps predict economic cycles and make informed investment decisions.
-          </p>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span>2-Year Treasury</span>
-              <span className="font-bold">4.32%</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>5-Year Treasury</span>
-              <span className="font-bold">4.15%</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>10-Year Treasury</span>
-              <span className="font-bold">4.01%</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>30-Year Treasury</span>
-              <span className="font-bold">4.21%</span>
-            </div>
-
-            {/* Yellow Glowy Alert */}
-            <div className="mt-6 p-3 glow-yellow rounded-lg">
-              <div className="flex items-start gap-2">
-                <div className="mt-0.5 text-amber-500">
-                  <TrendingUp className="h-5 w-5" />
+              {/* Yield Curve */}
+              <div className="relative h-64 w-full">
+                {/* Grid Lines */}
+                <div className="absolute inset-0 grid grid-rows-4 w-full h-full">
+                  <div className="border-t border-muted-foreground/10"></div>
+                  <div className="border-t border-muted-foreground/10"></div>
+                  <div className="border-t border-muted-foreground/10"></div>
+                  <div className="border-t border-muted-foreground/10"></div>
                 </div>
-                <div>
-                  <p className="font-semibold text-amber-500">Yield Curve Alert</p>
-                  <p className="text-sm">Slight inversion between 5Y and 30Y yields may indicate economic uncertainty ahead.</p>
+
+                {/* Y-Axis Labels */}
+                <div className="absolute -left-6 inset-y-0 flex flex-col justify-between text-sm text-muted-foreground">
+                  <div>5%</div>
+                  <div>4%</div>
+                  <div>3%</div>
+                  <div>2%</div>
+                  <div>1%</div>
+                </div>
+
+                {/* Current Yield Curve */}
+                <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+                    <path
+                      d="M0,50 C10,45 20,42 30,40 C40,38 50,37 60,37 C70,37 80,38 90,42 L100,45"
+                      fill="none"
+                      strokeWidth="2"
+                      className="stroke-primary"
+                    />
+                  </svg>
+                </div>
+
+                {/* Previous Yield Curve */}
+                <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+                    <path
+                      d="M0,30 C10,35 20,38 30,40 C40,42 50,43 60,43 C70,43 80,42 90,40 L100,35"
+                      fill="none"
+                      strokeWidth="2"
+                      strokeDasharray="2,2"
+                      className="stroke-blue-500/70"
+                    />
+                  </svg>
+                </div>
+
+                {/* Legend */}
+                <div className="absolute top-2 right-2 flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-3 w-6 bg-primary rounded-sm"></div>
+                    <span className="text-xs">Current (June 2025)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-3 w-6 border-2 border-dashed border-blue-500/70 rounded-sm"></div>
+                    <span className="text-xs">Previous (March 2025)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-xl font-bold mb-4">Current Yield Analysis</h3>
+                <p className="text-muted-foreground mb-4">
+                  The US Treasury yield curve is a critical indicator of economic health and market expectations.
+                  Our analysis provides insights into potential market movements based on yield curve shapes.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span>Real-time Treasury yield data</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span>Yield curve inversion alerts</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span>Historical yield comparisons</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold mb-4">Current Treasury Yields</h3>
+                <p className="text-muted-foreground mb-4">
+                  Understanding yield curve movements helps predict economic cycles and make informed investment decisions.
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span>2-Year Treasury</span>
+                    <span className="font-bold">4.32%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>5-Year Treasury</span>
+                    <span className="font-bold">4.15%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>10-Year Treasury</span>
+                    <span className="font-bold">4.01%</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>30-Year Treasury</span>
+                    <span className="font-bold">4.21%</span>
+                  </div>
+
+                  {/* Yellow Glowy Alert */}
+                  <div className="mt-6 p-3 glow-yellow rounded-lg">
+                    <div className="flex items-start gap-2">
+                      <div className="mt-0.5 text-amber-500">
+                        <TrendingUp className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-amber-500">Yield Curve Alert</p>
+                        <p className="text-sm">Slight inversion between 5Y and 30Y yields may indicate economic uncertainty ahead.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
 
 
-       {/* Features Section */}
+      {/* Features Section */}
       <section
         ref={featuresRef}
         id="features-section"
@@ -613,7 +609,7 @@ const fadeUp : Variants = {
       </section>
 
 
-    {/* Pricing Section */}
+      {/* Pricing Section */}
       <section
         ref={pricingRef}
         id="pricing-section"
@@ -781,118 +777,118 @@ const fadeUp : Variants = {
           </div>
 
           {/* Diamond Plan (Coming Soon) */}
-<div className="mt-12 mb-8">
-  <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
-    <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-purple-600 to-purple-500"></div>
-    
-    {/* Glowy "Coming Soon" Badge */}
-    <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-20">
-      <Badge className="mt-3 font-medium px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap glow-badge">
-        Coming Soon
-      </Badge>
-    </div>
+          <div className="mt-12 mb-8">
+            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-purple-600 to-purple-500"></div>
 
-    <CardHeader>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-6 sm:mt-0">
-        <CardTitle className="text-3xl font-extrabold">
-          Diamond
-        </CardTitle>
-        <Badge
-          variant="outline"
-          className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500"
-        >
-          Enterprise
-        </Badge>
-      </div>
-      <p className="text-xl font-bold mt-2">
-        Our most advanced ML prediction Model, trained on{" "}
-        <span className="text-purple-500 font-extrabold">
-          20 years
-        </span>{" "}
-        of historical stock data.
-      </p>
-    </CardHeader>
+              {/* Glowy "Coming Soon" Badge */}
+              <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-20">
+                <Badge className="mt-3 font-medium px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap glow-badge">
+                  Coming Soon
+                </Badge>
+              </div>
 
-    <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div className="space-y-4">
-        <h3 className="text-xl font-bold">Advanced Features</h3>
-        <ul className="space-y-3">
-          <li className="flex items-start gap-2">
-            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-            <span className="font-medium">
-              Deep-learning models trained on 20+ years of market data
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-            <span className="font-medium">
-              Predictive market crash indicators
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-            <span className="font-medium">
-              Sector-specific trend forecasting
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-            <span className="font-medium">
-              Custom AI model training on your portfolio
-            </span>
-          </li>
-        </ul>
-      </div>
+              <CardHeader>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-6 sm:mt-0">
+                  <CardTitle className="text-3xl font-extrabold">
+                    Diamond
+                  </CardTitle>
+                  <Badge
+                    variant="outline"
+                    className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500"
+                  >
+                    Enterprise
+                  </Badge>
+                </div>
+                <p className="text-xl font-bold mt-2">
+                  Our most advanced ML prediction Model, trained on{" "}
+                  <span className="text-purple-500 font-extrabold">
+                    20 years
+                  </span>{" "}
+                  of historical stock data.
+                </p>
+              </CardHeader>
 
-      <div className="space-y-4">
-        <h3 className="text-xl font-bold">Enterprise Benefits</h3>
-        <ul className="space-y-3">
-          <li className="flex items-start gap-2">
-            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-            <span className="font-medium">
-              Pattern Recognition Engine
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-            <span className="font-medium">
-              Dedicated account manager
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-            <span className="font-medium">
-              Get Personal Guidance from Top Market Minds
-            </span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-            <span className="font-medium">
-              White-label options available
-            </span>
-          </li>
-        </ul>
-      </div>
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold">Advanced Features</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="font-medium">
+                        Deep-learning models trained on 20+ years of market data
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="font-medium">
+                        Predictive market crash indicators
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="font-medium">
+                        Sector-specific trend forecasting
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="font-medium">
+                        Custom AI model training on your portfolio
+                      </span>
+                    </li>
+                  </ul>
+                </div>
 
-      <div className="md:col-span-2 flex flex-col items-center mt-4">
-        <p className="text-muted-foreground text-center mb-4 font-medium">
-          Join the waitlist to be the first to know when our Diamond
-          plan becomes available
-        </p>
-        <Button
-          variant="outline"
-          className="font-bold hover:scale-105 transition-transform px-8"
-          onClick={() =>
-            (window.location.href =
-              "mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.")
-          }
-        >
-          Join Waitlist
-        </Button>
-      </div>
-    </CardContent>
-  </Card>
-</div>
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold">Enterprise Benefits</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="font-medium">
+                        Pattern Recognition Engine
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="font-medium">
+                        Dedicated account manager
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="font-medium">
+                        Get Personal Guidance from Top Market Minds
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="font-medium">
+                        White-label options available
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="md:col-span-2 flex flex-col items-center mt-4">
+                  <p className="text-muted-foreground text-center mb-4 font-medium">
+                    Join the waitlist to be the first to know when our Diamond
+                    plan becomes available
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="font-bold hover:scale-105 transition-transform px-8"
+                    onClick={() =>
+                    (window.location.href =
+                      "mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.")
+                    }
+                  >
+                    Join Waitlist
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
 
           <div className="mt-12 text-center">
@@ -903,8 +899,8 @@ const fadeUp : Variants = {
               variant="outline"
               className="font-bold scale-hover"
               onClick={() =>
-                (window.location.href =
-                  "mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.")
+              (window.location.href =
+                "mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.")
               }
             >
               Contact Sales
@@ -917,126 +913,159 @@ const fadeUp : Variants = {
 
       {/* Testimonial Section */}
       <section className="py-16 bg-gradient-to-br from-purple-50/50 to-blue-50/50 dark:from-slate-900/80 dark:to-slate-950/80">
-      <div className="container mx-auto px-4">
-        <h3 className="text-4xl md:text-5xl font-bold text-center mb-16">
-          Trusted by <br />thousands of investors and traders.
-        </h3>
+        <div className="container mx-auto px-4">
+          <h3 className="text-4xl md:text-5xl font-bold text-center mb-16">
+            Trusted by <br />thousands of investors and traders.
+          </h3>
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Left Column */}
-          <div className="flex flex-col gap-8">
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-            >
-              <p className="mb-4">
-                "I bought the Gold membership of Stock Vision, and it has helped
-                me a lot in increasing both my portfolio size and profits. This
-                quarter has been especially beneficial for me."
-              </p>
-              <div>
-                <p className="font-semibold">Leslie Alexander</p>
-                <p className="text-sm text-muted-foreground">@lesliealexander</p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-            >
-              <p className="mb-4">
-                "The real-time market alerts have saved me from several bad
-                investment decisions. I've been using StockVision for 6 months
-                and my portfolio is up 24%. Couldn't be happier."
-              </p>
-              <div>
-                <p className="font-semibold">Michael Foster</p>
-                <p className="text-sm text-muted-foreground">@michaelfoster</p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-            >
-              <p className="mb-4">
-                "As a day trader, I need reliable data and quick insights.
-                StockVision's dashboard provides everything I need at a glance.
-                The Silver plan has paid for itself many times over."
-              </p>
-              <div>
-                <p className="font-semibold">Dries Vincent</p>
-                <p className="text-sm text-muted-foreground">@driesvincent</p>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Center Column */}
-          <div className="space-y-8">
-            {[
-              {
-                text: `"The AI predictions on StockVision have been remarkably accurate. I was skeptical at first, but after seeing their 87% accuracy rate on tech stocks over three months, I upgraded to the Platinum plan. My investment firm now relies on it daily."`,
-                name: "Brenna Goyette",
-                handle: "@brennagoyette"
-              },
-              {
-                text: `"StockVision's portfolio optimization tool helped me rebalance my investments and reduce risk while maintaining strong returns. Their Gold plan is worth every penny."`,
-                name: "Lindsay Walton",
-                handle: "@lindsaywalton"
-              },
-              {
-                text: `"The visualizations on StockVision make complex market data easy to understand. I've made 31% returns this year thanks to their insights and predictive analytics."`,
-                name: "Courtney Henry",
-                handle: "@courtneyhenry"
-              }
-            ].map((item, i) => (
+          {/* Main Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Left Column */}
+            <div className="flex flex-col gap-8">
               <motion.div
-                key={i}
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: i * 0.2, duration: 0.6 }}
                 className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
               >
-                <p className="mb-4">{item.text}</p>
+                <p className="mb-4">
+                  "I bought the Gold membership of Stock Vision, and it has helped
+                  me a lot in increasing both my portfolio size and profits. This
+                  quarter has been especially beneficial for me."
+                </p>
                 <div>
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-sm text-muted-foreground">{item.handle}</p>
+                  <p className="font-semibold">Leslie Alexander</p>
+                  <p className="text-sm text-muted-foreground">@lesliealexander</p>
                 </div>
               </motion.div>
-            ))}
+
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
+              >
+                <p className="mb-4">
+                  "The real-time market alerts have saved me from several bad
+                  investment decisions. I've been using StockVision for 6 months
+                  and my portfolio is up 24%. Couldn't be happier."
+                </p>
+                <div>
+                  <p className="font-semibold">Michael Foster</p>
+                  <p className="text-sm text-muted-foreground">@michaelfoster</p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
+              >
+                <p className="mb-4">
+                  "As a day trader, I need reliable data and quick insights.
+                  StockVision's dashboard provides everything I need at a glance.
+                  The Silver plan has paid for itself many times over."
+                </p>
+                <div>
+                  <p className="font-semibold">Dries Vincent</p>
+                  <p className="text-sm text-muted-foreground">@driesvincent</p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Center Column */}
+            <div className="space-y-8">
+              {[
+                {
+                  text: `"The AI predictions on StockVision have been remarkably accurate. I was skeptical at first, but after seeing their 87% accuracy rate on tech stocks over three months, I upgraded to the Platinum plan. My investment firm now relies on it daily."`,
+                  name: "Brenna Goyette",
+                  handle: "@brennagoyette"
+                },
+                {
+                  text: `"StockVision's portfolio optimization tool helped me rebalance my investments and reduce risk while maintaining strong returns. Their Gold plan is worth every penny."`,
+                  name: "Lindsay Walton",
+                  handle: "@lindsaywalton"
+                },
+                {
+                  text: `"The visualizations on StockVision make complex market data easy to understand. I've made 31% returns this year thanks to their insights and predictive analytics."`,
+                  name: "Courtney Henry",
+                  handle: "@courtneyhenry"
+                }
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ delay: i * 0.2, duration: 0.6 }}
+                  className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
+                >
+                  <p className="mb-4">{item.text}</p>
+                  <div>
+                    <p className="font-semibold">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">{item.handle}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Right Column */}
+            <div className="flex flex-col gap-8">
+              {[
+                {
+                  text: `"StockVision alerted me to a market downturn three days before it happened. I was able to adjust my positions and avoid a 15% loss. The Platinum plan's predictive alerts are game-changing."`,
+                  name: "Leonard Krasner",
+                  handle: "@leonardkrasner"
+                },
+                {
+                  text: `"I've tried many stock analysis platforms, but StockVision's ML models are in a league of their own. Their Gold plan has helped me identify undervalued stocks with remarkable accuracy."`,
+                  name: "Floyd Miles",
+                  handle: "@floydmiles"
+                },
+                {
+                  text: `"Since signing up for StockVision's Silver plan, my investment strategy has completely transformed. Their real-time analytics and daily insights have helped me achieve a 28% annual return."`,
+                  name: "Emily Selman",
+                  handle: "@emilyselman"
+                }
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ delay: i * 0.2, duration: 0.6 }}
+                  className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
+                >
+                  <p className="mb-4">{item.text}</p>
+                  <div>
+                    <p className="font-semibold">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">{item.handle}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
 
-          {/* Right Column */}
-          <div className="flex flex-col gap-8">
+          {/* Bottom Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
             {[
               {
-                text: `"StockVision alerted me to a market downturn three days before it happened. I was able to adjust my positions and avoid a 15% loss. The Platinum plan's predictive alerts are game-changing."`,
-                name: "Leonard Krasner",
-                handle: "@leonardkrasner"
+                text: `"StockVision's sector-specific trend forecasting helped our fund identify emerging opportunities in renewable energy. We've seen a 41% return in that sector alone over the past year. Looking forward to their Diamond plan."`,
+                name: "Tom Cook",
+                handle: "@tomcook"
               },
               {
-                text: `"I've tried many stock analysis platforms, but StockVision's ML models are in a league of their own. Their Gold plan has helped me identify undervalued stocks with remarkable accuracy."`,
-                name: "Floyd Miles",
-                handle: "@floydmiles"
-              },
-              {
-                text: `"Since signing up for StockVision's Silver plan, my investment strategy has completely transformed. Their real-time analytics and daily insights have helped me achieve a 28% annual return."`,
-                name: "Emily Selman",
-                handle: "@emilyselman"
+                text: `"As a financial advisor, I need tools I can trust. StockVision's Platinum plan gives me insights that impress my clients and keep their portfolios growing. The ROI has been exceptional."`,
+                name: "Whitney Francis",
+                handle: "@whitneyfrancis"
               }
             ].map((item, i) => (
               <motion.div
@@ -1057,40 +1086,7 @@ const fadeUp : Variants = {
             ))}
           </div>
         </div>
-
-        {/* Bottom Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-          {[
-            {
-              text: `"StockVision's sector-specific trend forecasting helped our fund identify emerging opportunities in renewable energy. We've seen a 41% return in that sector alone over the past year. Looking forward to their Diamond plan."`,
-              name: "Tom Cook",
-              handle: "@tomcook"
-            },
-            {
-              text: `"As a financial advisor, I need tools I can trust. StockVision's Platinum plan gives me insights that impress my clients and keep their portfolios growing. The ROI has been exceptional."`,
-              name: "Whitney Francis",
-              handle: "@whitneyfrancis"
-            }
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ delay: i * 0.2, duration: 0.6 }}
-              className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-            >
-              <p className="mb-4">{item.text}</p>
-              <div>
-                <p className="font-semibold">{item.name}</p>
-                <p className="text-sm text-muted-foreground">{item.handle}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
+      </section>
 
 
       {/* Footer */}
@@ -1116,8 +1112,8 @@ const fadeUp : Variants = {
             <div>
               <h3 className="font-bold text-lg mb-4">Contact Us</h3>
               <p className="text-muted-foreground">Have questions? Reach out to our support team.</p>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="mt-4 scale-hover"
                 onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=StockVision%20Support%20Request&body=I%20have%20a%20question%20about%20StockVision:'}
               >
@@ -1132,35 +1128,35 @@ const fadeUp : Variants = {
       </footer>
 
       {/* Go to Top Button */}
-	<div
-		className={clsx(
-			"fixed bottom-6 right-6 z-50 transition-all duration-300",
-			showScrollTop ? "opacity-100 translate-y-0" : "opacity-0 pointer-events-none translate-y-4"
-		)}
-	>
-		<button
-			onClick={scrollToTop}
-			className="relative w-14 h-14 rounded-full text-white focus:outline-none focus:ring-4 focus:ring-blue-400/40 active:scale-95 transition-transform"
-			aria-label="Go to top"
-		>
-			{/* Gradient core */}
-			<span className="absolute inset-0 rounded-full bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-500" />
-			{/* Soft glow */}
-			<span className="absolute inset-0 rounded-full blur-xl bg-blue-500/60 animate-pulse" aria-hidden="true" />
-			{/* Foreground icon */}
-			<span className="relative flex items-center justify-center w-full h-full">
-				<svg
-					className="w-6 h-6 drop-shadow-md"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12l7-7 7 7M12 5v14" />
-				</svg>
-			</span>
-		</button>
-	</div>
+      <div
+        className={clsx(
+          "fixed bottom-6 right-6 z-50 transition-all duration-300",
+          showScrollTop ? "opacity-100 translate-y-0" : "opacity-0 pointer-events-none translate-y-4"
+        )}
+      >
+        <button
+          onClick={scrollToTop}
+          className="relative w-14 h-14 rounded-full text-white focus:outline-none focus:ring-4 focus:ring-blue-400/40 active:scale-95 transition-transform"
+          aria-label="Go to top"
+        >
+          {/* Gradient core */}
+          <span className="absolute inset-0 rounded-full bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-500" />
+          {/* Soft glow */}
+          <span className="absolute inset-0 rounded-full blur-xl bg-blue-500/60 animate-pulse" aria-hidden="true" />
+          {/* Foreground icon */}
+          <span className="relative flex items-center justify-center w-full h-full">
+            <svg
+              className="w-6 h-6 drop-shadow-md"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12l7-7 7 7M12 5v14" />
+            </svg>
+          </span>
+        </button>
+      </div>
     </div>
   );
 }

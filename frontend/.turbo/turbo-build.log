@@ -1,31 +1,59 @@
 
 > stockvision@0.0.0 build
-> next build
+> prisma generate && next build
 
-   ▲ Next.js 15.3.5
+Prisma schema loaded from prisma\schema.prisma
+
+✔ Generated Prisma Client (v6.14.0) to .\..\node_modules\@prisma\client in 51ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
+
+ ⚠ Warning: Found multiple lockfiles. Selecting C:\Users\Mihir\package-lock.json.
+   Consider removing the lockfiles at:
+   * C:\Users\Mihir\OneDrive\Desktop\Main Push\Aditi\StockVision\frontend\package-lock.json
+   * C:\Users\Mihir\OneDrive\Desktop\Main Push\Aditi\StockVision\package-lock.json
+
+   ▲ Next.js 15.4.6
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 34.0s
+ ✓ Compiled successfully in 4.0s
    Linting and checking validity of types ...
- ⨯ ESLint: Cannot find package 'eslint-config-next' imported from C:\Users\Mihir\OneDrive\Desktop\StockVision\frontend\eslint.config.js
+ ⨯ ESLint: Invalid Options: - Unknown options: useEslintrc, extensions - 'extensions' has been removed.
    Collecting page data ...
-   Generating static pages (0/5) ...
-   Generating static pages (1/5) 
-   Generating static pages (2/5) 
-   Generating static pages (3/5) 
- ✓ Generating static pages (5/5)
+   Generating static pages (0/10) ...
+   Generating static pages (2/10) 
+   Generating static pages (4/10) 
+   Generating static pages (7/10) 
+ ✓ Generating static pages (10/10)
    Finalizing page optimization ...
    Collecting build traces ...
 
-Route (app)                                 Size  First Load JS
-┌ ○ /                                    44.8 kB         291 kB
-├ ○ /_not-found                            141 B         102 kB
-└ ○ /dashboard                           29.1 kB         275 kB
-+ First Load JS shared by all             102 kB
-  ├ chunks/870-856b6c2216c59f03.js       46.7 kB
-  ├ chunks/c7879cf7-bd0d5f1ca02ccc2a.js  53.2 kB
-  └ other shared chunks (total)          2.05 kB
+Route (app)                                   Size  First Load JS
+┌ ○ /                                      82.8 kB         330 kB
+├ ○ /_not-found                              139 B         101 kB
+├ ƒ /api/auth/[...nextauth]                  139 B         101 kB
+├ ƒ /api/auth/signup                         139 B         101 kB
+├ ƒ /api/history                             139 B         101 kB
+├ ƒ /api/screener                            139 B         101 kB
+├ ƒ /dashboard                             31.2 kB         278 kB
+├ ○ /login                                 2.54 kB         112 kB
+└ ○ /signup                                2.73 kB         113 kB
++ First Load JS shared by all               100 kB
+  ├ chunks/508-08a23c325a629154.js         44.3 kB
+  ├ chunks/c7879cf7-a41b851b46b3cb77.js    54.1 kB
+  └ other shared chunks (total)            2.06 kB
 
+Route (pages)                                 Size  First Load JS
+─   /_app                                      0 B        88.4 kB
++ First Load JS shared by all               104 kB
+  ├ chunks/framework-1c197e565e5fe229.js   44.8 kB
+  ├ chunks/main-832b7a4ac3005ee2.js        31.5 kB
+  ├ chunks/pages/_app-8af43c6e1ac0d50f.js  10.3 kB
+  ├ css/f489edc9067ad350.css               15.4 kB
+  └ other shared chunks (total)            1.83 kB
 
-○  (Static)  prerendered as static content
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
 

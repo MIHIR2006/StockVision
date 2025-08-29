@@ -5,10 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:dev": "prisma db push --schema=./prisma/schema.dev.prisma",
+    "db:prod": "prisma db push --schema=./prisma/schema.prisma",
+    "setup:prod": "node scripts/setup-production.js",
+    "setup:dev": "node scripts/setup-dev.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
