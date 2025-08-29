@@ -13,7 +13,7 @@ import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
 import { useRouter, usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion , type Variants  } from "framer-motion";
 
 // Declare the global window interface extension
 declare global {
@@ -128,7 +128,7 @@ export default function Landing() {
   }, []);
     
 
-const fadeUp = {
+const fadeUp : Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
