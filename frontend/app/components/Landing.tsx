@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { portfolioStocks } from "@/data/mock-data";
 import { BarChart2, ChartLine, CheckCircle, CircleDollarSign, LineChart, LogIn, PieChart, TrendingUp, XCircle } from "lucide-react";
 import Link from "next/link";
+import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
@@ -33,7 +34,11 @@ export default function Landing() {
 
    const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+ enhance-ui-with-animation
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  const [showScrollTop, setShowScrollTop] = useState(false);
+main
 
 
   // Expose scrollToPricing function to window so it can be called from MarketDataCenter
@@ -115,6 +120,7 @@ export default function Landing() {
   }, [pathname]);
 
 
+ enhance-ui-with-animation
   // scroll animation
   useEffect(() => {
     const updateScroll = () => {
@@ -128,6 +134,15 @@ export default function Landing() {
   }, []);
     
 
+	// Show "Go to Top" after scrolling down
+	useEffect(() => {
+		const onScroll = () => setShowScrollTop(window.scrollY > 400);
+		onScroll();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		return () => window.removeEventListener('scroll', onScroll);
+	}, []);
+ main
+
 const fadeUp : Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: {
@@ -140,8 +155,10 @@ const fadeUp : Variants = {
 
   return (
     <div className="min-h-screen flex flex-col">
+      
       {/* Header */}
       <header className="border-b backdrop-blur-lg bg-background/80 sticky top-0 z-50">
+ enhance-ui-with-animation
       {/* Progress Bar */}
       <div
        className="h-1 rounded-full 
@@ -179,6 +196,22 @@ const fadeUp : Variants = {
                             translate-x-[-100%] animate-[shimmer_2s_infinite]" />
           </Button>
         </Link>
+
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                     <div className="flex items-center gap-2"onClick={() => setSidebarOpen(true)}>
+            <BarChart2 className="h-6 w-6 text-primary" />
+            <span className="font-extrabold text-xl">StockVision</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <Link href="/dashboard">
+              <Button className="font-bold hover:scale-105 transition-transform flex items-center gap-2">
+                <LogIn className="h-4 w-4" />
+                <span className="hidden sm:inline">Sign In</span>
+              </Button>
+            </Link>
+          </div>
+ main
         </div>
       </div>
     </header>
@@ -192,8 +225,37 @@ const fadeUp : Variants = {
         onSectionChange={handleSectionChange}
       />
       
+      {/* Floating Side Menu Button */}
+      <div className={`fixed left-2 top-32 z-30 transition-all duration-300 ${sidebarOpen ? 'opacity-0 pointer-events-none scale-95' : 'opacity-100 scale-100'}`}>
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="w-12 h-12 rounded-lg bg-blue-100 hover:bg-blue-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-blue-200/50 dark:border-blue-600/30 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group"
+          aria-label="Open side menu"
+        >
+          {/* Light mode: double chevron arrows like in the image */}
+          <div className="flex items-center text-blue-600 group-hover:text-blue-700 transition-colors duration-200 dark:hidden">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+            <svg className="w-4 h-4 -ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+          
+          {/* Dark mode: double chevron arrows like in the image */}
+          <div className="hidden dark:flex items-center text-blue-400 group-hover:text-blue-300 transition-colors duration-200">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+            <svg className="w-4 h-4 -ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </button>
+      </div>
+      
 
-
+      
       {/* Stock Ticker */}
       <StockTicker />
 
@@ -1068,6 +1130,37 @@ const fadeUp : Variants = {
           </div>
         </div>
       </footer>
+
+      {/* Go to Top Button */}
+	<div
+		className={clsx(
+			"fixed bottom-6 right-6 z-50 transition-all duration-300",
+			showScrollTop ? "opacity-100 translate-y-0" : "opacity-0 pointer-events-none translate-y-4"
+		)}
+	>
+		<button
+			onClick={scrollToTop}
+			className="relative w-14 h-14 rounded-full text-white focus:outline-none focus:ring-4 focus:ring-blue-400/40 active:scale-95 transition-transform"
+			aria-label="Go to top"
+		>
+			{/* Gradient core */}
+			<span className="absolute inset-0 rounded-full bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-500" />
+			{/* Soft glow */}
+			<span className="absolute inset-0 rounded-full blur-xl bg-blue-500/60 animate-pulse" aria-hidden="true" />
+			{/* Foreground icon */}
+			<span className="relative flex items-center justify-center w-full h-full">
+				<svg
+					className="w-6 h-6 drop-shadow-md"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12l7-7 7 7M12 5v14" />
+				</svg>
+			</span>
+		</button>
+	</div>
     </div>
   );
 }
