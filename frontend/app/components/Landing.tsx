@@ -15,8 +15,6 @@ import { Sidebar } from "@/components/sidebar";
 import { useRouter, usePathname } from "next/navigation";
 
 
-
-
 // Declare the global window interface extension
 declare global {
   interface Window {
@@ -35,6 +33,7 @@ export default function Landing() {
 
    const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [scrollProgress, setScrollProgress] = useState(0);
 
 
   // Expose scrollToPricing function to window so it can be called from MarketDataCenter
@@ -116,8 +115,17 @@ export default function Landing() {
   }, [pathname]);
 
 
+  // scroll animation
+  useEffect(() => {
+    const updateScroll = () => {
+      const currentScroll = window.scrollY;
+      const totalHeight = document.body.scrollHeight - window.innerHeight;
+      setScrollProgress((currentScroll / totalHeight) * 100);
+    };
 
-
+    window.addEventListener("scroll", updateScroll);
+    return () => window.removeEventListener("scroll", updateScroll);
+  }, []);
     
 
 
@@ -127,22 +135,46 @@ export default function Landing() {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="border-b backdrop-blur-lg bg-background/80 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2"onClick={() => setSidebarOpen(true)}>
-            <BarChart2 className="h-6 w-6 text-primary" />
-            <span className="font-extrabold text-xl">StockVision</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <Link href="/dashboard">
-              <Button className="font-bold hover:scale-105 transition-transform flex items-center gap-2">
-                <LogIn className="h-4 w-4" />
-                <span className="hidden sm:inline">Sign In</span>
-              </Button>
-            </Link>
-          </div>
+      {/* Progress Bar */}
+      <div
+       className="h-1 rounded-full 
+             bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 
+             shadow-[0_0_10px_rgba(59,130,246,0.8),0_0_20px_rgba(139,92,246,0.6)] 
+             transition-all duration-200"
+        style={{ width: `${scrollProgress}%` }}
+      />
+
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => setSidebarOpen(true)}
+        >
+          <BarChart2 className="h-6 w-6 text-primary" />
+          <span className="font-extrabold text-xl">StockVision</span>
         </div>
-      </header>
+
+        {/* Right Section */}
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <Link href="/dashboard">
+          <Button
+            className="relative overflow-hidden font-bold flex items-center gap-2 px-6 py-3 
+                      rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 
+                      text-white hover:scale-105 transition-transform"
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              <LogIn className="h-4 w-4" />
+              <span className="hidden sm:inline">Sign In</span>
+            </span>
+
+            {/* shimmer overlay */}
+            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent 
+                            translate-x-[-100%] animate-[shimmer_2s_infinite]" />
+          </Button>
+        </Link>
+        </div>
+      </div>
+    </header>
 
 
       {/* Sidebar */}
@@ -164,7 +196,9 @@ export default function Landing() {
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-8 animate-fade-in">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gradient">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight 
+               bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 
+               bg-clip-text text-transparent bg-[length:200%_200%] animate-textGradient">
                 Visualize Your Portfolio Performance
               </h1>
               <p className="text-xl text-muted-foreground">
@@ -173,42 +207,58 @@ export default function Landing() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/dashboard">
-                  <Button size="lg" className="w-full sm:w-auto font-bold scale-hover">
-                    Launch Dashboard
-                  </Button>
-                </Link>
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto font-bold relative overflow-hidden group"
+                >
+                  <span className="relative z-10">Launch Dashboard</span>
+
+                  {/* Water fill gradient */}
+                  <span className="absolute inset-0 bg-gradient-to-t from-purple-500 to-blue-600
+                                  translate-y-full group-hover:translate-y-0 
+                                  transition-transform duration-500 ease-out z-0 " />
+                </Button>
+              </Link>
+
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto font-bold scale-hover"
+                  className="w-full sm:w-auto font-bold relative overflow-hidden group"
                   onClick={scrollToMarketData}
                 >
-                  Learn More
+                  <span className="relative z-10">Learn More</span>
+
+                  {/* Different gradient but same palette */}
+                  <span className="absolute inset-0 bg-gradient-to-t from-purple-600 to-pink-500 
+                                  translate-y-full group-hover:translate-y-0 
+                                  transition-transform duration-500 ease-out z-0" />
                 </Button>
+
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 animate-slide-in">
-              <div className="flex flex-col gap-4">
-                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 scale-hover">
-                  <LineChart className="h-16 w-16 text-primary mb-2" />
-                  <p className="text-center font-medium">Stock Performance</p>
-                </div>
-                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 scale-hover">
-                  <PieChart className="h-16 w-16 text-primary mb-2" />
-                  <p className="text-center font-medium">Portfolio Allocation</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 mt-8">
-                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 scale-hover">
-                  <BarChart2 className="h-16 w-16 text-primary mb-2" />
-                  <p className="text-center font-medium">Revenue Analytics</p>
-                </div>
-                <div className="bg-primary/10 rounded-lg p-6 h-40 flex flex-col justify-center items-center backdrop-blur-lg border border-primary/20 scale-hover">
-                  <div className="font-bold text-3xl text-primary">+34%</div>
-                  <p className="text-center font-medium mt-2">Portfolio Growth</p>
-                </div>
-              </div>
+           <div className="grid grid-cols-2 gap-4 animate-slide-in">
+          <div className="flex flex-col gap-4">
+            <div className="card-bottom-line">
+              <LineChart className="h-16 w-16 text-primary mb-2" />
+              <p className="text-center font-medium">Stock Performance</p>
             </div>
+            <div className="card-bottom-line">
+              <PieChart className="h-16 w-16 text-primary mb-2" />
+              <p className="text-center font-medium">Portfolio Allocation</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4 mt-8">
+            <div className="card-bottom-line">
+              <BarChart2 className="h-16 w-16 text-primary mb-2" />
+              <p className="text-center font-medium">Revenue Analytics</p>
+            </div>
+            <div className="card-bottom-line">
+              <div className="font-bold text-3xl text-primary">+34%</div>
+              <p className="text-center font-medium mt-2">Portfolio Growth</p>
+            </div>
+          </div>
+        </div>
           </div>
         </div>
       </section>
@@ -222,27 +272,26 @@ export default function Landing() {
           </h2>
           <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {portfolioStocks.map((stock, index) => (
+          <div 
+            key={stock.symbol} 
+            className="bg-card/60 backdrop-blur-lg p-4 rounded-xl border border-primary/10 animate-fade-in scale-hover card-shimmer" 
+            style={{ animationDelay: `${0.1 * index}s` }}
+          >
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-bold text-lg">{stock.symbol}</span>
               <div 
-                key={stock.symbol} 
-                className="bg-card/60 backdrop-blur-lg p-4 rounded-xl border border-primary/10 animate-fade-in scale-hover" 
-                style={{ animationDelay: `${0.1 * index}s` }}
+                className={`text-xs px-2 py-1 rounded-full ${
+                  stock.change >= 0 ? "bg-gain/20 text-gain" : "bg-loss/20 text-loss"
+                }`}
               >
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-bold text-lg">{stock.symbol}</span>
-                  <div 
-                    className={`text-xs px-2 py-1 rounded-full ${stock.change >= 0 ? "bg-gain/20 text-gain" : "bg-loss/20 text-loss"
-                    }`}
-                  >
-                    {stock.change >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}%
-                  </div>
-                </div>
-                <div className="text-2xl font-bold">${stock.price.toFixed(2)}</div>
-                <div className="text-xs text-muted-foreground mt-1">{stock.name}</div>
+                {stock.change >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}%
               </div>
+            </div>
+            <div className="text-2xl font-bold">${stock.price.toFixed(2)}</div>
+            <div className="text-xs text-muted-foreground mt-1">{stock.name}</div>
+          </div>
             ))}
           </div>
-
-
           <div className="mt-8 text-center">
             <Button
               variant="outline"
@@ -268,164 +317,154 @@ export default function Landing() {
       </div>
 
 
-      {/* YIELD CURVE - US Section */}
-      <section className="py-16 bg-muted/30 dark:bg-slate-900/50" id="yield-curve-us">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-8 text-center text-gradient">
-            YIELD CURVE - US
-          </h2>
-          <div className="glass-card p-6 rounded-xl shadow-lg max-w-5xl mx-auto dark:bg-slate-800/80 dark:border-slate-700/50">
-            <div className="aspect-video w-full bg-card/60 dark:bg-slate-900/80 rounded-lg p-6 flex flex-col justify-end mb-6 relative">
-              {/* X-Axis Labels */}
-              <div className="flex justify-between w-full mb-2 text-sm text-muted-foreground">
-                <div>1M</div>
-                <div>3M</div>
-                <div>6M</div>
-                <div>1Y</div>
-                <div>2Y</div>
-                <div>5Y</div>
-                <div>10Y</div>
-                <div>20Y</div>
-                <div>30Y</div>
-              </div>
+     {/* YIELD CURVE - US Section */}
+<section className="py-16 bg-muted/30 dark:bg-slate-900/50" id="yield-curve-us">
+  <div className="container mx-auto px-4">
+    <h2 className="text-3xl md:text-4xl font-extrabold mb-8 text-center text-gradient">
+      YIELD CURVE - US
+    </h2>
 
+    {/* Card with moving glowing border */}
+    <div className="glow-border-card p-6 rounded-xl shadow-lg max-w-5xl mx-auto dark:bg-slate-800/80 dark:border-slate-700/50 relative">
+      <div className="aspect-video w-full bg-card/60 dark:bg-slate-900/80 rounded-lg p-6 flex flex-col justify-end mb-6 relative">
+        
+        {/* X-Axis Labels */}
+        <div className="flex justify-between w-full mb-2 text-sm text-muted-foreground">
+          <div>1M</div>
+          <div>3M</div>
+          <div>6M</div>
+          <div>1Y</div>
+          <div>2Y</div>
+          <div>5Y</div>
+          <div>10Y</div>
+          <div>20Y</div>
+          <div>30Y</div>
+        </div>
 
-              {/* Yield Curve */}
-              <div className="relative h-64 w-full">
-                {/* Grid Lines */}
-                <div className="absolute inset-0 grid grid-rows-4 w-full h-full">
-                  <div className="border-t border-muted-foreground/10"></div>
-                  <div className="border-t border-muted-foreground/10"></div>
-                  <div className="border-t border-muted-foreground/10"></div>
-                  <div className="border-t border-muted-foreground/10"></div>
-                </div>
+        {/* Yield Curve */}
+        <div className="relative h-64 w-full">
+          {/* Grid Lines */}
+          <div className="absolute inset-0 grid grid-rows-4 w-full h-full">
+            <div className="border-t border-muted-foreground/10"></div>
+            <div className="border-t border-muted-foreground/10"></div>
+            <div className="border-t border-muted-foreground/10"></div>
+            <div className="border-t border-muted-foreground/10"></div>
+          </div>
 
+          {/* Y-Axis Labels */}
+          <div className="absolute -left-6 inset-y-0 flex flex-col justify-between text-sm text-muted-foreground">
+            <div>5%</div>
+            <div>4%</div>
+            <div>3%</div>
+            <div>2%</div>
+            <div>1%</div>
+          </div>
 
-                {/* Y-Axis Labels */}
-                <div className="absolute -left-6 inset-y-0 flex flex-col justify-between text-sm text-muted-foreground">
-                  <div>5%</div>
-                  <div>4%</div>
-                  <div>3%</div>
-                  <div>2%</div>
-                  <div>1%</div>
-                </div>
+          {/* Current Yield Curve */}
+          <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+              <path
+                d="M0,50 C10,45 20,42 30,40 C40,38 50,37 60,37 C70,37 80,38 90,42 L100,45"
+                fill="none"
+                strokeWidth="2"
+                className="stroke-primary"
+              />
+            </svg>
+          </div>
 
+          {/* Previous Yield Curve */}
+          <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+              <path
+                d="M0,30 C10,35 20,38 30,40 C40,42 50,43 60,43 C70,43 80,42 90,40 L100,35"
+                fill="none"
+                strokeWidth="2"
+                strokeDasharray="2,2"
+                className="stroke-blue-500/70"
+              />
+            </svg>
+          </div>
 
-                {/* Current Yield Curve */}
-                <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
-                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
-                    <path
-                      d="M0,50 C10,45 20,42 30,40 C40,38 50,37 60,37 C70,37 80,38 90,42 L100,45"
-                      fill="none"
-                      strokeWidth="2"
-                      className="stroke-primary"
-                    />
-                  </svg>
-                </div>
-
-
-                {/* Data Points */}
-                <div className="absolute left-0 bottom-40 h-2 w-2 rounded-full bg-primary"></div>
-                <div className="absolute left-1/8 bottom-42 h-2 w-2 rounded-full bg-primary"></div>
-                <div className="absolute left-2/8 bottom-45 h-2 w-2 rounded-full bg-primary"></div>
-                <div className="absolute left-3/8 bottom-48 h-2 w-2 rounded-full bg-primary"></div>
-                <div className="absolute left-4/8 bottom-50 h-2 w-2 rounded-full bg-primary"></div>
-                <div className="absolute left-5/8 bottom-50 h-2 w-2 rounded-full bg-primary"></div>
-                <div className="absolute left-6/8 bottom-48 h-2 w-2 rounded-full bg-primary"></div>
-                <div className="absolute left-7/8 bottom-45 h-2 w-2 rounded-full bg-primary"></div>
-                <div className="absolute right-0 bottom-42 h-2 w-2 rounded-full bg-primary"></div>
-
-
-                {/* Previous Yield Curve */}
-                <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
-                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
-                    <path
-                      d="M0,30 C10,35 20,38 30,40 C40,42 50,43 60,43 C70,43 80,42 90,40 L100,35"
-                      fill="none"
-                      strokeWidth="2"
-                      strokeDasharray="2,2"
-                      className="stroke-blue-500/70"
-                    />
-                  </svg>
-                </div>
-
-
-                {/* Legend */}
-                <div className="absolute top-2 right-2 flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <div className="h-3 w-6 bg-primary rounded-sm"></div>
-                    <span className="text-xs">Current (June 2025)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-3 w-6 border-2 border-dashed border-blue-500/70 rounded-sm"></div>
-                    <span className="text-xs">Previous (March 2025)</span>
-                  </div>
-                </div>
-              </div>
+          {/* Legend */}
+          <div className="absolute top-2 right-2 flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-6 bg-primary rounded-sm"></div>
+              <span className="text-xs">Current (June 2025)</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-bold mb-4">Current Yield Analysis</h3>
-                <p className="text-muted-foreground mb-4">
-                  The US Treasury yield curve is a critical indicator of economic health and market expectations.
-                  Our analysis provides insights into potential market movements based on yield curve shapes.
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span>Real-time Treasury yield data</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span>Yield curve inversion alerts</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span>Historical yield comparisons</span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-4">Current Treasury Yields</h3>
-                <p className="text-muted-foreground mb-4">
-                  Understanding yield curve movements helps predict economic cycles and make informed investment decisions.
-                </p>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span>2-Year Treasury</span>
-                    <span className="font-bold">4.32%</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>5-Year Treasury</span>
-                    <span className="font-bold">4.15%</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>10-Year Treasury</span>
-                    <span className="font-bold">4.01%</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>30-Year Treasury</span>
-                    <span className="font-bold">4.21%</span>
-                  </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-6 border-2 border-dashed border-blue-500/70 rounded-sm"></div>
+              <span className="text-xs">Previous (March 2025)</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      {/* Content Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 className="text-xl font-bold mb-4">Current Yield Analysis</h3>
+          <p className="text-muted-foreground mb-4">
+            The US Treasury yield curve is a critical indicator of economic health and market expectations.
+            Our analysis provides insights into potential market movements based on yield curve shapes.
+          </p>
+          <ul className="space-y-2">
+            <li className="flex items-start gap-2">
+              <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+              <span>Real-time Treasury yield data</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+              <span>Yield curve inversion alerts</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+              <span>Historical yield comparisons</span>
+            </li>
+          </ul>
+        </div>
 
-                  <div className="mt-6 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-                    <div className="flex items-start gap-2">
-                      <div className="mt-0.5 text-amber-500">
-                        <TrendingUp className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-amber-500">Yield Curve Alert</p>
-                        <p className="text-sm">Slight inversion between 5Y and 30Y yields may indicate economic uncertainty ahead.</p>
-                      </div>
-                    </div>
-                  </div>
+        <div>
+          <h3 className="text-xl font-bold mb-4">Current Treasury Yields</h3>
+          <p className="text-muted-foreground mb-4">
+            Understanding yield curve movements helps predict economic cycles and make informed investment decisions.
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span>2-Year Treasury</span>
+              <span className="font-bold">4.32%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>5-Year Treasury</span>
+              <span className="font-bold">4.15%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>10-Year Treasury</span>
+              <span className="font-bold">4.01%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>30-Year Treasury</span>
+              <span className="font-bold">4.21%</span>
+            </div>
+
+            {/* Yellow Glowy Alert */}
+            <div className="mt-6 p-3 glow-yellow rounded-lg">
+              <div className="flex items-start gap-2">
+                <div className="mt-0.5 text-amber-500">
+                  <TrendingUp className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-semibold text-amber-500">Yield Curve Alert</p>
+                  <p className="text-sm">Slight inversion between 5Y and 30Y yields may indicate economic uncertainty ahead.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 
        {/* Features Section */}
@@ -673,113 +712,119 @@ export default function Landing() {
           </div>
 
           {/* Diamond Plan (Coming Soon) */}
-          <div className="mt-12 mb-8">
-            <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-purple-600 to-purple-500"></div>
-              <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-20">
-                <Badge className="mt-3 font-medium bg-blue-400/80 px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap">
-                  Coming Soon
-                </Badge>
-              </div>
-              <CardHeader>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-6 sm:mt-0">
-                  <CardTitle className="text-3xl font-extrabold">
-                    Diamond
-                  </CardTitle>
-                  <Badge
-                    variant="outline"
-                    className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500"
-                  >
-                    Enterprise
-                  </Badge>
-                </div>
-                <p className="text-xl font-bold mt-2">
-                  Our most advanced ML prediction Model, trained on{" "}
-                  <span className="text-purple-500 font-extrabold">
-                    20 years
-                  </span>{" "}
-                  of historical stock data.
-                </p>
-              </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <h3 className="text-xl font-bold">Advanced Features</h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">
-                        Deep-learning models trained on 20+ years of market data
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">
-                        Predictive market crash indicators
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">
-                        Sector-specific trend forecasting
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">
-                        Custom AI model training on your portfolio
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-xl font-bold">Enterprise Benefits</h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">
-                        {" "}
-                        Pattern Recognition Engine
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">
-                        Dedicated account manager
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">
-                        Get Personal Guidance from Top Market Minds
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="font-medium">
-                        White-label options available
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="md:col-span-2 flex flex-col items-center mt-4">
-                  <p className="text-muted-foreground text-center mb-4 font-medium">
-                    Join the waitlist to be the first to know when our Diamond
-                    plan becomes available
-                  </p>
-                  <Button
-                    variant="outline"
-                    className="font-bold hover:scale-105 transition-transform px-8"
-                    onClick={() =>
-                      (window.location.href =
-                        "mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.")
-                    }
-                  >
-                    Join Waitlist
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+<div className="mt-12 mb-8">
+  <Card className="glass-card border-primary/10 shadow-lg transition-all hover:shadow-xl relative overflow-hidden">
+    <div className="absolute top-0 right-0 left-0 h-2 bg-gradient-to-r from-purple-600 to-purple-500"></div>
+    
+    {/* Glowy "Coming Soon" Badge */}
+    <div className="absolute right-2 sm:right-4 top-2 sm:top-4 z-20">
+      <Badge className="mt-3 font-medium px-3 sm:px-4 py-1 text-xs sm:text-sm whitespace-nowrap glow-badge">
+        Coming Soon
+      </Badge>
+    </div>
+
+    <CardHeader>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-6 sm:mt-0">
+        <CardTitle className="text-3xl font-extrabold">
+          Diamond
+        </CardTitle>
+        <Badge
+          variant="outline"
+          className="font-medium text-sm self-start sm:self-auto bg-gradient-to-r from-blue-400 to-purple-500"
+        >
+          Enterprise
+        </Badge>
+      </div>
+      <p className="text-xl font-bold mt-2">
+        Our most advanced ML prediction Model, trained on{" "}
+        <span className="text-purple-500 font-extrabold">
+          20 years
+        </span>{" "}
+        of historical stock data.
+      </p>
+    </CardHeader>
+
+    <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold">Advanced Features</h3>
+        <ul className="space-y-3">
+          <li className="flex items-start gap-2">
+            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+            <span className="font-medium">
+              Deep-learning models trained on 20+ years of market data
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+            <span className="font-medium">
+              Predictive market crash indicators
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+            <span className="font-medium">
+              Sector-specific trend forecasting
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+            <span className="font-medium">
+              Custom AI model training on your portfolio
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold">Enterprise Benefits</h3>
+        <ul className="space-y-3">
+          <li className="flex items-start gap-2">
+            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+            <span className="font-medium">
+              Pattern Recognition Engine
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+            <span className="font-medium">
+              Dedicated account manager
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+            <span className="font-medium">
+              Get Personal Guidance from Top Market Minds
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
+            <span className="font-medium">
+              White-label options available
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div className="md:col-span-2 flex flex-col items-center mt-4">
+        <p className="text-muted-foreground text-center mb-4 font-medium">
+          Join the waitlist to be the first to know when our Diamond
+          plan becomes available
+        </p>
+        <Button
+          variant="outline"
+          className="font-bold hover:scale-105 transition-transform px-8"
+          onClick={() =>
+            (window.location.href =
+              "mailto:elevate360marketingcompany@gmail.com?subject=Diamond%20Plan%20Waitlist&body=I%20am%20interested%20in%20joining%20the%20waitlist%20for%20your%20Diamond%20plan.")
+          }
+        >
+          Join Waitlist
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
+</div>
+
 
           <div className="mt-12 text-center">
             <p className="text-muted-foreground mb-4">
