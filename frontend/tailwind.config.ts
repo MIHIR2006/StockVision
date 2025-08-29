@@ -80,6 +80,14 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
+				shimmer: {
+				"0%": { transform: "translateX(-100%)" },
+				"100%": { transform: "translateX(100%)" },
+				},
+				 textGradient: {
+				"0%, 100%": { "background-position": "0% 50%" },
+				"50%": { "background-position": "100% 50%" },
+				},
 				'accordion-down': {
 					from: { height: '0' },
 					to: { height: 'var(--radix-accordion-content-height)' }
@@ -102,6 +110,8 @@ export default {
 				}
 			},
 			animation: {
+				shimmer: "shimmer 2s infinite",
+				textGradient: "textGradient 6s ease infinite",
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out forwards',

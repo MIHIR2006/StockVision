@@ -124,7 +124,9 @@ export function TreasuryBillSection() {
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-blue-500 dark:text-blue-400">U.S. Treasury Bills</h3>
+            <h3 className="text-2xl font-bold text-blue-500 dark:text-blue-400">
+              U.S. Treasury Bills
+            </h3>
             <div className="flex gap-8">
               <div>NAME</div>
               <div>LAST</div>
@@ -132,22 +134,31 @@ export function TreasuryBillSection() {
             </div>
           </div>
 
-          <Card className="glass-card p-4 mb-8">
+          {/* Main card with hover */}
+          <Card className="glass-card p-4 mb-8 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/30">
             {treasuryBills[0].name && (
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <h4 className="text-lg font-semibold">{treasuryBills[0].name}</h4>
+                  <h4 className="text-lg font-semibold">
+                    {treasuryBills[0].name}
+                  </h4>
                   <div className="text-right">
-                    <div className="text-xl font-bold">{treasuryBills[0].last}</div>
-                    <div className={cn(
-                      "text-sm",
-                      treasuryBills[0].isPositive ? "text-green-500" : "text-red-500"
-                    )}>
+                    <div className="text-xl font-bold">
+                      {treasuryBills[0].last}
+                    </div>
+                    <div
+                      className={cn(
+                        "text-sm",
+                        treasuryBills[0].isPositive
+                          ? "text-green-500"
+                          : "text-red-500"
+                      )}
+                    >
                       {treasuryBills[0].change}
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
@@ -155,9 +166,23 @@ export function TreasuryBillSection() {
                       margin={{ top: 10, right: 10, left: 0, bottom: 10 }}
                     >
                       <defs>
-                        <linearGradient id="colorTreasuryBill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#2B6CB0" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#2B6CB0" stopOpacity={0.1} />
+                        <linearGradient
+                          id="colorTreasuryBill"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="5%"
+                            stopColor="#2B6CB0"
+                            stopOpacity={0.3}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="#2B6CB0"
+                            stopOpacity={0.1}
+                          />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
@@ -175,13 +200,15 @@ export function TreasuryBillSection() {
                         fillOpacity={1}
                         fill="url(#colorTreasuryBill)"
                       />
-                      <ChartTooltip 
+                      <ChartTooltip
                         content={({ active, payload }) => {
                           if (active && payload && payload.length) {
                             return (
                               <div className="bg-background/95 border p-2 rounded shadow">
                                 <p>{payload[0].payload.time}</p>
-                                <p className="font-bold">{payload[0].value}%</p>
+                                <p className="font-bold">
+                                  {payload[0].value}%
+                                </p>
                               </div>
                             );
                           }
@@ -195,16 +222,22 @@ export function TreasuryBillSection() {
             )}
           </Card>
 
+          {/* Other cards with same hover effect */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {treasuryBills.slice(1).map((bill) => (
-              <Card key={bill.name} className="glass-card flex justify-between items-center p-4">
+              <Card
+                key={bill.name}
+                className="glass-card flex justify-between items-center p-4 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/30"
+              >
                 <div className="font-medium">{bill.name}</div>
                 <div className="text-right">
                   <div className="font-bold">{bill.last}</div>
-                  <div className={cn(
-                    "text-sm",
-                    bill.isPositive ? "text-green-500" : "text-red-500"
-                  )}>
+                  <div
+                    className={cn(
+                      "text-sm",
+                      bill.isPositive ? "text-green-500" : "text-red-500"
+                    )}
+                  >
                     {bill.change}
                   </div>
                 </div>
@@ -212,10 +245,13 @@ export function TreasuryBillSection() {
             ))}
           </div>
         </div>
-        
+
+        {/* Yield Curve */}
         <div className="mt-16">
-          <h3 className="text-2xl font-bold mb-6 text-blue-500 dark:text-blue-400">YIELD CURVE - US</h3>
-          <Card className="glass-card p-4">
+          <h3 className="text-2xl font-bold mb-6 text-blue-500 dark:text-blue-400">
+            YIELD CURVE - US
+          </h3>
+          <Card className="glass-card p-4 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/30">
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
@@ -224,8 +260,8 @@ export function TreasuryBillSection() {
                 >
                   <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                   <XAxis dataKey="duration" tick={{ fontSize: 12 }} />
-                  <YAxis 
-                    domain={[3.5, 5.5]} 
+                  <YAxis
+                    domain={[3.5, 5.5]}
                     tick={{ fontSize: 12 }}
                     tickFormatter={(value) => `${value}%`}
                   />
@@ -247,7 +283,7 @@ export function TreasuryBillSection() {
                     dot={{ r: 4 }}
                     activeDot={{ r: 6 }}
                   />
-                  <ChartTooltip 
+                  <ChartTooltip
                     formatter={(value) => [`${value}%`]}
                     labelFormatter={(label) => `Duration: ${label}`}
                   />
