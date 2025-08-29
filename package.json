@@ -24,12 +24,13 @@
     "bcryptjs": "^3.0.2",
     "next-auth": "^4.24.11",
     "prisma": "^6.13.0",
+    "react-intersection-observer": "^9.16.0",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@types/next-auth": "^3.13.0",
     "concurrently": "^8.2.2",
-    "turbo": "^2.5.5",
-    "@types/next-auth": "^3.13.0"
+    "turbo": "^2.5.5"
   },
   "engines": {
     "node": ">=18.0.0",
