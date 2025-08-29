@@ -1,14 +1,13 @@
-// Database configuration for both development and production
-// For local development: SQLite
-// For production: PostgreSQL
+// Development Database Schema (SQLite)
+// Use this for local development
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
