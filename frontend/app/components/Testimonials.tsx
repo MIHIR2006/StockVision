@@ -132,12 +132,8 @@ const Testimonials: React.FC = () => {
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* First set */}
-          {testimonials.slice(0, 3).map((testimonial) => (
-            <TestimonialCard key={`first-${testimonial.id}`} testimonial={testimonial} />
-          ))}
-          {/* Duplicate for seamless loop */}
-          {testimonials.slice(0, 3).map((testimonial) => (
-            <TestimonialCard key={`first-dup-${testimonial.id}`} testimonial={testimonial} />
+          {[...testimonials.slice(0, 3), ...testimonials.slice(0, 3)].map((testimonial, index) => (
+            <TestimonialCard key={`first-row-${index}-${testimonial.id}`} testimonial={testimonial} />
           ))}
         </div>
 
