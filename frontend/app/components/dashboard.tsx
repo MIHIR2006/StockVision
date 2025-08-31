@@ -4,6 +4,7 @@ import { CircleDollarSign, TrendingUp, Wallet } from "lucide-react";
 import { PerformanceSection } from "./performance-section";
 import { PortfolioAllocation } from "./portfolio-allocation";
 import { PortfolioSection } from "./portfolio-section";
+import { MultiPortfolioSection } from "./multi-portfolio-section";
 import { RecentActivity } from "./recent-activity";
 import { SettingsSection } from "./settings-section";
 import { StockCard } from "./stock-card";
@@ -35,10 +36,11 @@ export function Dashboard({ activeSection, onSectionChange }: DashboardProps) {
   return (
     <div className="w-full px-2 sm:px-4 py-4 sm:py-6 space-y-6 animate-fade-in max-w-full">
       <Tabs value={activeSection} onValueChange={onSectionChange} className="w-full">
-        <TabsList className="w-full md:w-[520px] mb-4 sm:mb-6 grid grid-cols-5">
+        <TabsList className="w-full md:w-[600px] mb-4 sm:mb-6 grid grid-cols-6">
           <TabsTrigger value="overview" className="font-bold text-xs sm:text-sm">Overview</TabsTrigger>
           <TabsTrigger value="performance" className="font-bold text-xs sm:text-sm">Performance</TabsTrigger>
           <TabsTrigger value="portfolio" className="font-bold text-xs sm:text-sm">Portfolio</TabsTrigger>
+          <TabsTrigger value="multi-portfolio" className="font-bold text-xs sm:text-sm">Multi-Portfolio</TabsTrigger>
           <TabsTrigger value="screener" className="font-bold text-xs sm:text-sm">Screener</TabsTrigger>
           <TabsTrigger value="settings" className="font-bold text-xs sm:text-sm">Settings</TabsTrigger>
         </TabsList>
@@ -118,6 +120,11 @@ export function Dashboard({ activeSection, onSectionChange }: DashboardProps) {
         {/* Portfolio Tab */}
         <TabsContent value="portfolio" className="space-y-4 sm:space-y-6">
           <PortfolioSection className="animate-fade-in" />
+        </TabsContent>
+
+        {/* Multi-Portfolio Tab */}
+        <TabsContent value="multi-portfolio" className="space-y-4 sm:space-y-6">
+          <MultiPortfolioSection className="animate-fade-in" />
         </TabsContent>
 
         {/* Screener Tab */}

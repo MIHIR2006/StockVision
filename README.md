@@ -17,6 +17,9 @@ StockVision is a modern, interactive dashboard for investors and traders. It pro
 ## Features
 
 - **Portfolio Overview:** Visualize your holdings and performance at a glance.
+- **Multi-Portfolio Management:** Create, manage, and compare multiple portfolios.
+- **Portfolio Comparison:** Interactive charts to compare performance across portfolios.
+- **Historical Analysis:** Track portfolio performance over different time periods.
 - **Market Data Center:** Access up-to-date market data and trends.
 - **Performance Analytics:** Analyze your portfolio's growth and risk.
 - **Recent Activity:** Track your latest transactions and changes.
@@ -163,6 +166,16 @@ See [Backend.md](./Backend.md) for full details, but here are the essentials:
 - `POST /api/stocks/search` - Search stocks
 - `GET /api/stocks/{symbol}/price` - Stock price only
 
+### Portfolio Management
+- `GET /api/portfolios` - Get all portfolios
+- `GET /api/portfolios/{id}` - Get specific portfolio
+- `POST /api/portfolios` - Create new portfolio
+- `PUT /api/portfolios/{id}` - Update portfolio
+- `DELETE /api/portfolios/{id}` - Delete portfolio
+- `GET /api/portfolios/{id}/history` - Portfolio historical data
+- `POST /api/portfolios/compare` - Compare multiple portfolios
+- `GET /api/portfolios/analytics/summary` - Combined portfolio analytics
+
 ### Market Data
 - `GET /api/market/summary` - Market summary
 - `GET /api/market/trends` - Market trends
@@ -195,9 +208,12 @@ The frontend uses Next.js environment variables. Create `.env.local` in the fron
 
 ## Roadmap
 
+- [x] Multi-portfolio management and comparison
 - [ ] Real-time stock data integration
-- [ ] User authentication and portfolios
+- [ ] User authentication and portfolio persistence
 - [ ] Advanced charting features
+- [ ] Portfolio optimization suggestions
+- [ ] Risk analysis and alerts
 - [ ] Mobile app development
 - [ ] Machine learning predictions
 - [ ] Social trading features

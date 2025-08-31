@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 # Import routers
-from app.routers import stocks, market
+from app.routers import stocks, market, portfolios
 
 # Load environment variables
 load_dotenv()
@@ -36,6 +36,7 @@ app.add_middleware(
 # Include routers
 app.include_router(stocks.router)
 app.include_router(market.router)
+app.include_router(portfolios.router)
 
 # Health check endpoints
 @app.get("/")
