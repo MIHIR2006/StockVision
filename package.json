@@ -9,7 +9,8 @@
     "backend"
   ],
   "scripts": {
-    "dev": "turbo run dev",
+    "banner": "node banner.js",
+    "dev": "npm run banner && turbo run dev",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",
@@ -22,6 +23,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@vercel/analytics": "^1.5.0",
     "bcryptjs": "^3.0.2",
+    "figlet": "^1.8.2",
     "next-auth": "^4.24.11",
     "prisma": "^6.13.0",
     "react-intersection-observer": "^9.16.0",
