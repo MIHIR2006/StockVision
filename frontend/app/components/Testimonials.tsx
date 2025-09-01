@@ -1,23 +1,9 @@
 import React, { useState } from 'react';
 
-interface Testimonial {
-  id: number;
-  name: string;
-  role: string;
-  company: string;
-  content: string;
-  avatar: string;
-  rating: number;
-}
+const Testimonials = () => {
+  const [isPaused, setIsPaused] = useState(false);
 
-interface TestimonialCardProps {
-  testimonial: Testimonial;
-}
-
-const Testimonials: React.FC = () => {
-  const [isPaused, setIsPaused] = useState<boolean>(false);
-
-  const testimonials: Testimonial[] = [
+  const testimonials = [
     {
       id: 1,
       name: "Sarah Chen",
@@ -74,7 +60,7 @@ const Testimonials: React.FC = () => {
     }
   ];
 
-  const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => (
+  const TestimonialCard = ({ testimonial }) => (
     <div className="flex-shrink-0 w-96 mx-4 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300 group">
       <div className="flex items-start space-x-4">
         <div className="flex-shrink-0">
@@ -132,8 +118,12 @@ const Testimonials: React.FC = () => {
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* First set */}
-          {[...testimonials.slice(0, 3), ...testimonials.slice(0, 3)].map((testimonial, index) => (
-            <TestimonialCard key={`first-row-${index}-${testimonial.id}`} testimonial={testimonial} />
+          {testimonials.slice(0, 3).map((testimonial) => (
+            <TestimonialCard key={`first-${testimonial.id}`} testimonial={testimonial} />
+          ))}
+          {/* Duplicate for seamless loop */}
+          {testimonials.slice(0, 3).map((testimonial) => (
+            <TestimonialCard key={`first-dup-${testimonial.id}`} testimonial={testimonial} />
           ))}
         </div>
 
