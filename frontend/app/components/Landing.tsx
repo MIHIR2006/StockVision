@@ -15,6 +15,7 @@ import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
 import { useRouter, usePathname } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
+import Testimonials from './Testimonials';
 
 // Declare the global window interface extension
 declare global {
@@ -22,7 +23,6 @@ declare global {
     scrollToPricing: () => void;
   }
 }
-
 
 export default function Landing() {
   const marketDataRef = useRef<HTMLDivElement>(null);
@@ -429,7 +429,7 @@ export default function Landing() {
                 <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
                   <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
                     <path
-                      d="M0,50 C10,45 20,42 30,40 C40,38 50,37 60,37 C70,37 80,38 90,42 L100,45"
+                      d="M0,50 C10,45 20,42 30,40 C40,38 50,37 60,37 C70,43 80,48 90,42 L100,45"
                       fill="none"
                       strokeWidth="2"
                       className="stroke-primary"
@@ -898,10 +898,7 @@ export default function Landing() {
             <Button
               variant="outline"
               className="font-bold scale-hover"
-              onClick={() =>
-              (window.location.href =
-                "mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.")
-              }
+              onClick={() => window.location.href = 'mailto:elevate360marketingcompany@gmail.com?subject=Custom%20Solution%20Inquiry&body=I%20am%20interested%20in%20learning%20more%20about%20custom%20solutions%20for%20my%20investment%20firm.'}
             >
               Contact Sales
             </Button>
@@ -912,181 +909,7 @@ export default function Landing() {
 
 
       {/* Testimonial Section */}
-      <section className="py-16 bg-gradient-to-br from-purple-50/50 to-blue-50/50 dark:from-slate-900/80 dark:to-slate-950/80">
-        <div className="container mx-auto px-4">
-          <h3 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            Trusted by <br />thousands of investors and traders.
-          </h3>
-
-          {/* Main Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Left Column */}
-            <div className="flex flex-col gap-8">
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-              >
-                <p className="mb-4">
-                  "I bought the Gold membership of Stock Vision, and it has helped
-                  me a lot in increasing both my portfolio size and profits. This
-                  quarter has been especially beneficial for me."
-                </p>
-                <div>
-                  <p className="font-semibold">Leslie Alexander</p>
-                  <p className="text-sm text-muted-foreground">@lesliealexander</p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-              >
-                <p className="mb-4">
-                  "The real-time market alerts have saved me from several bad
-                  investment decisions. I've been using StockVision for 6 months
-                  and my portfolio is up 24%. Couldn't be happier."
-                </p>
-                <div>
-                  <p className="font-semibold">Michael Foster</p>
-                  <p className="text-sm text-muted-foreground">@michaelfoster</p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-              >
-                <p className="mb-4">
-                  "As a day trader, I need reliable data and quick insights.
-                  StockVision's dashboard provides everything I need at a glance.
-                  The Silver plan has paid for itself many times over."
-                </p>
-                <div>
-                  <p className="font-semibold">Dries Vincent</p>
-                  <p className="text-sm text-muted-foreground">@driesvincent</p>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Center Column */}
-            <div className="space-y-8">
-              {[
-                {
-                  text: `"The AI predictions on StockVision have been remarkably accurate. I was skeptical at first, but after seeing their 87% accuracy rate on tech stocks over three months, I upgraded to the Platinum plan. My investment firm now relies on it daily."`,
-                  name: "Brenna Goyette",
-                  handle: "@brennagoyette"
-                },
-                {
-                  text: `"StockVision's portfolio optimization tool helped me rebalance my investments and reduce risk while maintaining strong returns. Their Gold plan is worth every penny."`,
-                  name: "Lindsay Walton",
-                  handle: "@lindsaywalton"
-                },
-                {
-                  text: `"The visualizations on StockVision make complex market data easy to understand. I've made 31% returns this year thanks to their insights and predictive analytics."`,
-                  name: "Courtney Henry",
-                  handle: "@courtneyhenry"
-                }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ delay: i * 0.2, duration: 0.6 }}
-                  className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-                >
-                  <p className="mb-4">{item.text}</p>
-                  <div>
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">{item.handle}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Right Column */}
-            <div className="flex flex-col gap-8">
-              {[
-                {
-                  text: `"StockVision alerted me to a market downturn three days before it happened. I was able to adjust my positions and avoid a 15% loss. The Platinum plan's predictive alerts are game-changing."`,
-                  name: "Leonard Krasner",
-                  handle: "@leonardkrasner"
-                },
-                {
-                  text: `"I've tried many stock analysis platforms, but StockVision's ML models are in a league of their own. Their Gold plan has helped me identify undervalued stocks with remarkable accuracy."`,
-                  name: "Floyd Miles",
-                  handle: "@floydmiles"
-                },
-                {
-                  text: `"Since signing up for StockVision's Silver plan, my investment strategy has completely transformed. Their real-time analytics and daily insights have helped me achieve a 28% annual return."`,
-                  name: "Emily Selman",
-                  handle: "@emilyselman"
-                }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ delay: i * 0.2, duration: 0.6 }}
-                  className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-                >
-                  <p className="mb-4">{item.text}</p>
-                  <div>
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">{item.handle}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Bottom Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
-            {[
-              {
-                text: `"StockVision's sector-specific trend forecasting helped our fund identify emerging opportunities in renewable energy. We've seen a 41% return in that sector alone over the past year. Looking forward to their Diamond plan."`,
-                name: "Tom Cook",
-                handle: "@tomcook"
-              },
-              {
-                text: `"As a financial advisor, I need tools I can trust. StockVision's Platinum plan gives me insights that impress my clients and keep their portfolios growing. The ROI has been exceptional."`,
-                name: "Whitney Francis",
-                handle: "@whitneyfrancis"
-              }
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: i * 0.2, duration: 0.6 }}
-                className="glass-card p-6 rounded-xl shadow-md dark:bg-slate-800/80 dark:border-slate-700/50"
-              >
-                <p className="mb-4">{item.text}</p>
-                <div>
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-sm text-muted-foreground">{item.handle}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Testimonials />
 
 
       {/* Footer */}

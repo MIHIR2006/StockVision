@@ -2,6 +2,7 @@ import DashboardPage from "@/components/DashboardPage";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import authOptions from "../api/auth/[...nextauth]/authOptions";
+import Testimonials from '../components/Testimonials';
 
 export const metadata = {
   title: "Dashboard | Stock Vision - AI/ML Stock Portfolio Analytics",
