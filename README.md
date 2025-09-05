@@ -33,6 +33,8 @@ StockVision is a modern, interactive dashboard for investors and traders. It pro
 
 ## Tech Stack
 
+[![Tech Stack](https://skillicons.dev/icons?i=nextjs,fastapi,vercel,ts,python,sqlite,prisma&theme=dark)](https://skillicons.dev)
+
 ### Frontend
 - **Framework:** Next.js 15 (Monorepo)
 - **Language:** TypeScript
