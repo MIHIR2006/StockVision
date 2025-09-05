@@ -6,7 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
   BarChart2, ChevronLeft, ChevronRight, Home, LineChart,
-  Settings, Wallet
+  Settings, Wallet,BriefcaseBusiness , ChartNoAxesCombined
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -37,6 +37,10 @@ export default function DashboardPage() {
         setActiveSection("portfolio");
       } else if (hash === "settings") {
         setActiveSection("settings");
+      } else if (hash === "multi-portfolio") {
+        setActiveSection("multi-portfolio");
+      } else if (hash === "screener") {
+        setActiveSection("screener")
       } else{
         setActiveSection("overview");
       }
@@ -145,6 +149,28 @@ export default function DashboardPage() {
               </button>
             </li>
              <li>
+             <button
+              className={getLinkClass("multi-portfolio")}
+              onClick={() => handleSectionChange("multi-portfolio")}
+              type="button"
+              style={{ width: '100%' }}
+            >
+              <BriefcaseBusiness className="h-5 w-5"/>
+              {!sidebarCollapsed && <span>Multi-Portfolio</span>}
+            </button>
+            </li>
+            <li>
+             <button
+              className={getLinkClass("screener")}
+              onClick={() => handleSectionChange("screener")}
+              type="button"
+              style={{ width: '100%' }}
+            >
+              <ChartNoAxesCombined  className="h-5 w-5" />
+              {!sidebarCollapsed && <span>Screener</span>}
+            </button>
+            </li>
+            <li>
             <button
               className={getLinkClass("settings")}
               onClick={() => handleSectionChange("settings")}
@@ -154,7 +180,7 @@ export default function DashboardPage() {
               <Settings className="h-5 w-5" />
               {!sidebarCollapsed && <span>Settings</span>}
             </button>
-          </li>
+            </li>
           </ul>
      
         </nav>

@@ -16,6 +16,7 @@ import { Sidebar } from "@/components/sidebar";
 import { useRouter, usePathname } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
 import Testimonials from './Testimonials';
+// import {MacbookScroll} from '../../components/ui/macbook-scroll'
 
 // Declare the global window interface extension
 declare global {
@@ -329,7 +330,15 @@ export default function Landing() {
         </div>
       </section>
 
+{/*  
+    <section>
+      <div>
+        <MacbookScroll src = "https://raw.githubusercontent.com/MIHIR2006/StockVision/refs/heads/main/Dashboard.png" showGradient = {true}  title="StockVision" />
+        // badge={<img src="/sticker.png" alt="Sticker" />} 
+      </div>
+    </section>
 
+*/}
       {/* Stock Prices Section */}
       <section className="py-12 bg-primary/5 backdrop-blur-sm">
         <div className="container mx-auto px-4">
