@@ -58,8 +58,9 @@ def forgot_password(payload: ForgotPasswordRequest, db: Session = Depends(get_db
             server.starttls()
             server.login(os.getenv("EMAIL_USER"), os.getenv("EMAIL_PASS"))
             server.send_message(msg)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to send reset email")
+    except smtplib.SMTPException as e:
+        # TODO: Log the error `e` for debugging purposes.
+        raise HTTPException(status_code=500, detail="Could not send email. Please try again later.")
 
     return generic_response
 
