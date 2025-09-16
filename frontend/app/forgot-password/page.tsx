@@ -23,7 +23,7 @@ export default function ForgotPasswordPage() {
       );
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.message || "Something went wrong");
+        toast.error("Unable to send reset link. Please try again later.");
       } else {
         toast.success("Password reset link sent to your email!");
       }
