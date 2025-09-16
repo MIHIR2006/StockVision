@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from pydantic import EmailStr
-import secrets, os, smtplib
+import secrets
+import os
+import smtplib
 from email.mime.text import MIMEText
 from passlib.context import CryptContext
 
