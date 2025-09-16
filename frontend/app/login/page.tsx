@@ -59,13 +59,13 @@ export default function LoginPage() {
   const handleSocialSignIn = async (provider: "github" | "google") => {
     setSocialLoading(provider);
     setError("");
-    
+
     try {
       const result = await signIn(provider, { 
         redirect: false,
         callbackUrl: "/dashboard"
       });
-      
+
       if (result?.error) {
         setError(`Failed to sign in with ${provider}. Please try again.`);
       } else if (result?.url) {
@@ -99,16 +99,12 @@ export default function LoginPage() {
         className="absolute top-6 right-6 p-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-200"
         aria-label="Toggle theme"
       >
-        {isDark ? (
-          <Sun className="h-5 w-5 text-yellow-500" />
-        ) : (
-          <Moon className="h-5 w-5 text-gray-600" />
-        )}
+        {isDark ? <Sun className="h-5 w-5 text-yellow-500" /> : <Moon className="h-5 w-5 text-gray-600" />}
       </button>
 
       <div className="w-full max-w-xs md:max-w-md mx-auto mt-20 p-8 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700">
         <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">Sign In</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="space-y-2">
             <input
               type="email"
@@ -129,7 +125,20 @@ export default function LoginPage() {
               required
             />
           </div>
+
+          {/* Forgot Password Link */}
+          <div className="text-right">
+            <button
+              type="button"
+              onClick={() => router.push("/forgot-password")}
+              className="text-yellow-500 dark:text-yellow-400 hover:underline text-sm"
+            >
+              Forgot Password?
+            </button>
+          </div>
+
           {error && <div className="text-red-600 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-lg border border-red-200 dark:border-red-800">{error}</div>}
+
           <button
             type="submit"
             className="w-full px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl shadow-lg transition-all duration-200 font-semibold transform hover:scale-105 active:scale-95"
@@ -138,7 +147,9 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-        <div className="flex flex-col gap-3 mt-8">
+
+        {/* Social Sign-In Buttons */}
+        <div className="flex flex-col gap-3 mt-6">
           <button
             className="w-full px-4 py-2 md:px-6 md:py-3 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white rounded-xl shadow-lg transition-all duration-200 font-semibold border border-gray-300 dark:border-gray-600 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             onClick={() => handleSocialSignIn("github")}
@@ -153,6 +164,7 @@ export default function LoginPage() {
               "Sign in with GitHub"
             )}
           </button>
+
           <button
             className="w-full px-4 py-2 md:px-6 md:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-lg transition-all duration-200 font-semibold border border-red-300 dark:border-red-600 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             onClick={() => handleSocialSignIn("google")}
@@ -168,6 +180,7 @@ export default function LoginPage() {
             )}
           </button>
         </div>
+
         <div className="text-center mt-6 text-gray-600 dark:text-gray-300">
           Don't have an account? <button onClick={() => handleNavigation("/signup")} className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline transition-colors">Sign Up</button>
         </div>
