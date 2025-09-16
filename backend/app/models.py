@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional, Dict
 from datetime import datetime
 
@@ -81,3 +81,18 @@ class CreatePortfolioRequest(BaseModel):
 class UpdatePortfolioRequest(BaseModel):
     name: Optional[str] = Field(None, description="Portfolio name")
     description: Optional[str] = Field(None, description="Portfolio description") 
+
+class User(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserInDB(User):
+    reset_token: Optional[str] = None
+    reset_token_expiry: Optional[datetime] = None
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
