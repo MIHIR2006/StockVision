@@ -50,7 +50,9 @@ def forgot_password(payload: ForgotPasswordRequest, db: Session = Depends(get_db
     msg["To"] = user.email
 
     try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+        smtp_port = int(os.getenv("SMTP_PORT", 587))
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
             server.login(os.getenv("EMAIL_USER"), os.getenv("EMAIL_PASS"))
             server.send_message(msg)
