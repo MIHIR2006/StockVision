@@ -42,7 +42,7 @@ def forgot_password(payload: ForgotPasswordRequest, db: Session = Depends(get_db
     db.add(user)
     db.commit()
 
-    reset_link = f"https://stock-vision-seven.vercel.app/reset-password/{token}"
+    reset_link = f"{os.getenv('FRONTEND_URL', 'https://stock-vision-seven.vercel.app')}/reset-password/{token}"
 
     msg = MIMEText(f"Click to reset your password: {reset_link}")
     msg["Subject"] = "StockVision Password Reset"
