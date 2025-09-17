@@ -1,16 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
-import os
 from dotenv import load_dotenv
-
-# Import routers
-from app.routers import stocks, market, portfolios, auth
-
-# Import database
-from app.db import engine, Base
-from app.user_models import UserDB
 
 # Load environment variables
 load_dotenv()
@@ -37,14 +29,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(stocks.router)
-app.include_router(market.router)
-app.include_router(portfolios.router)
-app.include_router(auth.router)  # Auth routes added
-
-# Create all DB tables
-Base.metadata.create_all(bind=engine)
+# Request logging middleware
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    print(f"Incoming request: {request.method} {request.url}")
+    response = await call_next(request)
+    print(f"Response status: {response.status_code}")
+    return response
 
 # Health check endpoints
 @app.get("/")
@@ -54,6 +45,11 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "service": "stockvision-api"}
+
+# New ping route for first contribution
+@app.get("/ping")
+async def ping():
+    return {"message": "pong"}
 
 # Error handlers
 @app.exception_handler(404)
