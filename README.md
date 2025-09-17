@@ -33,7 +33,7 @@ StockVision is a modern, interactive dashboard for investors and traders. It pro
 
 ## Tech Stack
 
-[![Tech Stack](https://skillicons.dev/icons?i=nextjs,fastapi,vercel,ts,python,sqlite,prisma&theme=dark)](https://skillicons.dev)
+[![Tech Stack](https://skillicons.dev/icons?i=nextjs,fastapi,vercel,ts,python,postgres,prisma&theme=dark)](https://skillicons.dev)
 
 ### Frontend
 - **Framework:** Next.js 15 (Monorepo)
@@ -79,6 +79,7 @@ StockVision/
 ### Prerequisites
 - **Node.js 18+** and **npm 9+**
 - **Python 3.8+** and **pip**
+- **PostgreSQL 14+** (running locally with a database created, e.g. `stockvision`)
 - **Git**
 
 ### Installation & Setup
@@ -93,14 +94,44 @@ StockVision/
    npm install
    # (installs both frontend and backend dependencies)
    ```
-3. **Set up backend environment variables**
+3. **Set up backend environment variables (PostgreSQL required)**
    ```bash
    cd backend
    cp env.example .env
-   # Edit .env with your configuration
+   # Edit .env and set DATABASE_URL, for example:
+   # DATABASE_URL=postgresql://user:password@localhost:5432/stockvision
    cd ..
    ```
-4. **Run the development servers**
+4. **Start PostgreSQL locally (recommended: Docker)**
+   ```bash
+   # Start a local PostgreSQL 16 container on port 5432
+   docker run --name stockvision-postgres \
+     -e POSTGRES_USER=svuser -e POSTGRES_PASSWORD=svpass -e POSTGRES_DB=stockvision \
+     -p 5432:5432 -d postgres:16
+
+   # Set the same DATABASE_URL in your shell (PowerShell example)
+   # $env:DATABASE_URL="postgresql://svuser:svpass@localhost:5432/stockvision"
+   ```
+
+   Useful Docker commands:
+   - Start: `docker start stockvision-postgres`
+   - Stop: `docker stop stockvision-postgres`
+   - Logs: `docker logs -f stockvision-postgres`
+
+5. **Setup database client (Prisma) for frontend**
+   ```bash
+   cd frontend
+   npm install
+   # Ensure DATABASE_URL is available in environment (same as backend)
+   # On Windows PowerShell:
+   #   $env:DATABASE_URL="postgresql://user:password@localhost:5432/stockvision"
+   # On Unix shells:
+   #   export DATABASE_URL="postgresql://user:password@localhost:5432/stockvision"
+   npm run db:generate
+   npm run db:dev
+   cd ..
+   ```
+6. **Run the development servers**
    ```bash
    # Start both frontend and backend together
    npm run dev
@@ -201,10 +232,51 @@ API_HOST=0.0.0.0
 API_PORT=8000
 DEBUG=True
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+# Required PostgreSQL connection string
+# Example: postgresql://user:password@localhost:5432/stockvision
+DATABASE_URL=postgresql://user:password@localhost:5432/stockvision
 ```
 
 ### Frontend
-The frontend uses Next.js environment variables. Create `.env.local` in the frontend directory if needed.
+The frontend uses Prisma + PostgreSQL. Ensure `DATABASE_URL` is set in your shell (or create `frontend/.env.local`) before running:
+```bash
+cd frontend
+npm run db:generate
+npm run db:dev
+```
+
+#### View the Database (Prisma Studio)
+Use Prisma Studio to inspect tables and data in your PostgreSQL database.
+
+PowerShell (Windows):
+```powershell
+cd frontend
+$env:DATABASE_URL="postgresql://svuser:svpass@localhost:5432/stockvision"
+npm run db:studio
+```
+
+Unix shells (macOS/Linux/WSL):
+```bash
+cd frontend
+export DATABASE_URL="postgresql://svuser:svpass@localhost:5432/stockvision"
+npm run db:studio
+```
+
+This opens a local UI at http://localhost:5555 showing your Prisma models and rows.
+
+Optional: connect with psql (Docker example):
+```bash
+docker exec -it stockvision-postgres psql -U svuser -d stockvision
+```
+
+#### Example `frontend/.env.local`
+```bash
+# PostgreSQL database URL used by Prisma
+DATABASE_URL="postgresql://user:password@localhost:5432/stockvision?schema=public"
+
+# Optional: Backend API URL if the frontend calls the backend
+# NEXT_PUBLIC_API_URL="http://localhost:8000"
+```
 
 ---
 
@@ -240,6 +312,25 @@ This project uses [Turborepo](https://turbo.build/) for monorepo management and 
 - **API URL:** Set `NEXT_PUBLIC_API_URL` in Vercel to your backend’s public URL.
 
 See [Backend.md](./Backend.md) for backend deployment and API details.
+
+### NextAuth on Vercel (production)
+
+Set these environment variables in the Vercel project (Frontend):
+
+- `NEXTAUTH_URL` = your production URL (e.g. `https://your-app.vercel.app`)
+- `NEXTAUTH_SECRET` = a strong random string (e.g. output of `openssl rand -base64 32`)
+- `DATABASE_URL` = your production PostgreSQL connection string
+- Optional OAuth providers:
+  - `GITHUB_ID`, `GITHUB_SECRET`
+  - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+
+Provider callback URLs to configure in the provider dashboards:
+- GitHub: `https://your-app.vercel.app/api/auth/callback/github`
+- Google: `https://your-app.vercel.app/api/auth/callback/google`
+
+Notes:
+- App Router auth endpoint is at `app/api/auth/[...nextauth]/route.ts` and is production-safe.
+- Keep `debug` off in production (it's automatically off when `NODE_ENV=production`).
 
 ---
 
