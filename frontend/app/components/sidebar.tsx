@@ -1,20 +1,18 @@
 'use client';
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import {
-  BarChart2,
-  Home,
-  LineChart,
-  Settings,
-  Wallet,
-  BriefcaseBusiness,
-  CircleDollarSign,
-  TrendingUp
+    BarChart2,
+    BriefcaseBusiness,
+    Home,
+    LineChart,
+    Settings,
+    TrendingUp,
+    Wallet
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -67,6 +65,11 @@ export function Sidebar({ isOpen, onClose, activeSection, onSectionChange }: Sid
           "fixed top-1/2 left-0 -translate-y-1/2 z-20 w-16 rounded-r-xl bg-blue/10 backdrop-blur-md border-r border-white/10 shadow-lg transition-transform duration-300",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
+        onMouseLeave={() => {
+          if (!isMobile) {
+            onClose();
+          }
+        }}
       >
         <nav className="flex flex-col items-center justify-center py-4 space-y-4">
           <button

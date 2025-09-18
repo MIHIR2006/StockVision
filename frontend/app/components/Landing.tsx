@@ -242,6 +242,7 @@ export default function Landing() {
       <div className={`fixed left-2 top-32 z-30 transition-all duration-300 ${sidebarOpen ? 'opacity-0 pointer-events-none scale-95' : 'opacity-100 scale-100'}`}>
         <button
           onClick={() => setSidebarOpen(true)}
+          onMouseEnter={() => setSidebarOpen(true)}
           className="w-12 h-12 rounded-lg bg-blue-100 hover:bg-blue-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-blue-200/50 dark:border-blue-600/30 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group"
           aria-label="Open side menu"
         >
