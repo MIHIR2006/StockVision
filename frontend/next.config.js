@@ -1,7 +1,19 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     // Remove turbo config to fix warning
+  },
+  // Prevent Next from picking a wrong workspace root in monorepo setups
+  outputFileTracingRoot: path.join(__dirname, '..'),
+  // Skip ESLint during production builds to avoid incompatible CLI options errors
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   // Ensure proper transpilation
   transpilePackages: [],

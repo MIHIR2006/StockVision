@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const Testimonials = () => {
   const [isPaused, setIsPaused] = useState(false);
@@ -61,7 +61,7 @@ const Testimonials = () => {
   ];
 
   const TestimonialCard = ({ testimonial }) => (
-    <div className="flex-shrink-0 w-96 mx-4 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-300 group">
+    <div className="flex-shrink-0 w-[72vw] sm:w-64 md:w-72 lg:w-80 xl:w-96 mx-2 sm:mx-3 md:mx-4 bg-card/70 dark:from-slate-800/50 dark:to-slate-900/50 backdrop-blur-sm border border-border rounded-2xl p-4 sm:p-6 hover:border-primary/50 transition-all duration-300 group">
       <div className="flex items-start space-x-4">
         <div className="flex-shrink-0">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-lg">
@@ -76,13 +76,13 @@ const Testimonials = () => {
               </svg>
             ))}
           </div>
-          <p className="text-slate-300 text-sm leading-relaxed mb-4 group-hover:text-white transition-colors duration-300">
+          <p className="text-muted-foreground text-sm leading-relaxed mb-4 group-hover:text-foreground transition-colors duration-300">
             "{testimonial.content}"
           </p>
           <div>
-            <h4 className="font-semibold text-white text-sm">{testimonial.name}</h4>
-            <p className="text-slate-400 text-xs">{testimonial.role}</p>
-            <p className="text-blue-400 text-xs font-medium">{testimonial.company}</p>
+            <h4 className="font-semibold text-foreground text-sm">{testimonial.name}</h4>
+            <p className="text-muted-foreground text-xs">{testimonial.role}</p>
+            <p className="text-primary text-xs font-medium">{testimonial.company}</p>
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@ const Testimonials = () => {
   );
 
   return (
-    <div className="bg-slate-950 py-16 overflow-hidden">
+    <div className="py-16 overflow-hidden bg-background">
       <div className="max-w-7xl mx-auto px-6 mb-12">
         <div className="text-center">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
@@ -104,14 +104,14 @@ const Testimonials = () => {
 
       <div className="relative">
         {/* Gradient overlays for smooth edges */}
-        <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none"></div>
-        <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute left-0 top-0 w-8 sm:w-16 md:w-24 h-full bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" aria-hidden="true"></div>
+        <div className="absolute right-0 top-0 w-8 sm:w-16 md:w-24 h-full bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" aria-hidden="true"></div>
         
         {/* First row - moving right */}
         <div 
-          className="flex animate-marquee-right hover:pause-animation"
+          className="inline-flex gap-3 sm:gap-4 px-1 sm:px-2 will-change-transform animate-marquee-right hover:pause-animation"
           style={{
-            animationDuration: '60s',
+            animationDuration: '28s',
             animationPlayState: isPaused ? 'paused' : 'running'
           }}
           onMouseEnter={() => setIsPaused(true)}
@@ -129,9 +129,9 @@ const Testimonials = () => {
 
         {/* Second row - moving left */}
         <div 
-          className="flex animate-marquee-left mt-8 hover:pause-animation"
+          className="inline-flex gap-3 sm:gap-4 px-1 sm:px-2 will-change-transform animate-marquee-left mt-8 hover:pause-animation"
           style={{
-            animationDuration: '60s',
+            animationDuration: '28s',
             animationPlayState: isPaused ? 'paused' : 'running'
           }}
           onMouseEnter={() => setIsPaused(true)}
@@ -148,35 +148,12 @@ const Testimonials = () => {
         </div>
       </div>
 
-      {/* Interactive controls */}
-      <div className="text-center mt-12">
-        <button
-          onClick={() => setIsPaused(!isPaused)}
-          className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-        >
-          {isPaused ? (
-            <>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <polygon points="5,3 19,12 5,21"></polygon>
-              </svg>
-              <span>Resume</span>
-            </>
-          ) : (
-            <>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <rect x="6" y="4" width="4" height="16"></rect>
-                <rect x="14" y="4" width="4" height="16"></rect>
-              </svg>
-              <span>Pause</span>
-            </>
-          )}
-        </button>
-      </div>
+      {/* Removed interactive pause/resume button; hover still pauses */}
 
       <style jsx>{`
         @keyframes marquee-right {
           from {
-            transform: translateX(-100%);
+            transform: translateX(-50%);
           }
           to {
             transform: translateX(0%);
@@ -188,7 +165,7 @@ const Testimonials = () => {
             transform: translateX(0%);
           }
           to {
-            transform: translateX(-100%);
+            transform: translateX(-50%);
           }
         }
 

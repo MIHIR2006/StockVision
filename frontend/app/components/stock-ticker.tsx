@@ -3,35 +3,65 @@
 import { portfolioStocks } from "@/data/mock-data";
 import { cn } from "@/lib/utils";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
-export function StockTicker() {
-  const [scrollPosition, setScrollPosition] = useState(0);
+interface StockTickerProps {
+  // Speed in pixels per second
+  speedPxPerSecond?: number;
+}
 
-  // Auto-scroll the ticker
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setScrollPosition((prevPosition) => {
-        // Reset when it's scrolled enough
-        if (prevPosition < -2000) {
-          return 0;
-        }
-        return prevPosition - 1;
-      });
-    }, 30);
-
-    return () => clearInterval(interval);
-  }, []);
+export function StockTicker({ speedPxPerSecond = 30 }: StockTickerProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const positionRef = useRef<number>(0);
+  const animationFrameRef = useRef<number | null>(null);
+  const contentWidthRef = useRef<number>(0);
+  const lastTsRef = useRef<number | null>(null);
 
   // Double the stocks to create a continuous loop
-  const tickerStocks = [...portfolioStocks, ...portfolioStocks];
+  const tickerStocks = useMemo(() => [...portfolioStocks, ...portfolioStocks], []);
+
+  useEffect(() => {
+    const step = (ts?: number) => {
+      const contentWidth = contentWidthRef.current;
+      if (!contentWidth) {
+        animationFrameRef.current = requestAnimationFrame(step);
+        return;
+      }
+      const now = ts ?? performance.now();
+      const last = lastTsRef.current ?? now;
+      const deltaMs = now - last;
+      lastTsRef.current = now;
+      const pixelsThisFrame = (speedPxPerSecond * deltaMs) / 1000;
+      positionRef.current -= pixelsThisFrame;
+      // Reset seamlessly when fully scrolled
+      if (Math.abs(positionRef.current) >= contentWidth / 2) {
+        positionRef.current = 0;
+      }
+      if (contentRef.current) {
+        contentRef.current.style.transform = `translateX(${positionRef.current}px)`;
+      }
+      animationFrameRef.current = requestAnimationFrame(step);
+    };
+
+    // Measure content width once mounted
+    const measure = () => {
+      if (contentRef.current) {
+        contentWidthRef.current = contentRef.current.scrollWidth;
+      }
+    };
+    measure();
+    window.addEventListener('resize', measure, { passive: true });
+    animationFrameRef.current = requestAnimationFrame(step);
+    return () => {
+      window.removeEventListener('resize', measure);
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+    };
+  }, []);
 
   return (
-    <div className="w-full overflow-hidden border-y backdrop-blur-lg bg-background/50 py-2">
-      <div 
-        className="flex whitespace-nowrap" 
-        style={{ transform: `translateX(${scrollPosition}px)` }}
-      >
+    <div ref={containerRef} className="w-full overflow-hidden border-y backdrop-blur-lg bg-background/50 py-2">
+      <div ref={contentRef} className="flex whitespace-nowrap will-change-transform select-none">
         {tickerStocks.map((stock, index) => (
           <div 
             key={`${stock.symbol}-${index}`} 

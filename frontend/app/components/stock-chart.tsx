@@ -1,7 +1,7 @@
 "use client";
 import { StockData, timeRanges } from "@/data/mock-data";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
     Area,
     AreaChart,
@@ -24,22 +24,25 @@ interface StockChartProps {
 }
 
 export function StockChart({ data, title = "Stock Performance", className, style }: StockChartProps) {
-  const [selectedStock, setSelectedStock] = useState<string>(data[0]?.symbol || "");
+  const initialSymbol = data[0]?.symbol || "";
+  const [selectedStock, setSelectedStock] = useState<string>(initialSymbol);
   const [timeRange, setTimeRange] = useState("1m");
   const { theme } = useTheme();
   
   const isDarkMode = theme === "dark";
   
-  const selectedStockData = data.find((stock) => stock.symbol === selectedStock) || data[0];
+  const selectedStockData = useMemo(() => {
+    return data.find((stock) => stock.symbol === selectedStock) || data[0];
+  }, [data, selectedStock]);
   
   // Filter history based on time range (for simplicity, we'll just use the full history)
-  const chartData = selectedStockData?.history || [];
+  const chartData = useMemo(() => selectedStockData?.history || [], [selectedStockData]);
   
   // Format currency for tooltip
   const formatCurrency = (value: number) => `$${value.toFixed(2)}`;
 
   // Custom chart colors based on theme
-  const chartColors = {
+  const chartColors = useMemo(() => ({
     line: isDarkMode ? "#38BDF8" : "#3b82f6",
     gradient: {
       start: isDarkMode ? "rgba(56, 189, 248, 0.6)" : "rgba(59, 130, 246, 0.6)",
@@ -50,7 +53,7 @@ export function StockChart({ data, title = "Stock Performance", className, style
       bg: isDarkMode ? "rgba(15, 23, 42, 0.8)" : "rgba(255, 255, 255, 0.8)",
       border: isDarkMode ? "rgba(51, 65, 85, 0.5)" : "rgba(229, 231, 235, 0.5)"
     }
-  };
+  }), [isDarkMode]);
   
   return (
     <Card className={cn("col-span-3 backdrop-blur-lg bg-card/80 border-primary/10 transition-all hover:shadow-lg", className)} style={style}>

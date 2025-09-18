@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { marketIndices } from "@/data/mock-data";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
@@ -12,9 +12,10 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart";
 import { TrendingUp } from "lucide-react";
+import dynamic from 'next/dynamic';
 import { Bar, BarChart, CartesianGrid, Cell, LabelList } from "recharts";
-import { Overview } from './overview';
-import { RecentSales } from './recent-sales';
+const Overview = dynamic(() => import('./overview').then(m => m.Overview), { ssr: false });
+const RecentSales = dynamic(() => import('./recent-sales').then(m => m.RecentSales), { ssr: false });
 const chartData = [
   { month: "January", visitors: 186 },
   { month: "February", visitors: 205 },
