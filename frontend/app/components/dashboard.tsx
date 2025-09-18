@@ -1,20 +1,25 @@
 import { portfolioStocks, portfolioSummary, recentActivities } from "@/data/mock-data";
 // import { useLocation } from "react-router-dom";
-import { PerformanceSection } from "./performance-section";
-import { PortfolioAllocation } from "./portfolio-allocation";
-import { PortfolioSection } from "./portfolio-section";
-import { MultiPortfolioSection } from "./multi-portfolio-section";
+import {
+    BarChart2,
+    BriefcaseBusiness, ChartNoAxesCombined, CircleDollarSign,
+    LineChart,
+    Settings,
+    TrendingUp,
+    Wallet
+} from "lucide-react";
+import dynamic from "next/dynamic";
 import { RecentActivity } from "./recent-activity";
+import Screener from "./screener";
 import { SettingsSection } from "./settings-section";
 import { StockCard } from "./stock-card";
-import { StockChart } from "./stock-chart";
 import { SummaryCard } from "./summary-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import Screener from "./screener";
-import {
-  BarChart2, ChevronLeft, ChevronRight, Home, LineChart,
-  Settings, Wallet,BriefcaseBusiness , ChartNoAxesCombined ,CircleDollarSign, TrendingUp
-} from "lucide-react";
+const PerformanceSection = dynamic(() => import("./performance-section").then(m => m.PerformanceSection), { ssr: false });
+const PortfolioAllocation = dynamic(() => import("./portfolio-allocation").then(m => m.PortfolioAllocation), { ssr: false });
+const PortfolioSection = dynamic(() => import("./portfolio-section").then(m => m.PortfolioSection), { ssr: false });
+const MultiPortfolioSection = dynamic(() => import("./multi-portfolio-section").then(m => m.MultiPortfolioSection), { ssr: false });
+const StockChart = dynamic(() => import("./stock-chart").then(m => m.StockChart), { ssr: false });
 // Define the Activity type to match what RecentActivity component expects
 type Activity = {
   id: number;

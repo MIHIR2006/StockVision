@@ -1,5 +1,6 @@
 'use client';
 import { MarketDataCenter } from "@/components/market-data-center";
+import { Sidebar } from "@/components/sidebar";
 import { StockTicker } from "@/components/stock-ticker";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TreasuryBillSection } from "@/components/treasury-bill-section";
@@ -7,14 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { portfolioStocks } from "@/data/mock-data";
+import clsx from "clsx";
+import { type Variants } from "framer-motion";
 import { BarChart2, ChartLine, CheckCircle, CircleDollarSign, LineChart, LogIn, PieChart, TrendingUp, XCircle } from "lucide-react";
 import Link from "next/link";
-import clsx from "clsx";
-import { useEffect, useRef } from "react";
-import { useState } from "react";
-import { Sidebar } from "@/components/sidebar";
-import { useRouter, usePathname } from "next/navigation";
-import { motion, type Variants } from "framer-motion";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import Testimonials from './Testimonials';
 // import {MacbookScroll} from '../../components/ui/macbook-scroll'
 
@@ -34,7 +33,8 @@ export default function Landing() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const progressBarRef = useRef<HTMLDivElement | null>(null);
+  const scrollCurrentRef = useRef(0);
 
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -119,16 +119,32 @@ export default function Landing() {
   }, [pathname]);
 
 
-  // scroll animation
+  // scroll animation with rAF for smooth, continuous progress (lerped)
   useEffect(() => {
-    const updateScroll = () => {
-      const currentScroll = window.scrollY;
-      const totalHeight = document.body.scrollHeight - window.innerHeight;
-      setScrollProgress((currentScroll / totalHeight) * 100);
+    let rafId: number | null = null;
+    const update = () => {
+      const doc = document.documentElement;
+      const currentScroll = doc.scrollTop || window.scrollY || 0;
+      const totalHeight = (doc.scrollHeight - doc.clientHeight) || 1;
+      const target = Math.max(0, Math.min(1, currentScroll / totalHeight));
+      // Exponential moving average for smoothing
+      const smoothing = 0.18; // 0..1 higher = snappier
+      scrollCurrentRef.current = scrollCurrentRef.current + (target - scrollCurrentRef.current) * smoothing;
+      if (progressBarRef.current) {
+        progressBarRef.current.style.transform = `scaleX(${scrollCurrentRef.current})`;
+      }
+      rafId = requestAnimationFrame(update);
     };
-
-    window.addEventListener("scroll", updateScroll);
-    return () => window.removeEventListener("scroll", updateScroll);
+    const onResize = () => {
+      // Trigger a recalculation on resize
+      if (rafId === null) rafId = requestAnimationFrame(update);
+    };
+    rafId = requestAnimationFrame(update);
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', onResize);
+    };
   }, []);
 
 
@@ -159,11 +175,10 @@ export default function Landing() {
 
         {/* Progress Bar */}
         <div
-          className="h-1 rounded-full 
-             bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 
-             shadow-[0_0_10px_rgba(59,130,246,0.8),0_0_20px_rgba(139,92,246,0.6)] 
-             transition-all duration-200"
-          style={{ width: `${scrollProgress}%` }}
+          ref={progressBarRef}
+          className="h-1 w-full origin-left will-change-transform transform-gpu rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 shadow-[0_0_10px_rgba(59,130,246,0.8),0_0_20px_rgba(139,92,246,0.6)]"
+          style={{ transform: 'scaleX(0)' }}
+          aria-hidden="true"
         />
 
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -255,7 +270,7 @@ export default function Landing() {
 
 
       {/* Stock Ticker */}
-      <StockTicker />
+      <StockTicker speedPxPerSecond={35} />
 
 
       {/* Hero Section */}

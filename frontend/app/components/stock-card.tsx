@@ -1,8 +1,9 @@
 
-import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { cn } from "@/lib/utils";
 import { StockData } from "@/data/mock-data";
+import { cn } from "@/lib/utils";
+import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 interface StockCardProps {
   stock: StockData;
@@ -10,7 +11,7 @@ interface StockCardProps {
   style?: React.CSSProperties;
 }
 
-export function StockCard({ stock, className, style }: StockCardProps) {
+function StockCardInner({ stock, className, style }: StockCardProps) {
   const isPositive = stock.change >= 0;
 
   return (
@@ -55,3 +56,23 @@ export function StockCard({ stock, className, style }: StockCardProps) {
     </Card>
   );
 }
+
+export const StockCard = React.memo(
+  StockCardInner,
+  (prevProps, nextProps) => {
+    // Shallow compare fields used in render to avoid unnecessary rerenders
+    const p = prevProps.stock;
+    const n = nextProps.stock;
+    const sameStock =
+      p.symbol === n.symbol &&
+      p.name === n.name &&
+      p.shares === n.shares &&
+      p.price === n.price &&
+      p.change === n.change &&
+      p.changePercent === n.changePercent &&
+      p.value === n.value &&
+      p.marketCap === n.marketCap;
+    const sameStyle = prevProps.className === nextProps.className && JSON.stringify(prevProps.style) === JSON.stringify(nextProps.style);
+    return sameStock && sameStyle;
+  }
+);
