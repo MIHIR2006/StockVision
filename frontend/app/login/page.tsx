@@ -12,6 +12,9 @@ export default function LoginPage() {
   const [isNavigating, setIsNavigating] = useState(false);
   const [socialLoading, setSocialLoading] = useState<"github" | "google" | null>(null);
   const [isDark, setIsDark] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Initialize router
   const router = useRouter();
 
   // Detect initial theme on mount
@@ -23,14 +26,14 @@ export default function LoginPage() {
   }, []);
 
   const toggleTheme = () => {
-    setIsDark(!isDark);
-    if (typeof window !== "undefined") {
-      const root = window.document.documentElement;
-      if (isDark) {
-        root.classList.remove("dark");
-      } else {
-        root.classList.add("dark");
-      }
+    if (typeof window === "undefined") return;
+    const root = window.document.documentElement;
+    const newIsDark = !isDark;
+    setIsDark(newIsDark);
+    if (newIsDark) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
     }
   };
 
@@ -42,7 +45,7 @@ export default function LoginPage() {
       redirect: false,
       email,
       password,
-    });
+    } as any);
     setLoading(false);
     if (res?.error) {
       setError("Invalid email or password.");
@@ -61,10 +64,10 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const result = await signIn(provider, { 
+      const result = await signIn(provider, {
         redirect: false,
-        callbackUrl: "/dashboard"
-      });
+        callbackUrl: "/dashboard",
+      } as any);
 
       if (result?.error) {
         setError(`Failed to sign in with ${provider}. Please try again.`);
@@ -110,20 +113,30 @@ export default function LoginPage() {
               type="email"
               placeholder="Email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-2 py-2 md:px-4 md:py-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-all duration-200"
+              required
+            />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-2 py-2 md:px-4 md:py-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-all duration-200"
               required
             />
           </div>
-          <div className="space-y-2">
+          <div className="flex items-center gap-2">
             <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full px-2 py-2 md:px-4 md:py-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-all duration-200"
-              required
+              type="checkbox"
+              id="show-password"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+              className="cursor-pointer"
             />
+            <label htmlFor="show-password" className="text-sm text-gray-600 dark:text-gray-300 cursor-pointer select-none">
+              Show Password
+            </label>
           </div>
 
           {/* Forgot Password Link */}
@@ -137,7 +150,11 @@ export default function LoginPage() {
             </button>
           </div>
 
-          {error && <div className="text-red-600 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-lg border border-red-200 dark:border-red-800">{error}</div>}
+          {error && (
+            <div className="text-red-600 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-lg border border-red-200 dark:border-red-800">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"
@@ -182,7 +199,10 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mt-6 text-gray-600 dark:text-gray-300">
-          Don't have an account? <button onClick={() => handleNavigation("/signup")} className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline transition-colors">Sign Up</button>
+          Don't have an account?{" "}
+          <button onClick={() => handleNavigation("/signup")} className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline transition-colors">
+            Sign Up
+          </button>
         </div>
       </div>
     </main>
