@@ -14,9 +14,9 @@ import { BarChart2, ChartLine, CheckCircle, CircleDollarSign, LineChart, LogIn, 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import dash from '../../../Dashboard.png';
+import { ContainerScroll } from '../../components/ui/container-scroll-animation';
 import Testimonials from './Testimonials';
-// import {MacbookScroll} from '../../components/ui/macbook-scroll'
-
 // Declare the global window interface extension
 declare global {
   interface Window {
@@ -275,7 +275,7 @@ export default function Landing() {
 
 
       {/* Hero Section */}
-      <section className="flex-1 flex items-center">
+      <section className="flex-1 flex items-center mb-0">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-8 animate-fade-in">
@@ -346,15 +346,32 @@ export default function Landing() {
         </div>
       </section>
 
-{/*  
-    <section>
-      <div>
-        <MacbookScroll src = "https://raw.githubusercontent.com/MIHIR2006/StockVision/refs/heads/main/Dashboard.png" showGradient = {true}  title="StockVision" />
-        // badge={<img src="/sticker.png" alt="Sticker" />} 
-      </div>
-    </section>
 
-*/}
+      <section className="mt-0">
+        <div className="flex flex-col overflow-hidden">
+          <ContainerScroll
+            titleComponent={
+              <div className="mb-0">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
+                  Unleash the power of <br />
+                  <span className="block text-5xl md:text-7xl lg:text-[6rem] font-extrabold mt-1 leading-none text-gradient">
+                    Your Market Powered by AI.
+                  </span>
+                </h1>
+              </div>
+            }
+          >
+            <img
+              src={dash.src}
+              alt="hero"
+              height={720}
+              width={1400}
+              className="mx-auto rounded-2xl object-cover h-full object-left-top"
+              draggable={false}
+            />
+          </ContainerScroll>
+        </div>
+      </section>
       {/* Stock Prices Section */}
       <section className="py-12 bg-primary/5 backdrop-blur-sm">
         <div className="container mx-auto px-4">
