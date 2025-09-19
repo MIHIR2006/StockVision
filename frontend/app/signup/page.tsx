@@ -1,5 +1,5 @@
 "use client";
-import { Eye, EyeClosed, Moon, Sun } from "lucide-react";
+import { Eye, EyeClosed, Moon, Sun ,StepBack} from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -116,6 +116,14 @@ export default function SignupPage() {
             containerClassName="h-screen w-screen"
           />
         </div>
+         {/* Exit to Landing Page Button */}
+         <button
+          onClick={() => router.push("/")}
+          className="absolute z-20 top-6 left-6 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border border-white/20 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-200"
+          aria-label="Back to landing page"
+        >
+          <StepBack className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+        </button>
         
         <div className="relative z-10 w-full max-w-md mx-auto mt-20 p-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50">
           <div className="flex flex-col items-center justify-center py-8">
@@ -145,6 +153,14 @@ export default function SignupPage() {
           containerClassName="h-screen w-screen"
         />
       </div>
+      {/* Exit to Landing Page Button */}
+      <button
+        onClick={() => router.push("/")}
+        className="absolute z-20 top-6 left-6 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border border-white/20 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-200"
+        aria-label="Back to landing page"
+      >
+        <StepBack className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+      </button>
 
       {/* Theme Toggle Button */}
       <button
