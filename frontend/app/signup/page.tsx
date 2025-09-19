@@ -1,27 +1,51 @@
 "use client";
-import { Eye, EyeClosed, Moon, Sun ,StepBack} from "lucide-react";
+import { Eye, EyeClosed, Moon, Sun, StepBack } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BackgroundGradientAnimation } from "../../components/ui/background-gradient-animation";
+
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  const [socialLoading, setSocialLoading] = useState<"github" | "google" | null>(null);
+  const [socialLoading, setSocialLoading] = useState<
+    "github" | "google" | null
+  >(null);
   const [isDark, setIsDark] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
+  // Password rules state
+  const [passwordRules, setPasswordRules] = useState({
+    minLength: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    specialChar: false,
+  });
+
   // Detect initial theme on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const isDarkMode = window.document.documentElement.classList.contains("dark");
+      const isDarkMode =
+        window.document.documentElement.classList.contains("dark");
       setIsDark(isDarkMode);
     }
   }, []);
+
+  // Update password rules on change
+  useEffect(() => {
+    setPasswordRules({
+      minLength: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    });
+  }, [password]);
 
   const toggleTheme = () => {
     setIsDark(!isDark);
@@ -78,13 +102,13 @@ export default function SignupPage() {
   const handleSocialSignIn = async (provider: "github" | "google") => {
     setSocialLoading(provider);
     setError("");
-    
+
     try {
-      const result = await signIn(provider, { 
+      const result = await signIn(provider, {
         redirect: false,
-        callbackUrl: "/dashboard"
+        callbackUrl: "/dashboard",
       });
-      
+
       if (result?.error) {
         setError(`Failed to sign up with ${provider}. Please try again.`);
       } else if (result?.url) {
@@ -100,7 +124,6 @@ export default function SignupPage() {
   if (isNavigating) {
     return (
       <main className="flex flex-col items-center justify-center min-h-screen relative overflow-hidden">
-        {/* Background Gradient Animation */}
         <div className="absolute inset-0 z-0">
           <BackgroundGradientAnimation
             gradientBackgroundStart="rgb(15, 23, 42)"
@@ -116,15 +139,14 @@ export default function SignupPage() {
             containerClassName="h-screen w-screen"
           />
         </div>
-         {/* Exit to Landing Page Button */}
-         <button
+        <button
           onClick={() => router.push("/")}
           className="absolute z-20 top-6 left-6 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border border-white/20 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-200"
           aria-label="Back to landing page"
         >
           <StepBack className="h-5 w-5 text-gray-600 dark:text-gray-300" />
         </button>
-        
+
         <div className="relative z-10 w-full max-w-md mx-auto mt-20 p-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50">
           <div className="flex flex-col items-center justify-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -135,9 +157,10 @@ export default function SignupPage() {
     );
   }
 
+  const isPasswordValid = Object.values(passwordRules).every(Boolean);
+
   return (
     <main className="flex flex-col items-center justify-center min-h-screen relative overflow-hidden">
-      {/* Background Gradient Animation */}
       <div className="absolute inset-0 z-0">
         <BackgroundGradientAnimation
           gradientBackgroundStart="rgb(15, 23, 42)"
@@ -153,7 +176,7 @@ export default function SignupPage() {
           containerClassName="h-screen w-screen"
         />
       </div>
-      {/* Exit to Landing Page Button */}
+
       <button
         onClick={() => router.push("/")}
         className="absolute z-20 top-6 left-6 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border border-white/20 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-200"
@@ -162,7 +185,6 @@ export default function SignupPage() {
         <StepBack className="h-5 w-5 text-gray-600 dark:text-gray-300" />
       </button>
 
-      {/* Theme Toggle Button */}
       <button
         onClick={toggleTheme}
         className="absolute z-20 top-6 right-6 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border border-white/20 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-200"
@@ -176,55 +198,99 @@ export default function SignupPage() {
       </button>
 
       <div className="relative z-10 w-full max-w-xs md:max-w-md mx-auto mt-20 p-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50">
-        <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">Sign Up</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <div className="space-y-2">
+        <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
+          Sign Up
+        </h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <input
+            type="email"
+            autoComplete="off"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            required
+          />
+          <div className="relative">
             <input
-              type="email"
+              type={showPassword ? "text" : "password"}
               autoComplete="off"
-              placeholder="Email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full px-2 py-2 md:px-4 md:py-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-all duration-200"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 pr-12 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200"
+            >
+              {showPassword ? (
+                <Eye className="h-5 w-5" />
+              ) : (
+                <EyeClosed className="h-5 w-5" />
+              )}
+            </button>
           </div>
-          <div className="space-y-2">
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                autoComplete="off"
-                placeholder="Password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full px-2 py-2 md:px-4 md:py-3 pr-12 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-all duration-200"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200"
-              >
-                {showPassword ? (
-                  <Eye className="h-5 w-5" />
-                ) : (
-                  <EyeClosed className="h-5 w-5" />
-                )}
-              </button>
+
+          {/* Password Policy Checklist */}
+          <ul className="text-sm space-y-1">
+            <li
+              className={
+                passwordRules.minLength ? "text-green-600" : "text-red-600"
+              }
+            >
+              At least 8 characters
+            </li>
+            <li
+              className={
+                passwordRules.uppercase ? "text-green-600" : "text-red-600"
+              }
+            >
+              Contains uppercase letter
+            </li>
+            <li
+              className={
+                passwordRules.lowercase ? "text-green-600" : "text-red-600"
+              }
+            >
+              Contains lowercase letter
+            </li>
+            <li
+              className={
+                passwordRules.number ? "text-green-600" : "text-red-600"
+              }
+            >
+              Contains number
+            </li>
+            <li
+              className={
+                passwordRules.specialChar ? "text-green-600" : "text-red-600"
+              }
+            >
+              Contains special character
+            </li>
+          </ul>
+
+          {error && (
+            <div className="text-red-600 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-lg border border-red-200 dark:border-red-800">
+              {error}
             </div>
-          </div>
-          {error && <div className="text-red-600 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-lg border border-red-200 dark:border-red-800">{error}</div>}
+          )}
           <button
             type="submit"
-            className="w-full px-2 py-2 md:px-4 md:py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl shadow-lg transition-all duration-200 font-semibold transform hover:scale-105 active:scale-95"
-            disabled={loading}
+            className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl shadow-lg transition-all duration-200 font-semibold transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            disabled={loading || !isPasswordValid}
           >
             {loading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
-        <div className="flex flex-col gap-3 mt-8">
+
+        {/* Social sign-in buttons */}
+        <div className="flex flex-col gap-3 mt-6">
           <button
-            className="w-full px-4 py-2 md:px-6 md:py-3 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white rounded-xl shadow-lg transition-all duration-200 font-semibold border border-gray-300 dark:border-gray-600 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="w-full px-4 py-2 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white rounded-xl shadow-lg transition-all duration-200 font-semibold border border-gray-300 dark:border-gray-600 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             type="button"
             onClick={() => handleSocialSignIn("github")}
             disabled={socialLoading !== null}
@@ -239,7 +305,7 @@ export default function SignupPage() {
             )}
           </button>
           <button
-            className="w-full px-4 py-2 md:px-6 md:py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-lg transition-all duration-200 font-semibold border border-red-300 dark:border-red-600 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-lg transition-all duration-200 font-semibold border border-red-300 dark:border-red-600 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             type="button"
             onClick={() => handleSocialSignIn("google")}
             disabled={socialLoading !== null}
@@ -254,8 +320,15 @@ export default function SignupPage() {
             )}
           </button>
         </div>
+
         <div className="text-center mt-6 text-gray-600 dark:text-gray-300">
-          Already have an account? <button onClick={() => handleNavigation("/login")} className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline transition-colors">Login</button>
+          Already have an account?{" "}
+          <button
+            onClick={() => handleNavigation("/login")}
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline transition-colors"
+          >
+            Login
+          </button>
         </div>
       </div>
     </main>
