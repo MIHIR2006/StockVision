@@ -1,9 +1,9 @@
 "use client";
+import { Eye, EyeClosed, Moon, Sun } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { Moon, Sun } from "lucide-react";
-
+import { useEffect, useState } from "react";
+import { BackgroundGradientAnimation } from "../../components/ui/background-gradient-animation";
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,6 +12,7 @@ export default function SignupPage() {
   const [isNavigating, setIsNavigating] = useState(false);
   const [socialLoading, setSocialLoading] = useState<"github" | "google" | null>(null);
   const [isDark, setIsDark] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   // Detect initial theme on mount
@@ -98,8 +99,25 @@ export default function SignupPage() {
 
   if (isNavigating) {
     return (
-      <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="w-full max-w-md mx-auto mt-20 p-8 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700">
+      <main className="flex flex-col items-center justify-center min-h-screen relative overflow-hidden">
+        {/* Background Gradient Animation */}
+        <div className="absolute inset-0 z-0">
+          <BackgroundGradientAnimation
+            gradientBackgroundStart="rgb(15, 23, 42)"
+            gradientBackgroundEnd="rgb(30, 41, 59)"
+            firstColor="30, 58, 138"
+            secondColor="55, 48, 163"
+            thirdColor="17, 24, 39"
+            fourthColor="67, 56, 202"
+            fifthColor="30, 64, 175"
+            pointerColor="59, 130, 246"
+            size="80%"
+            blendingValue="multiply"
+            containerClassName="h-screen w-screen"
+          />
+        </div>
+        
+        <div className="relative z-10 w-full max-w-md mx-auto mt-20 p-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50">
           <div className="flex flex-col items-center justify-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             <p className="text-gray-600 dark:text-gray-300 mt-4">Loading...</p>
@@ -110,11 +128,28 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 relative">
+    <main className="flex flex-col items-center justify-center min-h-screen relative overflow-hidden">
+      {/* Background Gradient Animation */}
+      <div className="absolute inset-0 z-0">
+        <BackgroundGradientAnimation
+          gradientBackgroundStart="rgb(15, 23, 42)"
+          gradientBackgroundEnd="rgb(30, 41, 59)"
+          firstColor="30, 58, 138"
+          secondColor="55, 48, 163"
+          thirdColor="17, 24, 39"
+          fourthColor="67, 56, 202"
+          fifthColor="30, 64, 175"
+          pointerColor="59, 130, 246"
+          size="80%"
+          blendingValue="multiply"
+          containerClassName="h-screen w-screen"
+        />
+      </div>
+
       {/* Theme Toggle Button */}
       <button
         onClick={toggleTheme}
-        className="absolute top-6 right-6 p-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-200"
+        className="absolute z-20 top-6 right-6 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border border-white/20 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-200"
         aria-label="Toggle theme"
       >
         {isDark ? (
@@ -124,7 +159,7 @@ export default function SignupPage() {
         )}
       </button>
 
-      <div className="w-full max-w-xs md:max-w-md mx-auto mt-20 p-8 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700">
+      <div className="relative z-10 w-full max-w-xs md:max-w-md mx-auto mt-20 p-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50">
         <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">Sign Up</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="space-y-2">
@@ -139,15 +174,28 @@ export default function SignupPage() {
             />
           </div>
           <div className="space-y-2">
-            <input
-              type="password"
-              autoComplete="off"
-              placeholder="Password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full px-2 py-2 md:px-4 md:py-3 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-all duration-200"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                autoComplete="off"
+                placeholder="Password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="w-full px-2 py-2 md:px-4 md:py-3 pr-12 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 transition-all duration-200"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200"
+              >
+                {showPassword ? (
+                  <Eye className="h-5 w-5" />
+                ) : (
+                  <EyeClosed className="h-5 w-5" />
+                )}
+              </button>
+            </div>
           </div>
           {error && <div className="text-red-600 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded-lg border border-red-200 dark:border-red-800">{error}</div>}
           <button
