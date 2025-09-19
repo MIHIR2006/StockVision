@@ -15,6 +15,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import dash from '../../../Dashboard.png';
+import { CardSpotlight } from "../../components/ui/card-spotlight";
 import { ContainerScroll } from '../../components/ui/container-scroll-animation';
 import Testimonials from './Testimonials';
 // Declare the global window interface extension
@@ -578,60 +579,55 @@ export default function Landing() {
       <section
         ref={featuresRef}
         id="features-section"
-        className="py-16 bg-muted/50 scroll-mt-20"
+        className="py-16 bg-gradient-to-br from-slate-900/50 via-blue-900/30 to-purple-900/50 backdrop-blur-sm scroll-mt-20"
       >
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-12 text-center">
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-12 text-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
             Powerful Features
           </h2>
+
           <div className="grid gap-8 md:grid-cols-3">
             {/* Feature 1 */}
-            <div
-              className="glass-card p-6 rounded-xl shadow-lg animate-fade-in 
-                   transition-all duration-300 
-                   hover:scale-105 hover:shadow-2xl hover:bg-primary/5 
-                   active:scale-110"
-              style={{ animationDelay: "0.2s" }}
+            <CardSpotlight 
+              className="h-80 w-full border-neutral-700/50 bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm"
+              color="#3b82f6"
+              radius={300}
             >
-              <ChartLine className="h-12 w-12 text-primary mb-4 transition-colors duration-300 group-hover:text-primary/80" />
-              <h3 className="text-xl font-bold mb-2">Real-time Analytics</h3>
-              <p className="text-muted-foreground">
+              <ChartLine className="h-12 w-12 text-blue-400 mb-4 transition-colors duration-300 group-hover:text-blue-300" />
+              <h3 className="text-xl font-bold mb-2 text-white">Real-time Analytics</h3>
+              <p className="text-slate-300">
                 Track your portfolio performance with real-time charts and
                 analytics that help you make informed decisions.
               </p>
-            </div>
+            </CardSpotlight>
 
             {/* Feature 2 */}
-            <div
-              className="glass-card p-6 rounded-xl shadow-lg animate-fade-in 
-                   transition-all duration-300 
-                   hover:scale-105 hover:shadow-2xl hover:bg-primary/5 
-                   active:scale-110"
-              style={{ animationDelay: "0.3s" }}
+            <CardSpotlight 
+              className="h-80 w-full border-neutral-700/50 bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm"
+              color="#3b82f6"
+              radius={300}
             >
-              <TrendingUp className="h-12 w-12 text-primary mb-4 transition-colors duration-300 group-hover:text-primary/80" />
-              <h3 className="text-xl font-bold mb-2">Performance Tracking</h3>
-              <p className="text-muted-foreground">
+              <TrendingUp className="h-12 w-12 text-blue-400 mb-4 transition-colors duration-300 group-hover:text-blue-300" />
+              <h3 className="text-xl font-bold mb-2 text-white">Performance Tracking</h3>
+              <p className="text-slate-300">
                 Visualize your investment growth over time with interactive
                 charts and comprehensive performance metrics.
               </p>
-            </div>
+            </CardSpotlight>
 
             {/* Feature 3 */}
-            <div
-              className="glass-card p-6 rounded-xl shadow-lg animate-fade-in 
-                   transition-all duration-300 
-                   hover:scale-105 hover:shadow-2xl hover:bg-primary/5 
-                   active:scale-110"
-              style={{ animationDelay: "0.4s" }}
+            <CardSpotlight 
+              className="h-80 w-full border-neutral-700/50 bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm"
+              color="#3b82f6"
+              radius={300}
             >
-              <CircleDollarSign className="h-12 w-12 text-primary mb-4 transition-colors duration-300 group-hover:text-primary/80" />
-              <h3 className="text-xl font-bold mb-2">Portfolio Management</h3>
-              <p className="text-muted-foreground">
+              <CircleDollarSign className="h-12 w-12 text-blue-400 mb-4 transition-colors duration-300 group-hover:text-blue-300" />
+              <h3 className="text-xl font-bold mb-2 text-white">Portfolio Management</h3>
+              <p className="text-slate-300">
                 Easily manage your investment portfolio with intuitive tools to
                 buy, sell, and track your holdings.
               </p>
-            </div>
+            </CardSpotlight>
           </div>
         </div>
       </section>
