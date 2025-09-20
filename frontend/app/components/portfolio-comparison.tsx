@@ -1,10 +1,20 @@
 "use client";
 
+import { BarChart3, TrendingDown, TrendingUp } from "lucide-react";
 import { useState } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Portfolio } from "./portfolio-selector";
 import { Badge } from "./ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "./ui/chart";
+import { Checkbox } from "./ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -12,17 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-} from "./ui/chart";
-import { Checkbox } from "./ui/checkbox";
-import { TrendingUp, TrendingDown, BarChart3 } from "lucide-react";
-import { Portfolio } from "./portfolio-selector";
 
 interface ComparisonData {
   date: string;
@@ -48,6 +47,37 @@ const chartColors = [
   "hsl(var(--chart-4))",
   "hsl(var(--chart-5))",
 ];
+
+// Function to get color based on portfolio value (red for lower, blue for higher)
+const getColorByValue = (portfolios: Portfolio[], selectedPortfolios: string[]) => {
+  const selectedPortfolioData = selectedPortfolios
+    .map(id => portfolios.find(p => p.id === id))
+    .filter(Boolean) as Portfolio[];
+  
+  if (selectedPortfolioData.length === 0) return {};
+  
+  // Sort portfolios by total value
+  const sortedPortfolios = [...selectedPortfolioData].sort((a, b) => a.totalValue - b.totalValue);
+  
+  const colorMap: { [key: string]: string } = {};
+  
+  selectedPortfolioData.forEach(portfolio => {
+    const index = sortedPortfolios.findIndex(p => p.id === portfolio.id);
+    const ratio = index / (sortedPortfolios.length - 1);
+    
+    // Interpolate between red (lower values) and blue (higher values)
+    if (sortedPortfolios.length === 1) {
+      colorMap[portfolio.id] = "#3b82f6"; // Default blue for single portfolio
+    } else {
+      // Red to Blue gradient: red (0, 0) -> blue (0, 0, 255)
+      const red = Math.round(220 * (1 - ratio)); // Start with red, fade to 0
+      const blue = Math.round(59 + 196 * ratio); // Start with some blue, increase to 255
+      colorMap[portfolio.id] = `rgb(${red}, 0, ${blue})`;
+    }
+  });
+  
+  return colorMap;
+};
 
 export function PortfolioComparison({ portfolios, className }: PortfolioComparisonProps) {
   const [selectedPortfolios, setSelectedPortfolios] = useState<string[]>(
@@ -94,12 +124,15 @@ export function PortfolioComparison({ portfolios, className }: PortfolioComparis
     }
   };
 
-  const chartConfig: ChartConfig = selectedPortfolios.reduce((config, portfolioId, index) => {
+  // Get colors based on portfolio values
+  const valueBasedColors = getColorByValue(portfolios, selectedPortfolios);
+  
+  const chartConfig: ChartConfig = selectedPortfolios.reduce((config, portfolioId) => {
     const portfolio = portfolios.find(p => p.id === portfolioId);
     if (portfolio) {
       config[portfolio.name] = {
         label: portfolio.name,
-        color: chartColors[index % chartColors.length],
+        color: valueBasedColors[portfolioId] || "#3b82f6", // Default blue if no color found
       };
     }
     return config;
@@ -186,9 +219,10 @@ export function PortfolioComparison({ portfolios, className }: PortfolioComparis
               <ChartContainer config={chartConfig} className="h-[400px]">
                 <AreaChart data={comparisonData}>
                   <defs>
-                    {selectedPortfolios.map((portfolioId, index) => {
+                    {selectedPortfolios.map((portfolioId) => {
                       const portfolio = portfolios.find(p => p.id === portfolioId);
                       if (!portfolio) return null;
+                      const portfolioColor = valueBasedColors[portfolioId] || "#3b82f6";
                       return (
                         <linearGradient
                           key={portfolio.name}
@@ -200,12 +234,12 @@ export function PortfolioComparison({ portfolios, className }: PortfolioComparis
                         >
                           <stop
                             offset="5%"
-                            stopColor={chartColors[index % chartColors.length]}
+                            stopColor={portfolioColor}
                             stopOpacity={0.3}
                           />
                           <stop
                             offset="95%"
-                            stopColor={chartColors[index % chartColors.length]}
+                            stopColor={portfolioColor}
                             stopOpacity={0.1}
                           />
                         </linearGradient>
@@ -240,15 +274,16 @@ export function PortfolioComparison({ portfolios, className }: PortfolioComparis
                       />
                     }
                   />
-                  {selectedPortfolios.map((portfolioId, index) => {
+                  {selectedPortfolios.map((portfolioId) => {
                     const portfolio = portfolios.find(p => p.id === portfolioId);
                     if (!portfolio) return null;
+                    const portfolioColor = valueBasedColors[portfolioId] || "#3b82f6";
                     return (
                       <Area
                         key={portfolio.name}
                         type="monotone"
                         dataKey={portfolio.name}
-                        stroke={chartColors[index % chartColors.length]}
+                        stroke={portfolioColor}
                         fill={`url(#fill${portfolio.name.replace(/\s+/g, '')})`}
                         strokeWidth={2}
                       />
