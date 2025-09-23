@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 # Import routers
-from app.routers import stocks, market, portfolios, auth
+from app.routers import stocks, market, portfolios, auth, chatbot
 
 # Import database
 from app.db import engine, Base
@@ -42,6 +42,7 @@ app.include_router(stocks.router)
 app.include_router(market.router)
 app.include_router(portfolios.router)
 app.include_router(auth.router)  # Auth routes added
+app.include_router(chatbot.router)  # ADD THIS LINE
 
 # Create all DB tables
 Base.metadata.create_all(bind=engine)

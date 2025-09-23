@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { FloatingChatbot } from "@/components/floating-chatbot";
 import "@/styles/globals.css";
 import { Analytics } from '@vercel/analytics/react';
 import { Inter } from "next/font/google";
@@ -52,6 +53,7 @@ export default function RootLayout({
               {children}
               <Toaster />
               <Sonner />
+              <FloatingChatbot />
             </TooltipProvider>
           </ThemeProvider>
         </Providers>

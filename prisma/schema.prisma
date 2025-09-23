@@ -13,3 +13,62 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// NEW MODELS FOR AI CHATBOT
+model ChatSession {
+  id        String   @id @default(cuid())
+  userId    String?  @map("user_id")
+  sessionId String   @unique @map("session_id")
+  title     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  messages  ChatMessage[]
+  
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id          String      @id @default(cuid())
+  sessionId   String      @map("session_id")
+  role        MessageRole
+  content     String
+  metadata    Json?       // Store analysis results, portfolio data, etc.
+  timestamp   DateTime    @default(now())
+  
+  session     ChatSession @relation(fields: [sessionId], references: [sessionId])
+  
+  @@map("chat_messages")
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+model Portfolio {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  totalValue  Float    @map("total_value")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  stocks      PortfolioStock[]
+  
+  @@map("portfolios")
+}
+
+model PortfolioStock {
+  id           String    @id @default(cuid())
+  portfolioId  String    @map("portfolio_id")
+  symbol       String
+  shares       Int
+  avgCost      Float     @map("avg_cost")
+  currentPrice Float?    @map("current_price")
+  
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id])
+  
+  @@map("portfolio_stocks")
+}

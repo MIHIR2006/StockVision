@@ -77,6 +77,32 @@ frontend/.env.local
 **/generated/
 packages/*/generated/
 
+# Additional Security - API Keys & Sensitive Data
+**/.env
+**/.env.*
+*.env
+*.env.*
+.env.backup
+.env.production
+.env.staging
+.env.development
+
+# Database files (SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# API Keys and credentials
+**/config/keys.json
+**/config/secrets.json
+api-keys.txt
+credentials.json
+
+# Session and auth files
+sessions/
+auth-sessions/
+*.session
+
 ---
 
 ### Turborepo daemon logs
