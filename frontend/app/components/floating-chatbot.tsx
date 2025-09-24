@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, Bot, User, Loader2, X, Minimize2 } from 'lucide-react';
+import { MessageSquare, Send, Bot, User, Loader2, X, Minimize2, AlertCircle, Wifi, WifiOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { chatApi } from '../../lib/api-config';
+import { useServerStatus, ApiErrorAlert } from '../../lib/error-handling';
 
 interface ChatMessage {
   id: string;
@@ -26,7 +28,13 @@ export function FloatingChatbot() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId] = useState(() => `session_${Date.now()}`);
+  const [apiError, setApiError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  
+  // Use server status monitoring
+  const { status: serverStatus, lastCheck, checkStatus } = useServerStatus();
+  const isServerHealthy = serverStatus === 'connected';
+  const isOnline = navigator?.onLine !== false;
 
   const scrollToBottom = () => {
     if (scrollRef.current) {
@@ -39,7 +47,7 @@ export function FloatingChatbot() {
   }, [messages]);
 
   const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || !isServerHealthy) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -52,24 +60,19 @@ export function FloatingChatbot() {
     const currentInput = input;
     setInput('');
     setIsLoading(true);
+    setApiError(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/chatbot/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: currentInput,
-          session_id: sessionId
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Check server status before attempting to send message
+      if (!isServerHealthy) {
+        await checkStatus();
+        // Re-check status after the call
+        if (!isServerHealthy) {
+          throw new Error('Server is not accessible');
+        }
       }
 
-      const data = await response.json();
+      const data = await chatApi.sendMessage(currentInput, sessionId);
 
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
@@ -82,10 +85,25 @@ export function FloatingChatbot() {
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Chat error:', error);
+      
+      let errorContent = 'Sorry, I encountered an issue. Please try again.';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('fetch')) {
+          errorContent = 'Unable to connect to the StockVision server. Please check if the backend is running on port 8000.';
+        } else if (error.message.includes('timeout')) {
+          errorContent = 'Request timed out. The server might be busy. Please try again.';
+        } else if (error.message.includes('Server is not accessible')) {
+          errorContent = 'The StockVision server is currently offline. Please wait a moment and try again.';
+        }
+      }
+      
+      setApiError(errorContent);
+      
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'Sorry, I\'m having trouble connecting to the server. Please make sure the backend is running on port 8000.',
+        content: errorContent,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -137,7 +155,23 @@ export function FloatingChatbot() {
           <div className="flex items-center gap-2">
             <Bot className="h-5 w-5" />
             <span className="font-semibold">AI Stock Analyzer</span>
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            {/* Dynamic connection status indicator */}
+            {isServerHealthy ? (
+              <div className="flex items-center gap-1">
+                <Wifi className="h-3 w-3 text-green-300" />
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              </div>
+            ) : serverStatus === 'checking' ? (
+              <div className="flex items-center gap-1">
+                <Loader2 className="h-3 w-3 animate-spin text-yellow-300" />
+                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1">
+                <WifiOff className="h-3 w-3 text-red-300" />
+                <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -157,6 +191,18 @@ export function FloatingChatbot() {
 
         {!isMinimized && (
           <>
+            {/* API Error Alert */}
+            {apiError && (
+              <ApiErrorAlert 
+                error={new Error(apiError)} 
+                onRetry={() => {
+                  setApiError(null);
+                  checkStatus();
+                }} 
+                onDismiss={() => setApiError(null)}
+              />
+            )}
+            
             {/* Messages */}
             <div 
               ref={scrollRef} 
@@ -275,20 +321,47 @@ export function FloatingChatbot() {
             
             {/* Input */}
             <div className="p-4 border-t bg-white dark:bg-gray-900 rounded-b-lg">
+              {/* Server status message when disconnected */}
+              {!isServerHealthy && (
+                <div className="mb-2 text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {serverStatus === 'checking' 
+                    ? 'Checking connection...' 
+                    : 'Server offline - Chat disabled'}
+                </div>
+              )}
+              
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask about stocks, trends, or analysis..."
-                  disabled={isLoading}
-                  className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white text-sm"
+                  placeholder={
+                    !isServerHealthy 
+                      ? "Waiting for server connection..." 
+                      : "Ask about stocks, trends, or analysis..."
+                  }
+                  disabled={isLoading || !isServerHealthy}
+                  className={cn(
+                    "flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white text-sm",
+                    !isServerHealthy && "opacity-50 cursor-not-allowed"
+                  )}
                 />
                 <button 
                   onClick={sendMessage} 
-                  disabled={!input.trim() || isLoading}
-                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white p-2 rounded-md transition-colors"
+                  disabled={!input.trim() || isLoading || !isServerHealthy}
+                  className={cn(
+                    "bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white p-2 rounded-md transition-colors",
+                    !isServerHealthy && "cursor-not-allowed"
+                  )}
+                  title={
+                    !isServerHealthy 
+                      ? "Server is offline" 
+                      : isLoading 
+                        ? "Sending..." 
+                        : "Send message"
+                  }
                 >
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

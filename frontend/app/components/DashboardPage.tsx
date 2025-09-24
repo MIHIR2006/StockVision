@@ -4,6 +4,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { FloatingChatbot } from "@/components/floating-chatbot";
+import { StockVisionErrorBoundary } from "../../lib/error-handling";
 import {
   BarChart2, ChevronLeft, ChevronRight, Home, LineChart,
   Settings, Wallet,BriefcaseBusiness , ChartNoAxesCombined
@@ -221,6 +223,11 @@ export default function DashboardPage() {
           onClick={() => setSidebarCollapsed(true)}
         />
       )}
+      
+      {/* AI Chatbot - Only visible in dashboard for authenticated users */}
+      <StockVisionErrorBoundary>
+        <FloatingChatbot />
+      </StockVisionErrorBoundary>
     </div>
   );
 }

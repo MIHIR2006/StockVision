@@ -2,16 +2,26 @@ import openai
 import json
 import os
 from typing import Dict, Any, List
-import requests
+import httpx
 from datetime import datetime, timedelta
+
+# AI Configuration Constants
+OPENAI_MODEL = "gpt-3.5-turbo"
+PARSER_MAX_TOKENS = 200
+PARSER_TEMPERATURE = 0.3
+ANALYSIS_MAX_TOKENS = 300
+ANALYSIS_TEMPERATURE = 0.7
+DEFAULT_CONFIDENCE = 0.7
+DEFAULT_TIME_RANGE = 30  # Default time range for trend analysis in days
+JSON_INDENT = 2
 
 class AIStockAnalyzer:
     def __init__(self):
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
         self.alpha_vantage_key = os.getenv("ALPHA_VANTAGE_API_KEY")
         
-        if self.openai_api_key:
-            openai.api_key = self.openai_api_key
+        # Note: No longer setting global openai.api_key for thread safety
+        # API key will be passed directly to each API call
     
     async def analyze_stock_query(self, query: str, context: Dict[str, Any] = None):
         """Analyze user query and determine what stock data to fetch"""
@@ -32,13 +42,14 @@ class AIStockAnalyzer:
             """
             
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+                model=OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": f"Analyze this query: {query}"}
                 ],
-                max_tokens=200,
-                temperature=0.3
+                max_tokens=PARSER_MAX_TOKENS,
+                temperature=PARSER_TEMPERATURE,
+                api_key=self.openai_api_key
             )
             
             # Parse the response and extract structured data
@@ -75,8 +86,8 @@ class AIStockAnalyzer:
         return {
             "action": action,
             "symbols": symbols,
-            "time_range": 30,
-            "confidence": 0.7
+            "time_range": DEFAULT_TIME_RANGE,
+            "confidence": DEFAULT_CONFIDENCE
         }
     
     def _parse_ai_response(self, content: str, query: str) -> Dict[str, Any]:
@@ -88,7 +99,9 @@ class AIStockAnalyzer:
                 end = content.rfind('}') + 1
                 json_str = content[start:end]
                 return json.loads(json_str)
-        except:
+        except json.JSONDecodeError as e:
+            # Failed to parse JSON, will fall back to simple analysis
+            print(f"JSON parsing error: {e}")
             pass
         
         # Fallback to simple analysis
@@ -103,19 +116,20 @@ class AIStockAnalyzer:
         try:
             context = f"""
             User Query: {query}
-            Stock Data: {json.dumps(data, indent=2)}
+            Stock Data: {json.dumps(data, indent=JSON_INDENT)}
             
             Provide a helpful, professional response with insights and recommendations.
             """
             
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+                model=OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are a professional stock analyst providing clear, actionable insights."},
                     {"role": "user", "content": context}
                 ],
-                max_tokens=300,
-                temperature=0.7
+                max_tokens=ANALYSIS_MAX_TOKENS,
+                temperature=ANALYSIS_TEMPERATURE,
+                api_key=self.openai_api_key
             )
             
             return response.choices[0].message.content
@@ -166,8 +180,11 @@ async def get_real_time_stock_data(symbol: str) -> Dict[str, Any]:
             }
         
         url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={api_key}"
-        response = requests.get(url)
-        data = response.json()
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+            response.raise_for_status()  # Raises exception for HTTP errors
+            data = response.json()
         
         if "Global Quote" in data:
             quote = data["Global Quote"]
