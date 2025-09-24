@@ -1,7 +1,9 @@
-import openai
+from openai import OpenAI
 import json
 import os
-from typing import Dict, Any, List
+import re
+import logging
+from typing import Dict, Any, List, Optional
 import httpx
 from datetime import datetime, timedelta
 
@@ -20,44 +22,149 @@ class AIStockAnalyzer:
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
         self.alpha_vantage_key = os.getenv("ALPHA_VANTAGE_API_KEY")
         
-        # Note: No longer setting global openai.api_key for thread safety
-        # API key will be passed directly to each API call
-    
-    async def analyze_stock_query(self, query: str, context: Dict[str, Any] = None):
-        """Analyze user query and determine what stock data to fetch"""
-        
-        if not self.openai_api_key:
-            # Fallback to simple keyword matching if no OpenAI key
-            return self._simple_query_analysis(query)
-        
+        # Initialize OpenAI client with API key
+        if self.openai_api_key:
+            self.client = OpenAI(api_key=self.openai_api_key)
+        else:
+            self.client = None
+        # Track if JSON mode succeeded once (avoid double attempts later)
+        self._json_mode_supported: bool = True
+        self.logger = logging.getLogger(__name__)
+
+    # ----------------------------- JSON Parsing Helpers ----------------------------- #
+    def _extract_json_from_fenced_block(self, content: str) -> Optional[str]:
+        """Extract JSON from markdown fenced code blocks (```json ... ``` or ``` ... ```)."""
+        fenced_pattern = re.compile(r"```(?:json)?\s*\n(\{[\s\S]*?\})\s*```", re.IGNORECASE)
+        match = fenced_pattern.search(content)
+        if match:
+            return match.group(1).strip()
+        return None
+
+    def _extract_json_with_stack(self, content: str) -> Optional[str]:
+        """Robustly extract the first complete top-level JSON object using a brace stack.
+
+        Handles nested braces and ignores braces appearing inside quoted strings.
+        Returns the JSON string or None if not found.
+        """
+        in_string = False
+        escape = False
+        stack = []
+        start_index = None
+        for i, ch in enumerate(content):
+            if ch == '"' and not escape:
+                in_string = not in_string
+            if in_string and ch == '\\' and not escape:
+                escape = True
+                continue
+            escape = False
+            if in_string:
+                continue
+            if ch == '{':
+                stack.append(ch)
+                if start_index is None:
+                    start_index = i
+            elif ch == '}' and stack:
+                stack.pop()
+                if not stack and start_index is not None:
+                    return content[start_index:i+1]
+        return None
+
+    def _safe_json_load(self, json_str: str) -> Optional[Dict[str, Any]]:
         try:
-            system_prompt = """
-            You are an AI stock analyst assistant. Analyze the user's query and extract:
-            1. Stock symbols mentioned (e.g., AAPL, TSLA, GOOGL)
-            2. Type of analysis needed
-            3. Time ranges if mentioned
-            4. Return structured JSON response
-            
-            Available actions: "get_price", "get_trends", "compare_portfolios", "analyze_risk", "market_summary"
-            """
-            
-            response = openai.ChatCompletion.create(
+            return json.loads(json_str)
+        except Exception:
+            return None
+
+    def _parse_ai_response(self, content: str, query: str) -> Dict[str, Any]:
+        """Parse AI response and extract structured data using multiple resilient strategies."""
+        parsing_attempts: List[str] = []
+
+        # 1. Direct full content if it already looks like JSON
+        trimmed = content.strip()
+        if trimmed.startswith('{') and trimmed.endswith('}'):
+            parsing_attempts.append(trimmed)
+
+        # 2. Fenced code block
+        fenced = self._extract_json_from_fenced_block(content)
+        if fenced:
+            parsing_attempts.append(fenced)
+
+        # 3. Stack-based extraction
+        stacked = self._extract_json_with_stack(content)
+        if stacked:
+            parsing_attempts.append(stacked)
+
+        # 4. Legacy fallback (first/last brace) only if none collected
+        if not parsing_attempts and '{' in content and '}' in content:
+            first = content.find('{')
+            last = content.rfind('}') + 1
+            parsing_attempts.append(content[first:last])
+
+        for candidate in parsing_attempts:
+            loaded = self._safe_json_load(candidate)
+            if isinstance(loaded, dict):
+                return loaded
+
+        # Fallback to heuristic analysis
+        return self._simple_query_analysis(query)
+    
+    async def analyze_stock_query(self, query: str, context: Optional[Dict[str, Any]] = None):
+        """Analyze user query and determine what stock data to fetch using JSON mode when possible."""
+        if not self.client:
+            return self._simple_query_analysis(query)
+
+        base_system_prompt = (
+            "You are an AI stock analyst assistant. Return ONLY structured JSON describing the user's intent. "
+            "Recognize: symbols (list of uppercase stock tickers), action (one of get_price, get_trends, compare_portfolios, analyze_risk, market_summary), "
+            "time_range (integer days if the user implies a period, else default), confidence (0-1 float). Provide no commentary."
+        )
+
+        user_instruction = f"User Query: {query}\nIf ambiguous, infer best action."
+
+        # Attempt JSON mode first (efficient & guaranteed if supported)
+        if self._json_mode_supported:
+            try:
+                response = self.client.chat.completions.create(
+                    model=OPENAI_MODEL,
+                    messages=[
+                        {"role": "system", "content": base_system_prompt},
+                        {"role": "user", "content": user_instruction},
+                    ],
+                    max_tokens=PARSER_MAX_TOKENS,
+                    temperature=PARSER_TEMPERATURE,
+                    response_format={"type": "json_object"},
+                )
+                content = response.choices[0].message.content
+                loaded = self._safe_json_load(content.strip())
+                if isinstance(loaded, dict):
+                    return loaded
+            except Exception as json_mode_err:
+                # Mark unsupported and fall back to prompt-based fenced JSON strategy
+                self._json_mode_supported = False
+                self.logger.warning(
+                    "JSON mode unsupported or failed; falling back to fenced parsing.",
+                    exc_info=True
+                )
+
+        # Fallback strategy: instruct model to wrap JSON in fenced code block
+        try:
+            fenced_prompt = (
+                base_system_prompt +
+                " Output ONLY a markdown fenced JSON block like:\n```json\n{ ... }\n```\nNo extra commentary outside the block."
+            )
+            response = self.client.chat.completions.create(
                 model=OPENAI_MODEL,
                 messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": f"Analyze this query: {query}"}
+                    {"role": "system", "content": fenced_prompt},
+                    {"role": "user", "content": user_instruction},
                 ],
                 max_tokens=PARSER_MAX_TOKENS,
                 temperature=PARSER_TEMPERATURE,
-                api_key=self.openai_api_key
             )
-            
-            # Parse the response and extract structured data
             content = response.choices[0].message.content
             return self._parse_ai_response(content, query)
-            
         except Exception as e:
-            print(f"OpenAI API error: {e}")
+            self.logger.error("OpenAI analyze fallback error", exc_info=True)
             return self._simple_query_analysis(query)
     
     def _simple_query_analysis(self, query: str) -> Dict[str, Any]:
@@ -90,27 +197,12 @@ class AIStockAnalyzer:
             "confidence": DEFAULT_CONFIDENCE
         }
     
-    def _parse_ai_response(self, content: str, query: str) -> Dict[str, Any]:
-        """Parse AI response and extract structured data"""
-        try:
-            # Try to extract JSON from response
-            if '{' in content and '}' in content:
-                start = content.find('{')
-                end = content.rfind('}') + 1
-                json_str = content[start:end]
-                return json.loads(json_str)
-        except json.JSONDecodeError as e:
-            # Failed to parse JSON, will fall back to simple analysis
-            print(f"JSON parsing error: {e}")
-            pass
-        
-        # Fallback to simple analysis
-        return self._simple_query_analysis(query)
+    # (Original _parse_ai_response replaced by robust version above)
     
     async def generate_response(self, query: str, data: Dict[str, Any]) -> str:
         """Generate natural language response"""
         
-        if not self.openai_api_key:
+        if not self.client:
             return self._generate_simple_response(query, data)
         
         try:
@@ -121,21 +213,20 @@ class AIStockAnalyzer:
             Provide a helpful, professional response with insights and recommendations.
             """
             
-            response = openai.ChatCompletion.create(
+            response = self.client.chat.completions.create(
                 model=OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are a professional stock analyst providing clear, actionable insights."},
                     {"role": "user", "content": context}
                 ],
                 max_tokens=ANALYSIS_MAX_TOKENS,
-                temperature=ANALYSIS_TEMPERATURE,
-                api_key=self.openai_api_key
+                temperature=ANALYSIS_TEMPERATURE
             )
             
             return response.choices[0].message.content
             
         except Exception as e:
-            print(f"OpenAI response error: {e}")
+            self.logger.error("OpenAI response generation error", exc_info=True)
             return self._generate_simple_response(query, data)
     
     def _generate_simple_response(self, query: str, data: Dict[str, Any]) -> str:

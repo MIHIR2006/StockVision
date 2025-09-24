@@ -40,24 +40,28 @@ class ChatDatabaseService:
         metadata: Optional[Dict[str, Any]] = None
     ) -> ChatMessage:
         """Add a new message to a session"""
+        session = db.query(ChatSession).filter(ChatSession.session_id == session_id).first()
+        if not session:
+            # Auto-create session if somehow missing (defensive)
+            session = ChatSession(
+                session_id=session_id,
+                title=f"Chat Session {datetime.utcnow().strftime('%Y-%m-%d %H:%M')}"
+            )
+            db.add(session)
+            db.flush()
+
         message = ChatMessage(
             session_id=session_id,
+            chat_session_fk=session.id,
             role=role,
             content=content,
             message_metadata=metadata,
             timestamp=datetime.utcnow()
         )
-        
         db.add(message)
+        session.updated_at = datetime.utcnow()
         db.commit()
         db.refresh(message)
-        
-        # Update session's updated_at timestamp
-        session = db.query(ChatSession).filter(ChatSession.session_id == session_id).first()
-        if session:
-            session.updated_at = datetime.utcnow()
-            db.commit()
-        
         return message
     
     @staticmethod

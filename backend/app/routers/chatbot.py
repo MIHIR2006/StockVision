@@ -68,7 +68,8 @@ async def chat_with_ai(
     """Main chatbot endpoint with database persistence and singleton AI analyzer"""
     try:
         # Capture timestamp once for consistency across all operations
-        request_timestamp = datetime.now()
+        # Use UTC to match database model defaults and avoid TZ ambiguity
+        request_timestamp = datetime.utcnow()
         
         # Ensure session exists in database
         chat_service.get_or_create_session(db, request.session_id, request.user_id)
