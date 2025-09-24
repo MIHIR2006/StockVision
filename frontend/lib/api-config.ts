@@ -16,8 +16,8 @@ export const API_CONFIG = {
   ENDPOINTS: {
     CHATBOT: {
       CHAT: '/api/chatbot/chat',
-      SESSIONS: '/api/chatbot/sessions',
-      MESSAGES: (sessionId: string) => `/api/chatbot/sessions/${sessionId}/messages`,
+      SESSION: (sessionId: string) => `/api/chatbot/sessions/${sessionId}`,
+      USER_SESSIONS: (userId: string) => `/api/chatbot/sessions?user_id=${userId}`,
       DELETE_SESSION: (sessionId: string) => `/api/chatbot/sessions/${sessionId}`
     },
     STOCKS: {
@@ -106,17 +106,15 @@ export const chatApi = {
     return response.json();
   },
   
-  createSession: async () => {
+  getSession: async (sessionId: string) => {
     const response = await makeApiCall(
-      API_CONFIG.ENDPOINTS.CHATBOT.SESSIONS,
-      { method: 'POST' }
+      API_CONFIG.ENDPOINTS.CHATBOT.SESSION(sessionId)
     );
     return response.json();
   },
-  
-  getMessages: async (sessionId: string) => {
+  getUserSessions: async (userId: string) => {
     const response = await makeApiCall(
-      API_CONFIG.ENDPOINTS.CHATBOT.MESSAGES(sessionId)
+      API_CONFIG.ENDPOINTS.CHATBOT.USER_SESSIONS(userId)
     );
     return response.json();
   }

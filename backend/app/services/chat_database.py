@@ -88,23 +88,30 @@ class ChatDatabaseService:
     
     @staticmethod
     def get_user_sessions(db: Session, user_id: str) -> List[Dict[str, Any]]:
-        """Get all sessions for a user (note: message_count aggregation optimization recommended)."""
-        # TODO: Optimize with aggregate count query to avoid potential N+1 when accessing session.messages.
-        sessions = db.query(ChatSession).filter(
-            ChatSession.user_id == user_id
-        ).order_by(ChatSession.updated_at.desc()).all()
-
-        result: List[Dict[str, Any]] = []
-        for session in sessions:
-            # Current approach: len(session.messages) may lazy-load; acceptable for low volume, optimize later.
-            result.append({
-                "session_id": session.session_id,
-                "title": session.title,
-                "created_at": session.created_at.isoformat(),
-                "updated_at": session.updated_at.isoformat(),
-                "message_count": len(session.messages)
-            })
-        return result
+        """Get all sessions for a user with aggregated message counts (avoids N+1)."""
+        from sqlalchemy import func
+        rows = (
+            db.query(
+                ChatSession.session_id,
+                ChatSession.created_at,
+                ChatSession.updated_at,
+                func.count(ChatMessage.id).label("message_count")
+            )
+            .outerjoin(ChatMessage, ChatMessage.chat_session_fk == ChatSession.id)
+            .filter(ChatSession.user_id == user_id)
+            .group_by(ChatSession.id)
+            .order_by(ChatSession.updated_at.desc())
+            .all()
+        )
+        return [
+            {
+                "session_id": r.session_id,
+                "created_at": r.created_at.isoformat() if r.created_at else None,
+                "updated_at": r.updated_at.isoformat() if r.updated_at else None,
+                "message_count": int(r.message_count or 0)
+            }
+            for r in rows
+        ]
     
     @staticmethod
     def delete_session(db: Session, session_id: str) -> bool:

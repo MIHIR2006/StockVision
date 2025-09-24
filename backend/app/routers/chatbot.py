@@ -5,6 +5,7 @@ from functools import lru_cache
 import json
 import logging
 from datetime import datetime
+from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.orm import Session
 from ..services.ai_services import AIStockAnalyzer, get_real_time_stock_data, get_stock_trends
 from ..services.chat_database import ChatDatabaseService
@@ -71,16 +72,17 @@ async def chat_with_ai(
         # Use UTC to match database model defaults and avoid TZ ambiguity
         request_timestamp = datetime.utcnow()
         
-        # Ensure session exists in database
-        chat_service.get_or_create_session(db, request.session_id, request.user_id)
-        
-        # Store user message in database
-        chat_service.add_message(
-            db=db,
-            session_id=request.session_id,
-            role="user",
-            content=request.message,
-            metadata={"request_timestamp": request_timestamp.isoformat()}
+        # Ensure session exists (threadpool to avoid blocking event loop)
+        await run_in_threadpool(chat_service.get_or_create_session, db, request.session_id, request.user_id)
+
+        # Store user message
+        await run_in_threadpool(
+            chat_service.add_message,
+            db,
+            request.session_id,
+            "user",
+            request.message,
+            {"request_timestamp": request_timestamp.isoformat()}
         )
         
         # Use dependency-injected AI analyzer (singleton for performance)
@@ -96,12 +98,13 @@ async def chat_with_ai(
         response = await ai_analyzer.generate_response(request.message, data)
         
         # Store assistant response in database
-        chat_service.add_message(
-            db=db,
-            session_id=request.session_id,
-            role="assistant",
-            content=response,
-            metadata={
+        await run_in_threadpool(
+            chat_service.add_message,
+            db,
+            request.session_id,
+            "assistant",
+            response,
+            {
                 "analysis": analysis,
                 "stock_data": data,
                 "response_timestamp": request_timestamp.isoformat()
@@ -126,7 +129,7 @@ async def chat_with_ai(
 async def get_chat_history(session_id: str, db: Session = Depends(get_db)):
     """Get chat history for a session from database"""
     try:
-        messages = chat_service.get_session_messages(db, session_id)
+        messages = await run_in_threadpool(chat_service.get_session_messages, db, session_id)
         return {"messages": messages}
     except Exception as e:
         logger.error(f"Error retrieving chat history for session {session_id}: {str(e)}", exc_info=True)
@@ -135,11 +138,25 @@ async def get_chat_history(session_id: str, db: Session = Depends(get_db)):
             detail=f"Unable to retrieve chat history. Error ID: {ChatErrorCodes.HISTORY_ERROR}"
         )
 
+@router.post("/sessions")
+async def create_session(payload: Dict[str, str], db: Session = Depends(get_db)):
+    """Explicitly create a new chat session (optional endpoint)."""
+    session_id = payload.get("session_id")
+    user_id = payload.get("user_id")
+    if not session_id or not user_id:
+        raise HTTPException(status_code=400, detail="session_id and user_id required")
+    try:
+        await run_in_threadpool(chat_service.get_or_create_session, db, session_id, user_id)
+        return {"session_id": session_id, "user_id": user_id}
+    except Exception as e:
+        logger.exception("Failed to create session: %s", e)
+        raise HTTPException(status_code=500, detail="Failed to create session")
+
 @router.delete("/sessions/{session_id}")
 async def clear_chat_session(session_id: str, db: Session = Depends(get_db)):
     """Delete a chat session from database"""
     try:
-        success = chat_service.delete_session(db, session_id)
+        success = await run_in_threadpool(chat_service.delete_session, db, session_id)
         if success:
             return {"message": "Session deleted successfully"}
         else:
@@ -158,7 +175,7 @@ async def clear_chat_session(session_id: str, db: Session = Depends(get_db)):
 async def get_user_sessions(user_id: str, db: Session = Depends(get_db)):
     """Get all sessions for a user"""
     try:
-        sessions = chat_service.get_user_sessions(db, user_id)
+        sessions = await run_in_threadpool(chat_service.get_user_sessions, db, user_id)
         return {"sessions": sessions}
     except Exception as e:
         logger.error(f"Error retrieving sessions for user {user_id}: {str(e)}", exc_info=True)

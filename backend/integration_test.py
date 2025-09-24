@@ -4,6 +4,7 @@ Frontend-Backend Integration Test
 Tests the complete AI chatbot integration
 """
 import asyncio
+import time
 import httpx
 import json
 
@@ -22,7 +23,8 @@ async def test_integration():
             
             # Test 1: Implicit session creation with first chat message
             print("\n🔧 Test 1: Sending Initial Message (implicit session creation)")
-            session_id = f"itest_{int(asyncio.get_event_loop().time()*1000)}"
+            # Use monotonic time via time.time() to avoid deprecated loop access
+            session_id = f"itest_{int(time.time()*1000)}"
             first_payload = {"message": "What's the current price of AAPL?", "session_id": session_id}
             response = await client.post(f"{base_url}/api/chatbot/chat", json=first_payload)
             if response.status_code == 200:

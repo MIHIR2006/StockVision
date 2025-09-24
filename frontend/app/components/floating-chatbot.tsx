@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, Bot, User, Loader2, X, Minimize2, AlertCircle, Wifi, WifiOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { chatApi } from '../../lib/api-config';
+import { chatApi, API_CONFIG } from '../../lib/api-config';
 import { useServerStatus, ApiErrorAlert } from '../../lib/error-handling';
 
 interface ChatMessage {
@@ -27,7 +27,23 @@ export function FloatingChatbot() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [sessionId] = useState(() => `session_${Date.now()}`);
+  // Persist session ID for the lifetime of the browser tab to avoid losing conversation on remount
+  const [sessionId] = useState(() => {
+    // Guard for non-browser environments (e.g., tests) even though this is a client component
+    if (typeof window === 'undefined' || typeof sessionStorage === 'undefined') {
+      return `session_${Date.now()}`;
+    }
+    let existing = sessionStorage.getItem('chat-session-id');
+    if (!existing) {
+      existing = `session_${Date.now()}`;
+      try {
+        sessionStorage.setItem('chat-session-id', existing);
+      } catch (_e) {
+        // Ignore storage failures (private mode / quota) and proceed with in-memory ID
+      }
+    }
+    return existing;
+  });
   const [apiError, setApiError] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   
@@ -90,7 +106,7 @@ export function FloatingChatbot() {
       
       if (error instanceof Error) {
         if (error.message.includes('fetch')) {
-          errorContent = 'Unable to connect to the StockVision server. Please check if the backend is running on port 8000.';
+          errorContent = `Unable to connect to the StockVision server. Please check if the backend is running at ${API_CONFIG.BACKEND_URL}.`;
         } else if (error.message.includes('timeout')) {
           errorContent = 'Request timed out. The server might be busy. Please try again.';
         } else if (error.message.includes('Server is not accessible')) {
