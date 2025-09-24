@@ -24,9 +24,7 @@ class ChatMessage(Base):
     __tablename__ = "chat_messages"
     
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    # Store both the natural session identifier and normalized FK to primary key
-    session_id = Column(String, nullable=False, index=True)
-    chat_session_fk = Column(String, ForeignKey("chat_sessions.id"), nullable=False)
+    chat_session_fk = Column(String, ForeignKey("chat_sessions.id"), nullable=False, index=True)
     role = Column(String, nullable=False)  # 'user', 'assistant', 'system'
     content = Column(Text, nullable=False)
     message_metadata = Column(JSON, nullable=True)  # Store analysis results, portfolio data, etc.

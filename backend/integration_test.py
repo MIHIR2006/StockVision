@@ -20,85 +20,45 @@ async def test_integration():
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
             
-            # Test 1: Create a chat session
-            print("\n🔧 Test 1: Creating Chat Session")
-            response = await client.post(f"{base_url}/api/chatbot/sessions")
-            
-            if response.status_code == 200:
-                session_data = response.json()
-                session_id = session_data.get("session_id")
-                print(f" Session created: {session_id}")
-            else:
-                print(f" Session creation failed: {response.status_code}")
-                return False
-            
-            # Test 2: Send a stock query (like frontend would)
-            print("\n🔧 Test 2: Sending Stock Query")
-            message_payload = {
-                "message": "What's the current price of AAPL?",
-                "session_id": session_id
-            }
-            
-            response = await client.post(
-                f"{base_url}/api/chatbot/chat",
-                json=message_payload
-            )
-            
+            # Test 1: Implicit session creation with first chat message
+            print("\n🔧 Test 1: Sending Initial Message (implicit session creation)")
+            session_id = f"itest_{int(asyncio.get_event_loop().time()*1000)}"
+            first_payload = {"message": "What's the current price of AAPL?", "session_id": session_id}
+            response = await client.post(f"{base_url}/api/chatbot/chat", json=first_payload)
             if response.status_code == 200:
                 chat_response = response.json()
-                print("Chat query successful")
-                print(f"   Response: {chat_response.get('response', '')[:100]}...")
-                
-                # Check if data is included
-                if 'data' in chat_response and chat_response['data']:
-                    print(" Stock data included in response")
-                else:
-                    print("  No stock data in response (using mock data)")
-                    
+                print(f" Session created implicitly: {session_id}")
             else:
-                print(f" Chat query failed: {response.status_code}")
+                print(f" Initial chat failed: {response.status_code}")
                 print(f"   Error: {response.text}")
                 return False
             
-            # Test 3: Send another query to test session persistence
-            print("\n Test 3: Testing Session Persistence")
-            message_payload = {
-                "message": "Can you also show me TSLA trends?",
-                "session_id": session_id
-            }
-            
-            response = await client.post(
-                f"{base_url}/api/chatbot/chat",
-                json=message_payload
-            )
-            
+            # Test 2: Send a second stock query to verify persistence
+            print("\n🔧 Test 2: Sending Follow-up Stock Query")
+            follow_payload = {"message": "Can you also show me TSLA trends?", "session_id": session_id}
+            response = await client.post(f"{base_url}/api/chatbot/chat", json=follow_payload)
             if response.status_code == 200:
-                chat_response = response.json()
-                print(" Second query successful - session persisted")
-                print(f"   Response: {chat_response.get('response', '')[:100]}...")
+                follow_resp = response.json()
+                print(" Follow-up query successful")
+                print(f"   Response: {follow_resp.get('response', '')[:100]}...")
             else:
-                print(f" Second query failed: {response.status_code}")
+                print(f" Follow-up query failed: {response.status_code}")
+                print(f"   Error: {response.text}")
                 return False
             
-            # Test 4: Verify chat history
-            print("\n🔧 Test 4: Checking Chat History")
-            response = await client.get(f"{base_url}/api/chatbot/sessions/{session_id}/messages")
-            
+            # Test 3: Get chat history (correct endpoint)
+            print("\n🔧 Test 3: Checking Chat History")
+            response = await client.get(f"{base_url}/api/chatbot/sessions/{session_id}")
             if response.status_code == 200:
-                messages = response.json()
-                print(f" Chat history retrieved: {len(messages)} messages")
-                
-                for i, msg in enumerate(messages[:2]):  # Show first 2 messages
-                    role = msg.get('role', 'unknown')
-                    content = msg.get('content', '')[:50]
-                    print(f"   {i+1}. {role}: {content}...")
-                    
+                history = response.json().get("messages", [])
+                print(f" Chat history retrieved: {len(history)} messages")
             else:
                 print(f" Chat history failed: {response.status_code}")
+                print(f"   Error: {response.text}")
                 return False
             
-            # Test 5: Test different query types
-            print("\n🔧 Test 5: Testing Different Query Types")
+            # Test 4: Different query types
+            print("\n🔧 Test 4: Testing Different Query Types")
             test_queries = [
                 "Show me market summary",
                 "Compare GOOGL vs MSFT",

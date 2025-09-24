@@ -23,12 +23,11 @@ class ChatDatabaseService:
             session = ChatSession(
                 session_id=session_id,
                 user_id=user_id,
-                title=f"Chat Session {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+                title=f"Chat Session {datetime.utcnow().strftime('%Y-%m-%d %H:%M')}"
             )
             db.add(session)
             db.commit()
             db.refresh(session)
-        
         return session
     
     @staticmethod
@@ -50,12 +49,15 @@ class ChatDatabaseService:
             db.add(session)
             db.flush()
 
+        # Optionally embed natural session_id inside metadata for traceability
+        enriched_meta = metadata.copy() if metadata else {}
+        if "session_id" not in enriched_meta:
+            enriched_meta["session_id"] = session.session_id
         message = ChatMessage(
-            session_id=session_id,
             chat_session_fk=session.id,
             role=role,
             content=content,
-            message_metadata=metadata,
+            message_metadata=enriched_meta,
             timestamp=datetime.utcnow()
         )
         db.add(message)
@@ -67,9 +69,12 @@ class ChatDatabaseService:
     @staticmethod
     def get_session_messages(db: Session, session_id: str) -> List[Dict[str, Any]]:
         """Get all messages for a session"""
-        messages = db.query(ChatMessage).filter(
-            ChatMessage.session_id == session_id
-        ).order_by(ChatMessage.timestamp.asc()).all()
+        # Join to filter by natural session id
+        messages = (db.query(ChatMessage)
+            .join(ChatSession, ChatMessage.chat_session_fk == ChatSession.id)
+            .filter(ChatSession.session_id == session_id)
+            .order_by(ChatMessage.timestamp.asc())
+            .all())
 
         return [
             {
@@ -83,21 +88,23 @@ class ChatDatabaseService:
     
     @staticmethod
     def get_user_sessions(db: Session, user_id: str) -> List[Dict[str, Any]]:
-        """Get all sessions for a user"""
+        """Get all sessions for a user (note: message_count aggregation optimization recommended)."""
+        # TODO: Optimize with aggregate count query to avoid potential N+1 when accessing session.messages.
         sessions = db.query(ChatSession).filter(
             ChatSession.user_id == user_id
         ).order_by(ChatSession.updated_at.desc()).all()
 
-        return [
-            {
+        result: List[Dict[str, Any]] = []
+        for session in sessions:
+            # Current approach: len(session.messages) may lazy-load; acceptable for low volume, optimize later.
+            result.append({
                 "session_id": session.session_id,
                 "title": session.title,
                 "created_at": session.created_at.isoformat(),
                 "updated_at": session.updated_at.isoformat(),
                 "message_count": len(session.messages)
-            }
-            for session in sessions
-        ]
+            })
+        return result
     
     @staticmethod
     def delete_session(db: Session, session_id: str) -> bool:

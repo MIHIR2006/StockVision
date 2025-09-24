@@ -7,6 +7,8 @@ from typing import Dict, Any, List, Optional
 import httpx
 from datetime import datetime, timedelta
 
+logger = logging.getLogger(__name__)
+
 # AI Configuration Constants
 OPENAI_MODEL = "gpt-3.5-turbo"
 PARSER_MAX_TOKENS = 200
@@ -292,7 +294,7 @@ async def get_real_time_stock_data(symbol: str) -> Dict[str, Any]:
             raise Exception("Invalid API response")
             
     except Exception as e:
-        print(f"Stock data error for {symbol}: {e}")
+        logger.error(f"Stock data error for {symbol}: {e}", exc_info=True)
         # Return mock data on error
         return {
             "symbol": symbol,
