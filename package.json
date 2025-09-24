@@ -18,7 +18,6 @@
     "install:all": "npm install && npm install --workspace=frontend && npm install --workspace=backend"
   },
   "dependencies": {
-    "@prisma/client": "^6.13.0",
     "@tanstack/react-query": "^5.85.0",
     "@types/bcryptjs": "^2.4.6",
     "@vercel/analytics": "^1.5.0",
@@ -32,7 +31,6 @@
   "devDependencies": {
     "@types/next-auth": "^3.13.0",
     "concurrently": "^8.2.2",
-    "prisma": "^6.16.2",
     "turbo": "^2.5.5"
   },
   "engines": {

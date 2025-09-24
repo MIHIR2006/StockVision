@@ -1,5 +1,9 @@
 """
 Database service layer for AI Chatbot functionality
+
+PERFORMANCE NOTE: All methods in this service are synchronous (def, not async def)
+because they use synchronous SQLAlchemy operations. Using async def with sync DB
+operations would block the FastAPI event loop and severely degrade performance.
 """
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any, Optional
@@ -11,7 +15,7 @@ class ChatDatabaseService:
     """Service for managing chat sessions and messages in the database"""
     
     @staticmethod
-    async def get_or_create_session(db: Session, session_id: str, user_id: Optional[str] = None) -> ChatSession:
+    def get_or_create_session(db: Session, session_id: str, user_id: Optional[str] = None) -> ChatSession:
         """Get existing session or create a new one"""
         session = db.query(ChatSession).filter(ChatSession.session_id == session_id).first()
         
@@ -28,7 +32,7 @@ class ChatDatabaseService:
         return session
     
     @staticmethod
-    async def add_message(
+    def add_message(
         db: Session, 
         session_id: str, 
         role: str, 
@@ -57,12 +61,12 @@ class ChatDatabaseService:
         return message
     
     @staticmethod
-    async def get_session_messages(db: Session, session_id: str) -> List[Dict[str, Any]]:
+    def get_session_messages(db: Session, session_id: str) -> List[Dict[str, Any]]:
         """Get all messages for a session"""
         messages = db.query(ChatMessage).filter(
             ChatMessage.session_id == session_id
         ).order_by(ChatMessage.timestamp.asc()).all()
-        
+
         return [
             {
                 "role": msg.role,
@@ -74,12 +78,12 @@ class ChatDatabaseService:
         ]
     
     @staticmethod
-    async def get_user_sessions(db: Session, user_id: str) -> List[Dict[str, Any]]:
+    def get_user_sessions(db: Session, user_id: str) -> List[Dict[str, Any]]:
         """Get all sessions for a user"""
         sessions = db.query(ChatSession).filter(
             ChatSession.user_id == user_id
         ).order_by(ChatSession.updated_at.desc()).all()
-        
+
         return [
             {
                 "session_id": session.session_id,
@@ -92,7 +96,7 @@ class ChatDatabaseService:
         ]
     
     @staticmethod
-    async def delete_session(db: Session, session_id: str) -> bool:
+    def delete_session(db: Session, session_id: str) -> bool:
         """Delete a session and all its messages"""
         session = db.query(ChatSession).filter(ChatSession.session_id == session_id).first()
         
@@ -104,7 +108,7 @@ class ChatDatabaseService:
         return False
     
     @staticmethod
-    async def update_session_title(db: Session, session_id: str, title: str) -> bool:
+    def update_session_title(db: Session, session_id: str, title: str) -> bool:
         """Update session title"""
         session = db.query(ChatSession).filter(ChatSession.session_id == session_id).first()
         

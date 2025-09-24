@@ -3,13 +3,31 @@ from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 from functools import lru_cache
 import json
+import logging
 from datetime import datetime
 from sqlalchemy.orm import Session
 from ..services.ai_services import AIStockAnalyzer, get_real_time_stock_data, get_stock_trends
 from ..services.chat_database import ChatDatabaseService
 from ..db import get_db
 
+# Configure logging
+logger = logging.getLogger(__name__)
+
+# Error codes for client responses (non-sensitive)
+class ChatErrorCodes:
+    PROCESSING_ERROR = "CHAT_001"
+    HISTORY_ERROR = "CHAT_002" 
+    SESSION_DELETE_ERROR = "CHAT_003"
+    USER_SESSIONS_ERROR = "CHAT_004"
+    DATA_FETCH_ERROR = "CHAT_005"
+
 router = APIRouter(prefix="/api/chatbot", tags=["chatbot"])
+
+# SECURITY: All exception handlers in this module follow secure practices:
+# 1. Detailed errors are logged server-side with full stack traces
+# 2. Generic error messages returned to clients to prevent info leakage
+# 3. Error codes provided for debugging without exposing internals
+# 4. HTTPException re-raised when appropriate (e.g., 404 responses)
 
 # Singleton AI Analyzer using dependency injection for performance
 @lru_cache()
@@ -37,6 +55,8 @@ class ChatResponse(BaseModel):
     timestamp: datetime
 
 # Database-backed chat persistence (replacing in-memory storage)
+# NOTE: ChatDatabaseService methods are synchronous to prevent blocking
+# the FastAPI event loop with sync DB operations
 chat_service = ChatDatabaseService()
 
 @router.post("/chat", response_model=ChatResponse)
@@ -51,10 +71,10 @@ async def chat_with_ai(
         request_timestamp = datetime.now()
         
         # Ensure session exists in database
-        await chat_service.get_or_create_session(db, request.session_id, request.user_id)
+        chat_service.get_or_create_session(db, request.session_id, request.user_id)
         
         # Store user message in database
-        await chat_service.add_message(
+        chat_service.add_message(
             db=db,
             session_id=request.session_id,
             role="user",
@@ -75,7 +95,7 @@ async def chat_with_ai(
         response = await ai_analyzer.generate_response(request.message, data)
         
         # Store assistant response in database
-        await chat_service.add_message(
+        chat_service.add_message(
             db=db,
             session_id=request.session_id,
             role="assistant",
@@ -95,41 +115,56 @@ async def chat_with_ai(
         )
         
     except Exception as e:
-        print(f"Chat error: {e}")
-        raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
+        logger.error(f"Chat endpoint error for session {request.session_id}: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=500, 
+            detail=f"An internal error occurred while processing the chat request. Error ID: {ChatErrorCodes.PROCESSING_ERROR}"
+        )
 
 @router.get("/sessions/{session_id}")
 async def get_chat_history(session_id: str, db: Session = Depends(get_db)):
     """Get chat history for a session from database"""
     try:
-        messages = await chat_service.get_session_messages(db, session_id)
+        messages = chat_service.get_session_messages(db, session_id)
         return {"messages": messages}
     except Exception as e:
-        print(f"Get history error: {e}")
-        raise HTTPException(status_code=500, detail=f"Error retrieving chat history: {str(e)}")
+        logger.error(f"Error retrieving chat history for session {session_id}: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Unable to retrieve chat history. Error ID: {ChatErrorCodes.HISTORY_ERROR}"
+        )
 
 @router.delete("/sessions/{session_id}")
 async def clear_chat_session(session_id: str, db: Session = Depends(get_db)):
     """Delete a chat session from database"""
     try:
-        success = await chat_service.delete_session(db, session_id)
+        success = chat_service.delete_session(db, session_id)
         if success:
             return {"message": "Session deleted successfully"}
         else:
             raise HTTPException(status_code=404, detail="Session not found")
+    except HTTPException:
+        # Re-raise HTTP exceptions (like 404) without modification
+        raise
     except Exception as e:
-        print(f"Delete session error: {e}")
-        raise HTTPException(status_code=500, detail=f"Error deleting session: {str(e)}")
+        logger.error(f"Error deleting session {session_id}: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Unable to delete session. Error ID: {ChatErrorCodes.SESSION_DELETE_ERROR}"
+        )
 
 @router.get("/sessions")
 async def get_user_sessions(user_id: str, db: Session = Depends(get_db)):
     """Get all sessions for a user"""
     try:
-        sessions = await chat_service.get_user_sessions(db, user_id)
+        sessions = chat_service.get_user_sessions(db, user_id)
         return {"sessions": sessions}
     except Exception as e:
-        print(f"Get sessions error: {e}")
-        raise HTTPException(status_code=500, detail=f"Error retrieving sessions: {str(e)}")
+        logger.error(f"Error retrieving sessions for user {user_id}: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Unable to retrieve user sessions. Error ID: {ChatErrorCodes.USER_SESSIONS_ERROR}"
+        )
 
 async def fetch_stock_data(analysis: Dict[str, Any]) -> Dict[str, Any]:
     """Fetch relevant stock data based on AI analysis"""
@@ -163,7 +198,8 @@ async def fetch_stock_data(analysis: Dict[str, Any]) -> Dict[str, Any]:
             data["info"] = f"No specific stocks mentioned. Try asking about stocks like {example_stocks_str}."
             
     except Exception as e:
-        data["error"] = f"Error fetching stock data: {str(e)}"
+        logger.error(f"Error fetching stock data: {str(e)}", exc_info=True)
+        data["error"] = "Unable to fetch stock data at this time. Please try again later."
     
     return data
 

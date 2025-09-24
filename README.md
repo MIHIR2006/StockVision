@@ -38,6 +38,7 @@ StockVision is a modern, interactive dashboard for investors and traders. It pro
 ### Frontend
 - **Framework:** Next.js 15 (Monorepo)
 - **Language:** TypeScript
+- **Authentication:** NextAuth.js + Prisma
 - **State Management:** React Context API
 - **UI:** Radix UI, Shadcn UI
 - **Styling:** Tailwind CSS
@@ -45,8 +46,13 @@ StockVision is a modern, interactive dashboard for investors and traders. It pro
 
 ### Backend
 - **Framework:** [FastAPI (Python)](./Backend.md)
-- **Features:** REST API, CORS, Pydantic validation, auto docs, market/stock endpoints
+- **Database:** SQLAlchemy + SQLite/PostgreSQL  
+- **Features:** AI Chatbot, REST API, CORS, Pydantic validation, auto docs
 - **Dev Tools:** Uvicorn, Black, isort, flake8, pytest
+
+### Database Architecture
+- **Authentication:** Prisma + PostgreSQL (Frontend)
+- **Chat & Analytics:** SQLAlchemy + SQLite/PostgreSQL (Backend)
 
 ### For a detailed explanation of the backend structure, API endpoints, and integration, see [Backend.md](./Backend.md).
 ---
@@ -224,6 +230,32 @@ See [Backend.md](./Backend.md) for full details, but here are the essentials:
 
 ---
 
+## Database Architecture
+
+StockVision uses a **dual-database approach** for optimal separation of concerns:
+
+### 🔐 **Authentication Database (Frontend)**
+- **Technology**: Prisma + PostgreSQL
+- **Purpose**: User authentication and session management
+- **Models**: `User` only
+- **Location**: `frontend/prisma/schema.prisma`
+- **Used by**: NextAuth.js authentication system
+
+### 💬 **Chat & Analytics Database (Backend)**  
+- **Technology**: SQLAlchemy + SQLite (dev) / PostgreSQL (prod)
+- **Purpose**: AI chatbot sessions, messages, and analytics
+- **Models**: `ChatSession`, `ChatMessage`
+- **Location**: `backend/app/chat_models.py`
+- **Used by**: FastAPI chatbot service
+
+This architecture ensures:
+- **Clear separation**: Auth vs application data
+- **Technology optimization**: Each service uses its preferred ORM
+- **Independent scaling**: Auth and chat services can scale separately
+- **No schema conflicts**: Each database has its own models
+
+---
+
 ## Configuration
 
 ### Backend (.env)
@@ -238,7 +270,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/stockvision
 ```
 
 ### Frontend
-The frontend uses Prisma + PostgreSQL. Ensure `DATABASE_URL` is set in your shell (or create `frontend/.env.local`) before running:
+The frontend uses Prisma + PostgreSQL **only for authentication**. Ensure `DATABASE_URL` is set in your shell (or create `frontend/.env.local`) before running:
 ```bash
 cd frontend
 npm run db:generate
