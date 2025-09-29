@@ -18,14 +18,14 @@
     "install:all": "npm install && npm install --workspace=frontend && npm install --workspace=backend"
   },
   "dependencies": {
-    "@prisma/client": "^6.13.0",
+    "@prisma/client": "^6.14.0",
     "@tanstack/react-query": "^5.85.0",
     "@types/bcryptjs": "^2.4.6",
     "@vercel/analytics": "^1.5.0",
     "bcryptjs": "^3.0.2",
     "figlet": "^1.9.3",
     "next-auth": "^4.24.11",
-    "prisma": "^6.13.0",
+    "prisma": "^6.14.0",
     "react-hot-toast": "^2.6.0",
     "react-intersection-observer": "^9.16.0",
     "sqlite3": "^5.1.7"

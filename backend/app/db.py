@@ -6,7 +6,8 @@ import os
 try:
     from dotenv import load_dotenv
     load_dotenv()
-except Exception:
+except ImportError:
+    # dotenv not available, continue without it
     pass
 
 DATABASE_URL = os.getenv("DATABASE_URL")
