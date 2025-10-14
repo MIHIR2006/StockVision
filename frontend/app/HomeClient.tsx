@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { SessionProvider } from "next-auth/react";
 import Landing from "@/components/Landing";
 import Preloader from "@/components/Preloder";
 
@@ -18,5 +19,9 @@ export default function HomeClient() {
     }
   }, []);
 
-  return isLoading ? <Preloader /> : <Landing />;
+  return isLoading ? <Preloader /> : (
+    <SessionProvider>
+      <Landing />
+    </SessionProvider>
+  );
 }
