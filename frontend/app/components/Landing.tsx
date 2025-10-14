@@ -2,7 +2,6 @@
 import { MarketDataCenter } from "@/components/market-data-center";
 import { Sidebar } from "@/components/sidebar";
 import { StockTicker } from "@/components/stock-ticker";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { TreasuryBillSection } from "@/components/treasury-bill-section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { portfolioStocks } from "@/data/mock-data";
 import clsx from "clsx";
 import { type Variants } from "framer-motion";
-import { BarChart2, ChartLine, CheckCircle, CircleDollarSign, LineChart, LogIn, PieChart, TrendingUp, XCircle } from "lucide-react";
+import { BarChart2, ChartLine, CheckCircle, CircleDollarSign, LineChart, PieChart, TrendingUp, XCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -18,6 +17,7 @@ import dash from '../../../Dashboard.png';
 import { CardSpotlight } from "../../components/ui/card-spotlight";
 import { ContainerScroll } from '../../components/ui/container-scroll-animation';
 import Testimonials from './Testimonials';
+import Navbar from './navbar';
 // Declare the global window interface extension
 declare global {
   interface Window {
@@ -171,9 +171,8 @@ export default function Landing() {
   return (
     <div className="min-h-screen flex flex-col">
 
-      {/* Header */}
-      <header className="border-b backdrop-blur-lg bg-background/80 sticky top-0 z-50">
-
+      {/* Header with Progress Bar */}
+      <div className="sticky top-0 z-50">
         {/* Progress Bar */}
         <div
           ref={progressBarRef}
@@ -181,54 +180,8 @@ export default function Landing() {
           style={{ transform: 'scaleX(0)' }}
           aria-hidden="true"
         />
-
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <BarChart2 className="h-6 w-6 text-primary" />
-            <span className="font-extrabold text-xl">StockVision</span>
-          </div>
-
-          {/* Right Section */}
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <Link href="/dashboard">
-              <Button
-                className="relative overflow-hidden font-bold flex items-center gap-2 px-6 py-3 
-                      rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 
-                      text-white hover:scale-105 transition-transform"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <LogIn className="h-4 w-4" />
-                  <span className="hidden sm:inline">Sign In</span>
-                </span>
-
-                {/* shimmer overlay */}
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent 
-                            translate-x-[-100%] animate-[shimmer_2s_infinite]" />
-              </Button>
-            </Link>
-
-            {/* <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-              <div className="flex items-center gap-2" onClick={() => setSidebarOpen(true)}>
-                <BarChart2 className="h-6 w-6 text-primary" />
-                <span className="font-extrabold text-xl">StockVision</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <ThemeToggle />
-                <Link href="/dashboard">
-                  <Button className="font-bold hover:scale-105 transition-transform flex items-center gap-2">
-                    <LogIn className="h-4 w-4" />
-                    <span className="hidden sm:inline">Sign In</span>
-                  </Button>
-                </Link>
-              </div>
-            </div> */}
-          </div>
-        </div>
-      </header>
+        <Navbar onMenuClick={() => setSidebarOpen(true)} />
+      </div>
 
 
       {/* Sidebar */}

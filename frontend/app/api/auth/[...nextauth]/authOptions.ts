@@ -73,6 +73,7 @@ const authOptions = {
   pages: {
     signIn: "/login",
     signUp: "/signup",
+    signOut: "/",
   },
 };
 
