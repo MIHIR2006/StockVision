@@ -1,23 +1,10 @@
-# Contributing to StockVision 🚀
+# Contributing to StockVision
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" alt="Line">
-</div>
+First off, thank you for considering contributing to StockVision! It's people like you that make StockVision such a great tool for investors and traders worldwide.
 
-<p align="center">
-  <strong>First off, thank you for considering contributing to StockVision!</strong><br>
-  It's people like you that make StockVision such a great tool for investors and traders worldwide.
-</p>
+---
 
-<div align="center">
-  <img src="https://media.giphy.com/media/f3iwJFOVOwuy7K6FFw/giphy.gif" width="400" alt="Coding">
-</div>
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" alt="Line">
-</div>
-
-## 📋 Table of Contents
+## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
 - [How Can I Contribute?](#how-can-i-contribute)
@@ -32,25 +19,17 @@
 - [Documentation](#documentation)
 - [Community](#community)
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png" alt="Line">
-</div>
+---
 
-## 📜 Code of Conduct
+## Code of Conduct
 
 This project and everyone participating in it is governed by our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to the project maintainers.
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/solar.png" alt="Line">
-</div>
+---
 
-## 🤝 How Can I Contribute?
+## How Can I Contribute?
 
-<p align="center">
-  <img src="https://media.giphy.com/media/LmNwrBhejkK9EFP504/giphy.gif" width="300" alt="Contributing">
-</p>
-
-### Reporting Bugs 🐛
+### Reporting Bugs
 
 Before creating bug reports, please check the [issue tracker](https://github.com/MIHIR2006/StockVision/issues) as you might find out that you don't need to create one. When you are creating a bug report, please include as many details as possible:
 
@@ -61,7 +40,7 @@ Before creating bug reports, please check the [issue tracker](https://github.com
 - **Include screenshots or animated GIFs if possible**
 - **Include your environment details** (OS, Node version, Python version, Browser)
 
-### Suggesting Enhancements 💡
+### Suggesting Enhancements
 
 Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, please include:
 
@@ -71,7 +50,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 - **List any similar features in other applications**
 - **Include mockups or examples if applicable**
 
-### Your First Code Contribution 🎯
+### Your First Code Contribution
 
 Unsure where to begin? You can start by looking through these issues:
 
@@ -79,7 +58,7 @@ Unsure where to begin? You can start by looking through these issues:
 - **`help wanted`** - Issues that may be more involved but are great for new contributors
 - **`hacktoberfest`** - Issues specifically tagged for Hacktoberfest
 
-### Pull Requests 🔀
+### Pull Requests
 
 - Fill in the required template
 - Follow the coding standards
@@ -87,15 +66,9 @@ Unsure where to begin? You can start by looking through these issues:
 - Update documentation as needed
 - End all files with a newline
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/grass.png" alt="Line">
-</div>
+---
 
-## 🚀 Getting Started
-
-<p align="center">
-  <img src="https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif" width="400" alt="Getting Started">
-</p>
+## Getting Started
 
 ### Prerequisites
 
@@ -179,15 +152,9 @@ Before you begin, ensure you have the following installed:
    - Backend API: http://localhost:8000
    - API Docs: http://localhost:8000/docs
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" alt="Line">
-</div>
+---
 
-## 🔄 Development Workflow
-
-<p align="center">
-  <img src="https://media.giphy.com/media/coxQHKASG60HrHtvkt/giphy.gif" width="350" alt="Workflow">
-</p>
+## Development Workflow
 
 ### Creating a New Branch
 
@@ -233,15 +200,9 @@ git fetch upstream
 git rebase upstream/main
 ```
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/fire.png" alt="Line">
-</div>
+---
 
-## 📁 Project Structure
-
-<p align="center">
-  <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" width="300" alt="Project Structure">
-</p>
+## Project Structure
 
 ```
 StockVision/
@@ -293,15 +254,9 @@ StockVision/
 - **Database**: Prisma (Frontend auth), SQLAlchemy (Backend)
 - **API**: RESTful endpoints, FastAPI routers
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/vintage.png" alt="Line">
-</div>
+---
 
-## 💻 Coding Standards
-
-<p align="center">
-  <img src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif" width="350" alt="Coding Standards">
-</p>
+## Coding Standards
 
 > **Note:** Following our coding standards ensures consistency across the codebase and makes collaboration easier for everyone!
 
@@ -436,15 +391,9 @@ async def get_portfolio(
 - **KISS principle** - Keep It Simple, Stupid
 - **Test your changes** before submitting
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/water.png" alt="Line">
-</div>
+---
 
-## 📝 Commit Guidelines
-
-<p align="center">
-  <img src="https://media.giphy.com/media/du3J3cXyzhj75IOgvA/giphy.gif" width="350" alt="Git Commits">
-</p>
+## Commit Guidelines
 
 > **Remember:** A well-written commit message can save hours of confusion later!
 
@@ -500,15 +449,9 @@ Closes #123
 - Reference issues and pull requests when relevant
 - Write detailed commit messages for complex changes
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/dark.png" alt="Line">
-</div>
+---
 
-## 🔀 Pull Request Process
-
-<p align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBhMmQxN2VhYjI0YjI0YjI0YjI0YjI0YjI0YjI0YjI0YjI0YjI0YiZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/kH6CqYiquZawmU1HI6/giphy.gif" width="400" alt="Pull Request">
-</p>
+## Pull Request Process
 
 > **Pro Tip:** Small, focused PRs get reviewed faster and are easier to merge!
 
@@ -591,15 +534,9 @@ Describe the tests you ran to verify your changes.
 - **Respond to feedback** in a timely manner
 - Be **respectful and professional** in all communications
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" alt="Line">
-</div>
+---
 
-## 📋 Issue Guidelines
-
-<p align="center">
-  <img src="https://media.giphy.com/media/3oKIPsx2VAYAgEHC12/giphy.gif" width="300" alt="Issues">
-</p>
+## Issue Guidelines
 
 ### Creating Issues
 
@@ -632,15 +569,9 @@ When creating an issue, please:
 - **Update the issue** with your progress
 - **Link your PR** to the issue when ready
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/solar.png" alt="Line">
-</div>
+---
 
-## 🧪 Testing
-
-<p align="center">
-  <img src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif" width="300" alt="Testing">
-</p>
+## Testing
 
 > **Important:** Always test your changes thoroughly before submitting a PR. It saves everyone time!
 
@@ -675,17 +606,11 @@ When testing your changes, please verify:
 - [ ] Loading states display correctly
 - [ ] No performance regressions
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/grass.png" alt="Line">
-</div>
+---
 
-## 📚 Documentation
+## Documentation
 
-<p align="center">
-  <img src="https://media.giphy.com/media/WFZvB7VIXBgiz3oDXE/giphy.gif" width="350" alt="Documentation">
-</p>
-
-> **Documentation is love! ❤️** Good documentation helps everyone understand and use the project better.
+> **Documentation is love!** Good documentation helps everyone understand and use the project better.
 
 Good documentation is crucial for the project's success.
 
@@ -717,15 +642,9 @@ Update documentation when:
 - Include screenshots for UI changes
 - Explain the "why" not just the "how"
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/aqua.png" alt="Line">
-</div>
+---
 
-## 👥 Community
-
-<p align="center">
-  <img src="https://media.giphy.com/media/l0HlNQ03J5JxX6lva/giphy.gif" width="350" alt="Community">
-</p>
+## Community
 
 ### Getting Help
 
@@ -742,23 +661,13 @@ We value all contributions! Contributors are recognized:
 - On our GitHub repository
 - In release notes for significant contributions
 
-### Hacktoberfest 🎃
-
-<p align="center">
-  <img src="https://media.giphy.com/media/l0IynvPneUpb7SnBe/giphy.gif" width="300" alt="Hacktoberfest">
-</p>
+### Hacktoberfest
 
 We participate in Hacktoberfest! Look for issues tagged with `hacktoberfest` to get started.
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/fire.png" alt="Line">
-</div>
+---
 
-## 🎉 Thank You!
-
-<p align="center">
-  <img src="https://media.giphy.com/media/ZfK4cXKJTTay1Ava29/giphy.gif" width="400" alt="Thank You">
-</p>
+## Thank You!
 
 Thank you for taking the time to contribute to StockVision! Your contributions help make this project better for everyone.
 
@@ -771,11 +680,9 @@ Thank you for taking the time to contribute to StockVision! Your contributions h
 - [Prisma Documentation](https://www.prisma.io/docs)
 - [NextAuth.js Documentation](https://next-auth.js.org/)
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/vintage.png" alt="Line">
-</div>
+---
 
-<h2 align="center">🌟 Our Amazing Contributors 🌟</h2>
+## Our Amazing Contributors
 
 <div align="center">
   <a href="https://github.com/MIHIR2006/StockVision/graphs/contributors">
@@ -783,16 +690,8 @@ Thank you for taking the time to contribute to StockVision! Your contributions h
   </a>
 </div>
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" alt="Line">
-</div>
+---
 
-<p align="center">
-  <img src="https://media.giphy.com/media/LnQjpWaON8nhr21vNW/giphy.gif" width="60"> <br>
-  <strong>Happy Contributing! 🚀</strong><br>
-  <em>If you have any questions or need help, don't hesitate to reach out to the maintainers or community.</em>
-</p>
+**Happy Contributing!**
 
-<div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=100&section=footer" alt="Footer"/>
-</div>
+If you have any questions or need help, don't hesitate to reach out to the maintainers or community.
