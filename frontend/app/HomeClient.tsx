@@ -1,9 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
+import { SessionProvider } from "next-auth/react";
 import Landing from "@/components/Landing";
 import Preloader from "@/components/Preloder";
 
 let hasShownPreloader = false;
+/**
+ * Client-side component that shows a one-time preloader on first mount and then renders Landing inside a SessionProvider.
+ *
+ * The preloader is displayed for 2500ms on the very first visit (tracked with a module-level flag); subsequent renders skip the preloader and render the session-wrapped Landing immediately.
+ *
+ * @returns The Preloader element while the preloader is active, otherwise the Landing component wrapped in a SessionProvider.
+ */
 export default function HomeClient() {
   const [isLoading, setIsLoading] = useState(!hasShownPreloader);
 
@@ -18,5 +26,9 @@ export default function HomeClient() {
     }
   }, []);
 
-  return isLoading ? <Preloader /> : <Landing />;
+  return isLoading ? <Preloader /> : (
+    <SessionProvider>
+      <Landing />
+    </SessionProvider>
+  );
 }

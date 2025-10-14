@@ -2,22 +2,68 @@
 import { Dashboard } from "@/components/dashboard";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { FloatingChatbot } from "@/components/floating-chatbot";
 import { StockVisionErrorBoundary } from "../../lib/error-handling";
 import {
   BarChart2, ChevronLeft, ChevronRight, Home, LineChart,
-  Settings, Wallet,BriefcaseBusiness , ChartNoAxesCombined
+  Settings, Wallet, BriefcaseBusiness, ChartNoAxesCombined, LogOut, User
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 
+/**
+ * Renders the dashboard page layout including a collapsible sidebar, header with theme toggle and authenticated user menu, main dashboard content, mobile overlay, and a floating AI chatbot.
+ *
+ * The component manages sidebar collapse state (auto-collapses on mobile), determines the active dashboard section from the URL or user interaction, handles navigation (home, section changes), and provides sign-out behavior that returns to the root path.
+ *
+ * @returns The dashboard page React element ready for rendering within the app.
+ */
 export default function DashboardPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const isMobile = useIsMobile();
   const router = useRouter();
   const [activeSection, setActiveSection] = useState("overview");
+  const { data: session } = useSession();
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push('/');
+  };
+
+  const getUsernameFromEmail = (email?: string | null) => {
+    if (!email) return 'User';
+    const username = email.split('@')[0];
+    // Capitalize first letter
+    return username.charAt(0).toUpperCase() + username.slice(1);
+  };
+
+  const getInitials = (name?: string | null, email?: string | null) => {
+    if (name) {
+      return name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    if (email) {
+      const username = email.split('@')[0];
+      return username.slice(0, 2).toUpperCase();
+    }
+    return 'U';
+  };
   
   useEffect(() => {
     if (isMobile) {
@@ -209,7 +255,81 @@ export default function DashboardPage() {
             </Button>
           </div>
           <h1 className="text-xl font-extrabold">Dashboard</h1>
-          <ThemeToggle />
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            {session && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="relative h-10 w-10 rounded-full p-0 ring-2 ring-primary/30 hover:ring-primary/60 transition-all duration-300 hover:scale-105"
+                  >
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage 
+                        src={session.user?.image || undefined} 
+                        alt={session.user?.name || getUsernameFromEmail(session.user?.email)}
+                        className="object-cover"
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 text-white font-bold shadow-lg">
+                        {getInitials(session.user?.name, session.user?.email)}
+                      </AvatarFallback>
+                    </Avatar>
+                    {/* Active indicator dot */}
+                    <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-background shadow-sm" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-64" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-2 p-2">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage 
+                            src={session.user?.image || undefined} 
+                            alt={session.user?.name || getUsernameFromEmail(session.user?.email)}
+                            className="object-cover"
+                          />
+                          <AvatarFallback className="bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 text-white font-bold shadow-lg">
+                            {getInitials(session.user?.name, session.user?.email)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col space-y-1 flex-1 min-w-0">
+                          <p className="text-sm font-semibold leading-none truncate">
+                            {session.user?.name || getUsernameFromEmail(session.user?.email)}
+                          </p>
+                          <p className="text-xs leading-none text-muted-foreground truncate">
+                            {session.user?.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => handleSectionChange("settings")}
+                    className="cursor-pointer"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleHomeClick}
+                    className="cursor-pointer"
+                  >
+                    <Home className="mr-2 h-4 w-4" />
+                    <span>Home</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </header>
         <main className="flex-1 overflow-y-auto">
           <Dashboard activeSection={activeSection} onSectionChange={handleSectionChange} />
