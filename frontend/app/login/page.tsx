@@ -18,13 +18,25 @@ export default function LoginPage() {
   // Initialize router
   const router = useRouter();
 
-  // Detect initial theme on mount
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isDarkMode = window.document.documentElement.classList.contains("dark");
-      setIsDark(isDarkMode);
-    }
-  }, []);
+  if (typeof window === "undefined") {
+    return;
+  }
+  const htmlElement = window.document.documentElement;
+  const checkDarkMode = () => {
+    const isDarkMode = htmlElement.classList.contains("dark");
+    setIsDark(isDarkMode);
+  };
+  checkDarkMode(); // Run it once immediately
+  const observer = new MutationObserver(checkDarkMode);
+  observer.observe(htmlElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+  return () => {
+    observer.disconnect();
+  };
+}, []);
 
   const toggleTheme = () => {
     if (typeof window === "undefined") return;
