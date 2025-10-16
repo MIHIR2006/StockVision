@@ -128,13 +128,6 @@ export default function LoginPage() {
         />
       </div>
 
-      {/* Decorative Elements for Light Mode */}
-      {/* <div className="absolute inset-0 z-0 dark:opacity-0 opacity-100 transition-opacity duration-300">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-indigo-300/20 rounded-full blur-3xl"></div>
-      </div> */}
-
       {/* Exit to Landing Page Button */}
       <button
         onClick={() => router.push("/")}
@@ -153,7 +146,7 @@ export default function LoginPage() {
         {isDark ? <Sun className="h-5 w-5 text-yellow-500" /> : <Moon className="h-5 w-5 text-indigo-600" />}
       </button>
 
-      <div className="relative z-10 w-full max-w-md mx-auto my-8 p-6 md:p-8 bg-white dark:bg-gray-800 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 min-height-[200px]">
+      <div className="relative z-10 w-full max-w-md mx-auto my-8 p-6 md:p-8 bg-white dark:bg-gray-800 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 min-h-[200px]">
         {/* Header */}
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 mb-3 shadow-lg">
@@ -311,8 +304,8 @@ export default function LoginPage() {
         <div className="text-center mt-5 pt-4 border-t border-gray-200 dark:border-gray-700">
           <p className="text-gray-600 dark:text-gray-400 text-xs">
             Don't have an account?{" "}
-            <button 
-              onClick={() => handleNavigation("/signup")} 
+            <button
+              onClick={() => handleNavigation("/signup")}
               className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors"
             >
               Sign Up

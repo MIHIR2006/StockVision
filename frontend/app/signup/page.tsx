@@ -1,16 +1,16 @@
 "use client";
 import {
+  CheckCircle2,
+  Chrome,
   Eye,
   EyeClosed,
-  Moon,
-  Sun,
-  StepBack,
-  Mail,
-  Lock,
   Github,
-  Chrome,
+  Lock,
+  Mail,
+  Moon,
+  StepBack,
+  Sun,
   UserPlus,
-  CheckCircle2,
   XCircle,
 } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -185,11 +185,6 @@ export default function SignupPage() {
       </div>
 
       {/* Decorative Elements for Light Mode */}
-      {/* <div className="absolute inset-0 z-0 dark:opacity-0 opacity-100 transition-opacity duration-300">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 left-0 w-96 h-96 bg-pink-300/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-300/20 rounded-full blur-3xl"></div>
-      </div> */}
 
       <button
         onClick={() => router.push("/")}
@@ -211,8 +206,7 @@ export default function SignupPage() {
         )}
       </button>
 
-      <div className="relative z-10 w-full max-w-md mx-auto my-8 p-6 md:p-8 bg-white dark:bg-gray-800 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 min-height-[200px]">
-        {/* Header */}
+      <div className="relative z-10 w-full max-w-md mx-auto my-8 p-6 md:p-8 bg-white dark:bg-gray-800 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 min-h-[200px]">        {/* Header */}
         <div className="text-center mb-5">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 mb-3 shadow-lg">
             <UserPlus className="h-7 w-7 text-white" />
