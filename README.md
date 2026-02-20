@@ -1,6 +1,6 @@
 # StockVision
 
-## 1️⃣ Visualize Your Portfolio Performance 
+## Visualize Your Portfolio Performance 
 
 Track your investments, analyze performance, and make data-driven decisions with our powerful financial dashboard.
 
@@ -8,13 +8,13 @@ Track your investments, analyze performance, and make data-driven decisions with
 
 ---
 
-## 2️⃣ Project Overview
+## Project Overview
 
 StockVision is a modern, interactive dashboard for investors and traders. It provides a comprehensive view of your portfolio, real-time market data, and insightful analytics to help you make smarter financial decisions.
 
 ---
 
-## 3️⃣ Features
+## Features
 
 - **Portfolio Overview:** Visualize your holdings and performance at a glance.
 - **Multi-Portfolio Management:** Create, manage, and compare multiple portfolios.
