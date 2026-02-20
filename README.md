@@ -1,6 +1,6 @@
 # StockVision
 
-## Visualize Your Portfolio Performance 
+## 1️⃣ Visualize Your Portfolio Performance 
 
 Track your investments, analyze performance, and make data-driven decisions with our powerful financial dashboard.
 
@@ -8,13 +8,13 @@ Track your investments, analyze performance, and make data-driven decisions with
 
 ---
 
-## Project Overview
+## 2️⃣ Project Overview
 
 StockVision is a modern, interactive dashboard for investors and traders. It provides a comprehensive view of your portfolio, real-time market data, and insightful analytics to help you make smarter financial decisions.
 
 ---
 
-## Features
+## 3️⃣ Features
 
 - **Portfolio Overview:** Visualize your holdings and performance at a glance.
 - **Multi-Portfolio Management:** Create, manage, and compare multiple portfolios.
@@ -31,7 +31,7 @@ StockVision is a modern, interactive dashboard for investors and traders. It pro
 
 ---
 
-## Tech Stack
+## 4️⃣ Tech Stack
 
 [![Tech Stack](https://skillicons.dev/icons?i=nextjs,fastapi,vercel,ts,python,postgres,prisma&theme=dark)](https://skillicons.dev)
 
@@ -57,7 +57,7 @@ StockVision is a modern, interactive dashboard for investors and traders. It pro
 ### For a detailed explanation of the backend structure, API endpoints, and integration, see [Backend.md](./Backend.md).
 ---
 
-## Folder Structure
+## 5️⃣ Folder Structure
 
 ```
 StockVision/
@@ -80,7 +80,7 @@ StockVision/
 
 ---
 
-## Quick Start
+## 6️⃣ Quick Start
 
 ### Prerequisites
 - **Node.js 18+** and **npm 9+**
@@ -150,7 +150,7 @@ StockVision/
 
 ---
 
-## Access Points
+## 7️⃣ Access Points
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
@@ -160,7 +160,7 @@ StockVision/
 
 ---
 
-## Development & Scripts
+## 8️⃣ Development & Scripts
 
 ### Monorepo Scripts
 ```bash
@@ -195,7 +195,7 @@ npm run lint             # Format and lint code
 
 ---
 
-## API Endpoints (Backend)
+## 9️⃣ API Endpoints (Backend)
 
 See [Backend.md](./Backend.md) for full details, but here are the essentials:
 
@@ -230,7 +230,7 @@ See [Backend.md](./Backend.md) for full details, but here are the essentials:
 
 ---
 
-## Database Architecture
+## 1️⃣0️⃣ Database Architecture
 
 StockVision uses a **dual-database approach** for optimal separation of concerns:
 
@@ -256,7 +256,7 @@ This architecture ensures:
 
 ---
 
-## Configuration
+## 1️⃣1️⃣ Configuration
 
 ### Backend (.env)
 ```bash
@@ -312,7 +312,7 @@ DATABASE_URL="postgresql://user:password@localhost:5432/stockvision?schema=publi
 
 ---
 
-## Roadmap
+## 1️⃣2️⃣ Roadmap
 
 - [x] Multi-portfolio management and comparison
 - [ ] Real-time stock data integration
@@ -327,7 +327,7 @@ DATABASE_URL="postgresql://user:password@localhost:5432/stockvision?schema=publi
 
 ---
 
-## Production Deployment
+## 1️⃣3️⃣ Production Deployment
 
 ### Monorepo Management
 
@@ -366,11 +366,11 @@ Notes:
 
 ---
 
-## TurboRepo
+## 1️⃣4️⃣ TurboRepo
 
 This monorepo uses [Turborepo](https://turbo.build/) for fast, cacheable builds and development.
 
-## Contributing
+## 1️⃣5️⃣ Contributing
 
 We love our contributors! Here's how you can contribute:
 
@@ -385,7 +385,7 @@ We love our contributors! Here's how you can contribute:
 
 ---
 
-## Repo Activity
+## 1️⃣6️⃣ Repo Activity
 
 ![Alt](https://repobeats.axiom.co/api/embed/ec1c47a5d3bcf938b5065f7f0efb5cd9effbb94f.svg "Repobeats analytics image")
 
